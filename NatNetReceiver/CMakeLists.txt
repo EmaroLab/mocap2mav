@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 project (NatNetReceiver)
-set(CMAKE_CXX_FLAGS "${Qt5Core_EXECUTABLE_COMPILE_FLAGS}")
-set(CMAKE_CXX_FLAGS "${Qt5Network_EXECUTABLE_COMPILE_FLAGS}")
-set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 list( APPEND CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
 
 set (PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -16,8 +13,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/listner.cpp 
-)
+${PROJECT_SOURCE_DIR}/listner.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
@@ -34,7 +30,7 @@ link_directories( ~/usr/local/lib )
 ## Declare a C++ library
  add_library(NNRec
          libs/NatNetReceiver.cpp
- )
+         include/NatNetReceiver.h)
 
 qt5_use_modules(sub Widgets Core Network)
 qt5_use_modules(NNRec Widgets Core Network)

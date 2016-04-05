@@ -11,14 +11,14 @@
 #ifndef NATNETRECEIVER_H
 #define NATNETRECEIVER_H
 
-#include "MavState.h"
-#include "global.h"
+
+
 #include <QObject>
 #include <QtNetwork>
 #include <QByteArray>
 
 
-//#include <conversions.h>
+
 
 
 class NatNetReceiver : public QObject
@@ -30,7 +30,15 @@ public:
                             QString serverAddress = QString("239.255.42.99"),
                             quint16 dataPort = 1511);
     ~NatNetReceiver();
+    void setPosition(double x, double y,double z);
+    void setOrientation(double w, double x, double y, double z);
 
+
+    const double * get_position() const;
+
+    const double * get_orientation() const;
+
+    bool _isReady;
 signals:
     void dataUpdate();
 
@@ -41,9 +49,11 @@ private:
     QUdpSocket _cmd_sock;
     QUdpSocket _data_sock;
     QHostAddress _serverAddr;
-
     QByteArray _buffer;
     void _decodeData();
+
+    double _position[3];
+    double _orientation[4];
 
 };
 

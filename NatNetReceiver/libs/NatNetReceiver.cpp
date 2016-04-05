@@ -9,17 +9,7 @@
  ******************************************************************************/
 
 #include "NatNetReceiver.h"
-#include "MavState.h"
-#include "global.h"
-#include <QDebug>
-#include <cstdio>
-//#include<conversions.h>
 
-namespace g {
-     MavState state;
-     MavState setPoint;
-     MavState platform;
-}
 
 #define strcpy_s(dest, src) strcpy(dest, src)
 
@@ -48,6 +38,7 @@ NatNetReceiver::NatNetReceiver(QObject *parent, QString serverAddress, quint16 d
         qCritical() << "Unable to join multicast group: " << _data_sock.errorString();
     }
 
+    _isReady = false;
     connect(&_data_sock, SIGNAL(readyRead()), this, SLOT(readData()));
 
 }
@@ -72,6 +63,21 @@ void NatNetReceiver::readData()
         _decodeData();
     }
 }
+
+void NatNetReceiver::setPosition(double x, double y, double z) {
+    _position[0] = x;
+    _position[1] = y;
+    _position[2] = z;
+}
+
+void NatNetReceiver::setOrientation(double w, double x, double y, double z) {
+    _orientation[0] = w;
+    _orientation[1] = x;
+    _orientation[2] = y;
+    _orientation[3] = z;
+}
+
+
 
 void NatNetReceiver::_decodeData()
 {
@@ -176,16 +182,17 @@ void NatNetReceiver::_decodeData()
                 * */
 
                if(ID == 1) {
-                   g::state.setPosition(x, z, -y);     //-z, x, -y
-                   g::state.setOrientation(qw, qx, qz, -qy);
+                   setPosition(x, z, -y);     //-z, x, -y
+                   setOrientation(qw, qx, qz, -qy);
+                   _isReady = true;
                    emit dataUpdate();
-                }
-
+               }
+/*
                if(ID == 2) {
                    g::platform.setPosition(x, z, -y);     //-z, x, -y
 
                 }
-
+*/
                // associated marker positions
                int nRigidMarkers = 0;  memcpy(&nRigidMarkers, ptr, 4); ptr += 4;
                //printf("Marker Count: %d\n", nRigidMarkers);
@@ -357,7 +364,7 @@ void NatNetReceiver::_decodeData()
            float latency = 0.0f; memcpy(&latency, ptr, 4); ptr += 4;
            //printf("latency : %3.3f\n", latency);
 
-           g::state.timestamp = (long int) (latency * 1000.0);
+           //g::state.timestamp = (long int) (latency * 1000.0);
 
            // timecode
            unsigned int timecode = 0;      memcpy(&timecode, ptr, 4);      ptr += 4;
@@ -531,4 +538,13 @@ bool TimecodeStringify(unsigned int inTimecode, unsigned int inTimecodeSubframe,
 
     return bValid;
 
+}
+
+
+const double *NatNetReceiver::get_position() const {
+    return _position;
+}
+
+const double *NatNetReceiver::get_orientation() const {
+    return _orientation;
 }

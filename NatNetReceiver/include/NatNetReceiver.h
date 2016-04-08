@@ -54,6 +54,7 @@ private:
 
     double _position[3];
     double _orientation[4];
+    long int _latency;
 
 };
 

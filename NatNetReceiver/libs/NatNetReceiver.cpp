@@ -364,7 +364,7 @@ void NatNetReceiver::_decodeData()
            float latency = 0.0f; memcpy(&latency, ptr, 4); ptr += 4;
            //printf("latency : %3.3f\n", latency);
 
-           //g::state.timestamp = (long int) (latency * 1000.0);
+           _latency = (long int) (latency * 1000.0);
 
            // timecode
            unsigned int timecode = 0;      memcpy(&timecode, ptr, 4);      ptr += 4;

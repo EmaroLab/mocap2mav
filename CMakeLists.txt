@@ -14,4 +14,4 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
  
 add_subdirectory(NatNetReceiver)
-#add_subdirectory(project2)
+add_subdirectory(Dispatcher)

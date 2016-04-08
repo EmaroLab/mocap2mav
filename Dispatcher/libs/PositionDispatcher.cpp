@@ -36,7 +36,7 @@ PositionDispatcher::~PositionDispatcher()
 }
 
 
-void PositionDispatcher::sendPosition()
+void PositionDispatcher::sendPosition(int64_t ts, double position[3])
 {
 
     mavlink_message_t msg1;
@@ -53,10 +53,10 @@ void PositionDispatcher::sendPosition()
         mavlink_msg_vision_position_estimate_pack(
                     1,
                     MAV_COMP_ID_ALL, &msg1,
-                    (uint64_t) 0 * 1000,
-                    0,
-                    0,
-                    0,
+                    (uint64_t) ts * 1000,
+                    position[0],
+                    position[1],
+                    position[2],
                     0, //rad
                     0, //rad
                     0); //rad

@@ -48,7 +48,10 @@ int main(int argc, char** argv){
     handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
 
 
-    while(0==handler.handle());
+    while(0==handler.handle()){
+        p.sendPosition(call._vision_pos.timestamp,call._vision_pos.position);
+
+    }
 
     return 0;
 

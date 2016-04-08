@@ -1,5 +1,5 @@
 
-#pragma once
+
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
 #include <QTime>

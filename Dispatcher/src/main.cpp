@@ -7,7 +7,7 @@
 #include <QApplication>
 #include <iostream>
 #include "lcm_messages/geometry/pose.hpp"
-
+#include "QDebug"
 
 class callbackHandler
 {
@@ -25,7 +25,7 @@ public:
             _vision_pos.orientation[j] = msg->orientation[j];
         }
 
-        std::cout << _vision_pos.position[0] << " " << _vision_pos.position[1] << " " << _vision_pos.position[2] << std::endl;
+        //std::cout << _vision_pos.position[0] << " " << _vision_pos.position[1] << " " << _vision_pos.position[2] << std::endl;
 
     }
 
@@ -33,16 +33,16 @@ public:
 
 
 int main(int argc, char** argv){
-
+    qDebug() << "ciao!";
     lcm::LCM handler;
 
+    /*
     if (!handler.good())
         return 1;
-
-    PositionDispatcher p;
-
+        */
     QApplication a(argc, argv);
 
+    PositionDispatcher p;
 
     callbackHandler call;
     handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);

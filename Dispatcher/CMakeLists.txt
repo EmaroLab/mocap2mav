@@ -27,17 +27,19 @@ set ( PROJECT_LINK_LIBS liblcm.so )
 link_directories( ~/usr/local/lib )
 
 ## Declare a C++ library
-# add_library(NNRec
-#         libs/NatNetReceiver.cpp
-#         include/NatNetReceiver.h)
+ add_library(Dis
+         libs/PositionDispatcher.cpp
+         include/PositionDispatcher.h)
 
-qt5_use_modules(pub Widgets Core Network)
+qt5_use_modules(pub Widgets Core Network SerialPort)
+qt5_use_modules(Dis Widgets Core Network SerialPort)
 
 target_link_libraries(pub
         ${PROJECT_LINK_LIBS}
-        #NNRec
         Qt5::Core
         Qt5::Network
         Qt5::Widgets
+
+        Dis
         )
 

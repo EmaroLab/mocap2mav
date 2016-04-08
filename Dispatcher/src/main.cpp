@@ -3,7 +3,7 @@
 //
 
 #include <lcm/lcm-cpp.hpp>
-
+#include "PositionDispatcher.h"
 #include <QApplication>
 #include <iostream>
 #include "lcm_messages/geometry/pose.hpp"
@@ -39,7 +39,7 @@ int main(int argc, char** argv){
     if (!handler.good())
         return 1;
 
-
+    PositionDispatcher p;
 
     QApplication a(argc, argv);
 

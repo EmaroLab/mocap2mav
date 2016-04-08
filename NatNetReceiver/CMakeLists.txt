@@ -19,9 +19,8 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("libs")
 include_directories("include")
+
 add_executable(sub ${PROJECT_SRCS})
-
-
 
 #Set LCM
 set ( PROJECT_LINK_LIBS liblcm.so )

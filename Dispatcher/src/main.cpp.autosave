@@ -51,7 +51,7 @@ int main(int argc, char** argv){
 
     while(0==handler.handle()){
         p.sendPosition(call._vision_pos.timestamp,call._vision_pos.position);
-
+        p.sendPosition(call._0,call._vision_pos.position);
 
     }
 

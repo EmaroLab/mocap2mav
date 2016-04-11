@@ -1,8 +1,9 @@
 #include <QtSerialPort/QtSerialPort>
+#include <iostream>
 #include "PositionDispatcher.h"
 
 
-#define DISPATCH_INTERVAL 100 //ms
+#define DISPATCH_INTERVAL 1000 //ms
 
 
 
@@ -15,6 +16,7 @@ PositionDispatcher::PositionDispatcher(QObject *parent) :
     // Open serial port
 
     if(!_serial.open(QSerialPort::ReadWrite)) {
+
         qCritical() << "Error opening serial port";
         emit finished();
         return;
@@ -36,7 +38,7 @@ PositionDispatcher::~PositionDispatcher()
 }
 
 
-void PositionDispatcher::sendPosition()
+void PositionDispatcher::sendPosition(int64_t ts, double position[3])
 {
 
     mavlink_message_t msg1;
@@ -53,10 +55,10 @@ void PositionDispatcher::sendPosition()
         mavlink_msg_vision_position_estimate_pack(
                     1,
                     MAV_COMP_ID_ALL, &msg1,
-                    (uint64_t) 0 * 1000,
-                    0,
-                    0,
-                    0,
+                    (uint64_t) ts * 1000,
+                    (float)position[0],
+                    (float)position[1],
+                    (float)position[2],
                     0, //rad
                     0, //rad
                     0); //rad
@@ -66,13 +68,11 @@ void PositionDispatcher::sendPosition()
 
 
 
-
-
         //m.lock();
-
+/*
         mavlink_msg_vicon_position_estimate_pack(
                 1,
-                MAV_COMP_ID_ALL, &msg1,
+                MAV_COMP_ID_ALL, &msg2,
                 (uint64_t) 0 * 1000,
                 0,
                 0,
@@ -84,8 +84,8 @@ void PositionDispatcher::sendPosition()
 
          _sendMavlinkMessage(&msg2);
          //qDebug() << "Sent position target";
-
-
+*/
+        std::cout << (float)position[0] << " " << (float)position[1] << " " << (float)position[2] << std::endl;
         _dispatchTime.restart();
 
 

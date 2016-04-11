@@ -1,5 +1,5 @@
 
-#pragma once
+
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
 #include <QTime>
@@ -14,13 +14,15 @@ class PositionDispatcher : public QObject
     Q_OBJECT
 public:
     explicit PositionDispatcher(QObject *parent = 0);
+     void sendPosition(int64_t ts, double position[3]);
     ~PositionDispatcher();
+
 
 signals:
     void finished();
 
 public slots:
-    void sendPosition();
+
 
 
 private:

@@ -31,6 +31,7 @@
 ehthumbs.db
 Thumbs.db
 *~
+*.autosave
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 

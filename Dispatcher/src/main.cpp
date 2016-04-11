@@ -51,7 +51,8 @@ int main(int argc, char** argv){
 
     while(0==handler.handle()){
         p.sendPosition(call._vision_pos.timestamp,call._vision_pos.position);
-
+        std::cout <<"Vision estimate: "<< call._vision_pos.position[0] << " " << call._vision_pos.position[1] << " " << call._vision_pos.position[2] << std::endl;
+        std::cout <<"Position SP: "<< call._position_sp.position[0] << " " << call._position_sp.position[1] << " " << call._position_sp.position[2] << std::endl;
 
     }
 

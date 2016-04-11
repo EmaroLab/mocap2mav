@@ -25,14 +25,7 @@ int main(int argc, char** argv){
 
     NatNetReceiver nat;
 
-
     geometry::pose pose_msg;
-
-    geometry::pose pose_trymsg;
-
-    pose_trymsg.position[0]=0;
-    pose_trymsg.position[1]=0;
-    pose_trymsg.position[2]=0;
 
     while(true) {
 
@@ -40,7 +33,7 @@ int main(int argc, char** argv){
             publishPosition(nat, handler, pose_msg);
             nat._isReady = false;
         }
-        handler.publish("local_position_sp",&pose_trymsg);
+
 
         a.processEvents();
     }
@@ -60,9 +53,6 @@ void publishPosition(NatNetReceiver &nat, lcm::LCM &handler, geometry::pose &msg
     msg.orientation[2] = nat.get_orientation()[2]; //y
     msg.orientation[3] = nat.get_orientation()[3]; //z
 
-
     handler.publish("vision_position_estimate", &msg);
-
-
 
 }

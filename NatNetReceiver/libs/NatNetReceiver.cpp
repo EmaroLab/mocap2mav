@@ -8,6 +8,7 @@
  * versions 2.0 as published by the Free Software Foundation.
  ******************************************************************************/
 
+#include <iostream>
 #include "NatNetReceiver.h"
 
 
@@ -186,6 +187,7 @@ void NatNetReceiver::_decodeData()
                    setOrientation(qw, qx, qz, -qy);
                    _isReady = true;
                    emit dataUpdate();
+
                }
 /*
                if(ID == 2) {

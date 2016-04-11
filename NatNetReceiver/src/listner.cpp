@@ -53,9 +53,6 @@ void publishPosition(NatNetReceiver &nat, lcm::LCM &handler, geometry::pose &msg
     msg.orientation[2] = nat.get_orientation()[2]; //y
     msg.orientation[3] = nat.get_orientation()[3]; //z
 
-
     handler.publish("vision_position_estimate", &msg);
-
-
 
 }

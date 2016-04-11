@@ -65,10 +65,6 @@ void PositionDispatcher::sendPosition(int64_t ts, double position[3])
 
         _sendMavlinkMessage(&msg1);
 
-
-
-
-        //m.lock();
 /*
         mavlink_msg_vicon_position_estimate_pack(
                 1,
@@ -85,7 +81,7 @@ void PositionDispatcher::sendPosition(int64_t ts, double position[3])
          _sendMavlinkMessage(&msg2);
          //qDebug() << "Sent position target";
 */
-        std::cout << (float)position[0] << " " << (float)position[1] << " " << (float)position[2] << std::endl;
+        std::cout << (uint64_t) ts * 1000 <<std::endl;
         _dispatchTime.restart();
 
 

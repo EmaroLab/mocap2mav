@@ -27,13 +27,15 @@ int main(int argc, char** argv){
 
     geometry::pose pose_msg;
 
+
     while(true) {
 
         if(nat._isReady){
+
             publishPosition(nat, handler, pose_msg);
             nat._isReady = false;
-        }
 
+        }
 
         a.processEvents();
     }

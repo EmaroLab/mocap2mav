@@ -4,9 +4,9 @@
 #include <QtSerialPort/QSerialPort>
 #include <QTime>
 #include <stdint.h>
-#include<QMutex>
+#include <QMutex>
 #include "mavlink/common/mavlink.h"
-
+#include "lcm_messages/geometry/pose.hpp"
 
 
 class PositionDispatcher : public QObject
@@ -14,7 +14,7 @@ class PositionDispatcher : public QObject
     Q_OBJECT
 public:
     explicit PositionDispatcher(QObject *parent = 0);
-     void sendPosition(int64_t ts, double position[3]);
+    void sendPosition(int64_t ts, geometry::pose vision, geometry::pose sp, bool visionValid, bool spValid);
     ~PositionDispatcher();
 
 
@@ -33,5 +33,4 @@ private:
     void setSp(double x, double y);
     void _sendMavlinkMessage(mavlink_message_t *msg);
 
-    QMutex m;
 };

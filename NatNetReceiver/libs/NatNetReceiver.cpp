@@ -187,7 +187,6 @@ void NatNetReceiver::_decodeData()
                    setOrientation(qw, qx, qz, -qy);
                    _isReady = true;
                    emit dataUpdate();
-
                }
 /*
                if(ID == 2) {

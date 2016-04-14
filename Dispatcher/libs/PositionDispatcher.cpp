@@ -3,7 +3,7 @@
 #include "PositionDispatcher.h"
 
 
-#define DISPATCH_INTERVAL 1000 //ms
+#define DISPATCH_INTERVAL 100 //ms
 
 
 
@@ -38,52 +38,49 @@ PositionDispatcher::~PositionDispatcher()
 }
 
 
-void PositionDispatcher::sendPosition(int64_t ts, double position[3])
+void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometry::pose sp, bool visionValid, bool spValid)
 {
 
     mavlink_message_t msg1;
     mavlink_message_t msg2;
 
+    mavlink_msg_vision_position_estimate_pack(
+            1,
+            MAV_COMP_ID_ALL, &msg1,
+            (uint64_t) ts * 1000,
+            (float)vision.position[0],
+            (float)vision.position[1],
+            (float)vision.position[2],
+            0, //rad
+            0, //rad
+            0); //rad
+
+    mavlink_msg_vicon_position_estimate_pack(
+            1,
+            MAV_COMP_ID_ALL, &msg2,
+            (uint64_t) ts * 1000,
+            (float)sp.position[0],
+            (float)sp.position[1],
+            (float)sp.position[2],
+            0, //rad
+            0, //rad
+            0); //rad
+
     if(_dispatchTime.elapsed() >= DISPATCH_INTERVAL){
 
-        float roll, pitch, yaw;
-        //g::state.orientation2(&roll, &pitch, &yaw);
+       // if(visionValid) {
+            _sendMavlinkMessage(&msg1);
+            std::cout << "Vision estimate: " << vision.position[0] << " " << vision.position[1] <<
+            " " << vision.position[2] << std::endl;
+        //}
 
-        // ADD CONVERSION IN LOCAL FRAME HERE
+        if(spValid){
+            _sendMavlinkMessage(&msg2);
+            std::cout << "Position SP: " << sp.position[0] << " " <<sp.position[1] <<
+            " " << sp.position[2] << std::endl;
+        }
 
-        // Pack the message
-        mavlink_msg_vision_position_estimate_pack(
-                    1,
-                    MAV_COMP_ID_ALL, &msg1,
-                    (uint64_t) ts * 1000,
-                    (float)position[0],
-                    (float)position[1],
-                    (float)position[2],
-                    0, //rad
-                    0, //rad
-                    0); //rad
-
-        _sendMavlinkMessage(&msg1);
-
-/*
-        mavlink_msg_vicon_position_estimate_pack(
-                1,
-                MAV_COMP_ID_ALL, &msg2,
-                (uint64_t) 0 * 1000,
-                0,
-                0,
-                0,
-                0, //rad
-                0, //rad
-                0); //rad
-         //m.unlock();
-
-         _sendMavlinkMessage(&msg2);
-         //qDebug() << "Sent position target";
-*/
-        std::cout << (uint64_t) ts * 1000 <<std::endl;
         _dispatchTime.restart();
-
 
     }
 

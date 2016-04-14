@@ -6,8 +6,9 @@
 #include "PositionDispatcher.h"
 #include <QApplication>
 #include <iostream>
-#include "lcm_messages/geometry/pose.hpp"
+#include <sys/poll.h>
 #include "QDebug"
+
 
 class callbackHandler
 {
@@ -16,6 +17,9 @@ public:
 
     geometry::pose _vision_pos;
     geometry::pose _position_sp;
+
+    bool _estimate_ready = false;
+    bool _position_sp_ready = false;
 
     void callback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
 
@@ -26,8 +30,7 @@ public:
         for (int j = 0; j < 4; ++j) {
             _vision_pos.orientation[j] = msg->orientation[j];
         }
-
-        //std::cout << _vision_pos.position[0] << " " << _vision_pos.position[1] << " " << _vision_pos.position[2] << std::endl;
+        _estimate_ready = true;
 
     }
 
@@ -40,8 +43,7 @@ public:
         for (int j = 0; j < 4; ++j) {
             _position_sp.orientation[j] = msg->orientation[j];
         }
-
-        //std::cout << _vision_pos.position[0] << " " << _vision_pos.position[1] << " " << _vision_pos.position[2] << std::endl;
+        _position_sp_ready = true;
 
     }
 
@@ -56,21 +58,24 @@ int main(int argc, char** argv){
     if (!handler.good())
         return 1;
 
+
     QApplication a(argc, argv);
 
     PositionDispatcher p;
 
     callbackHandler call;
+
     handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
-    //handler.subscribe("local_position_sp",&callbackHandler::callback2, &call);
-    qint64 now =  QDateTime::currentMSecsSinceEpoch();
+    handler.subscribe("local_position_sp",&callbackHandler::callback2, &call);
 
     while(0==handler.handle()){
 
-        p.sendPosition(call._vision_pos.timestamp,call._vision_pos.position);
-        std::cout <<"Vision estimate: "<< call._vision_pos.position[0] << " " << call._vision_pos.position[1] << " " << call._vision_pos.position[2] << std::endl;
-        std::cout <<"Position SP: "<< call._position_sp.position[0] << " " << call._position_sp.position[1] << " " << call._position_sp.position[2] << std::endl;
+        p.sendPosition(call._vision_pos.timestamp, call._vision_pos, call._position_sp, call._estimate_ready, call._position_sp_ready);
 
+        if(call._estimate_ready)    call._estimate_ready = false;
+        //if(call._position_sp_ready) call._position_sp_ready = false;
+
+        //TODO: check for lost rigid bodies
     }
 
     return 0;

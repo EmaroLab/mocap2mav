@@ -6,7 +6,6 @@
 #include "PositionDispatcher.h"
 #include <QApplication>
 #include <iostream>
-#include <sys/poll.h>
 #include "QDebug"
 
 
@@ -66,7 +65,7 @@ int main(int argc, char** argv){
     callbackHandler call;
 
     handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
-    handler.subscribe("local_position_sp",&callbackHandler::callback2, &call);
+    handler.subscribe("local_position_sp", &callbackHandler::callback2, &call); // Do we need to bufferize sp messages?
 
     while(0==handler.handle()){
 
@@ -76,6 +75,7 @@ int main(int argc, char** argv){
         //if(call._position_sp_ready) call._position_sp_ready = false;
 
         //TODO: check for lost rigid bodies
+
     }
 
     return 0;

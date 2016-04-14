@@ -66,6 +66,8 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
             0, //rad
             0); //rad
 
+    //TODO: add orientation inside mavlink messages
+
     if(_dispatchTime.elapsed() >= DISPATCH_INTERVAL){
 
        // if(visionValid) {

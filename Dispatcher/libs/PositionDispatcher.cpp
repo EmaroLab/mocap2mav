@@ -1,7 +1,7 @@
 #include <QtSerialPort/QtSerialPort>
 #include <iostream>
 #include "PositionDispatcher.h"
-
+#include "MavState.h"
 
 #define DISPATCH_INTERVAL 100 //ms
 
@@ -27,7 +27,6 @@ PositionDispatcher::PositionDispatcher(QObject *parent) :
 
     // Start dispatch time counter
     _dispatchTime.start();
-
     qDebug() << "Connected to MavLink Radio...";
 }
 
@@ -43,6 +42,11 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
 
     mavlink_message_t msg1;
     mavlink_message_t msg2;
+    MavState conv;
+    conv.setOrientation(vision.orientation[0],vision.orientation[1],vision.orientation[2],vision.orientation[3]);
+    float roll,pitch,yaw;
+    conv.orientation(&roll,&pitch,&yaw);
+
 
     mavlink_msg_vision_position_estimate_pack(
             1,
@@ -51,9 +55,9 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
             (float)vision.position[0],
             (float)vision.position[1],
             (float)vision.position[2],
-            0, //rad
-            0, //rad
-            0); //rad
+            roll, //rad
+            pitch, //rad
+            yaw); //rad
 
     mavlink_msg_vicon_position_estimate_pack(
             1,
@@ -62,24 +66,25 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
             (float)sp.position[0],
             (float)sp.position[1],
             (float)sp.position[2],
-            0, //rad
-            0, //rad
-            0); //rad
+            roll, //rad
+            pitch, //rad
+            yaw); //rad
 
-    //TODO: add orientation inside mavlink messages
+
 
     if(_dispatchTime.elapsed() >= DISPATCH_INTERVAL){
 
        // if(visionValid) {
             _sendMavlinkMessage(&msg1);
             std::cout << "Vision estimate: " << vision.position[0] << " " << vision.position[1] <<
-            " " << vision.position[2] << std::endl;
+            " " << vision.position[2] <<" \\ " <<roll <<" " <<pitch <<" " <<" " <<yaw << std::endl;
         //}
 
         if(spValid){
             _sendMavlinkMessage(&msg2);
             std::cout << "Position SP: " << sp.position[0] << " " <<sp.position[1] <<
             " " << sp.position[2] << std::endl;
+
         }
 
         _dispatchTime.restart();

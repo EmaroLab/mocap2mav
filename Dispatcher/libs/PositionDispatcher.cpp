@@ -1,7 +1,7 @@
 #include <QtSerialPort/QtSerialPort>
 #include <iostream>
 #include "PositionDispatcher.h"
-
+#include "MavState.h"
 
 #define DISPATCH_INTERVAL 100 //ms
 

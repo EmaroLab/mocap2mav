@@ -13,9 +13,8 @@
 
 #include <cmath>
 #include <cstdint>
+#include <math.h>
 #include <conversions.h>
-#include<math.h>
-
 
 
 
@@ -92,7 +91,6 @@ public:
             float dcm[3][3];
             quaternion_to_dcm(quaternion , dcm);
             dcm_to_euler( dcm, roll, pitch, yaw);
-
         }
 
     inline float x() const

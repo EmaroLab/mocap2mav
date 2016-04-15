@@ -126,7 +126,6 @@ public:
 
         this->setYaw(m.yaw());
 
-        //XXX TODO orientation quaternion
 
     }
 

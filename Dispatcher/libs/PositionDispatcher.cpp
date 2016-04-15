@@ -66,9 +66,9 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
             (float)sp.position[0],
             (float)sp.position[1],
             (float)sp.position[2],
-            roll, //rad
-            pitch, //rad
-            yaw); //rad
+            0, //rad
+            0,//rad
+            sp.yaw); //rad
 
 
 

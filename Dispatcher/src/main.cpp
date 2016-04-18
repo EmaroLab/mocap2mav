@@ -42,6 +42,7 @@ public:
         for (int j = 0; j < 4; ++j) {
             _position_sp.orientation[j] = msg->orientation[j];
         }
+        _position_sp.yaw = msg->yaw;
         _position_sp_ready = true;
 
     }

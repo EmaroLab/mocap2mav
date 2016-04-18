@@ -5,4 +5,5 @@ struct pose
     double   position[3];
     double   orientation[4];
     double yaw;
+    int8_t isValid;
 }

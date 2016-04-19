@@ -16,4 +16,4 @@ do
   fi
  
 done < $file.md;
-exit;
+

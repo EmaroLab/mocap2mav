@@ -20,9 +20,13 @@ class pose
 
         double     position[3];
 
+        double     velocity[3];
+
         double     orientation[4];
 
         double     yaw;
+
+        int8_t     isValid;
 
     public:
         /**
@@ -126,10 +130,16 @@ int pose::_encodeNoHash(void *buf, int offset, int maxlen) const
     tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->position[0], 3);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->velocity[0], 3);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->orientation[0], 4);
     if(tlen < 0) return tlen; else pos += tlen;
 
     tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->yaw, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
+    tlen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, &this->isValid, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
@@ -145,10 +155,16 @@ int pose::_decodeNoHash(const void *buf, int offset, int maxlen)
     tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->position[0], 3);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->velocity[0], 3);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->orientation[0], 4);
     if(tlen < 0) return tlen; else pos += tlen;
 
     tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->yaw, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
+    tlen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, &this->isValid, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
@@ -159,14 +175,16 @@ int pose::_getEncodedSizeNoHash() const
     int enc_size = 0;
     enc_size += __int64_t_encoded_array_size(NULL, 1);
     enc_size += __double_encoded_array_size(NULL, 3);
+    enc_size += __double_encoded_array_size(NULL, 3);
     enc_size += __double_encoded_array_size(NULL, 4);
     enc_size += __double_encoded_array_size(NULL, 1);
+    enc_size += __int8_t_encoded_array_size(NULL, 1);
     return enc_size;
 }
 
 uint64_t pose::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x4b72068e0b19a154LL;
+    uint64_t hash = 0x57dd4863aa87386fLL;
     return (hash<<1) + ((hash>>63)&1);
 }
 

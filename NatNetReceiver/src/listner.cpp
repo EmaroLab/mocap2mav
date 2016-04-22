@@ -7,10 +7,11 @@
 #include <lcm/lcm-cpp.hpp>
 #include "NatNetReceiver.h"
 #include <QApplication>
-#include <iostream>
 #include "lcm_messages/geometry/pose.hpp"
+#include <iostream>
+#include "common/common.h"
 
-void publishPosition(NatNetReceiver &nat, lcm::LCM &handler, geometry::pose &msg);
+void setPositionMsg(NatNetReceiver &nat, geometry::pose &msg);
 
 
 int main(int argc, char** argv){
@@ -26,14 +27,30 @@ int main(int argc, char** argv){
     NatNetReceiver nat;
 
     geometry::pose pose_msg;
+    geometry::pose prev_pose_msg;
+
 
 
     while(true) {
-
+        
         if(nat._isReady){
 
-            publishPosition(nat, handler, pose_msg);
+            setPositionMsg(nat, pose_msg);
+
+            // Quick estimate for velocities
+
+            int64_t dt = pose_msg.timestamp - prev_pose_msg.timestamp;
+
+            pose_msg.velocity[0] = (pose_msg.position[0] - prev_pose_msg.position[0])/((double)dt * MILLI2SECS);
+            pose_msg.velocity[1] = (pose_msg.position[1] - prev_pose_msg.position[1])/((double)dt * MILLI2SECS);
+            pose_msg.velocity[2] = (pose_msg.position[2] - prev_pose_msg.position[2])/((double)dt * MILLI2SECS);
+
+            // Reset
             nat._isReady = false;
+            prev_pose_msg.position[0] = pose_msg.position[0];
+            prev_pose_msg.position[1] = pose_msg.position[1];
+            prev_pose_msg.position[2] = pose_msg.position[2];
+            prev_pose_msg.timestamp = pose_msg.timestamp;
 
         }
 
@@ -44,7 +61,7 @@ int main(int argc, char** argv){
 
 }
 
-void publishPosition(NatNetReceiver &nat, lcm::LCM &handler, geometry::pose &msg){
+void setPositionMsg(NatNetReceiver &nat, geometry::pose &msg){
 
     msg.position[0] = nat.get_position()[0]; //x
     msg.position[1] = nat.get_position()[1]; //y
@@ -55,6 +72,6 @@ void publishPosition(NatNetReceiver &nat, lcm::LCM &handler, geometry::pose &msg
     msg.orientation[2] = nat.get_orientation()[2]; //y
     msg.orientation[3] = nat.get_orientation()[3]; //z
 
-    handler.publish("vision_position_estimate", &msg);
+    msg.timestamp = getTimeMilliSecond();
 
 }

@@ -2,8 +2,6 @@
 // Created by andrea on 15/03/16.
 //
 
-
-
 #include <lcm/lcm-cpp.hpp>
 #include "NatNetReceiver.h"
 #include <QApplication>

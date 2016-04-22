@@ -21,7 +21,6 @@ int main(int argc, char** argv){
     if (!handler.good())
         return 1;
 
-
     QApplication a(argc, argv);
 
     NatNetReceiver nat;
@@ -29,10 +28,8 @@ int main(int argc, char** argv){
     geometry::pose pose_msg;
     geometry::pose prev_pose_msg;
 
-
-
     while(true) {
-        
+
         if(nat._isReady){
 
             setPositionMsg(nat, pose_msg);
@@ -45,12 +42,15 @@ int main(int argc, char** argv){
             pose_msg.velocity[1] = (pose_msg.position[1] - prev_pose_msg.position[1])/((double)dt * MILLI2SECS);
             pose_msg.velocity[2] = (pose_msg.position[2] - prev_pose_msg.position[2])/((double)dt * MILLI2SECS);
 
+            //Publish pose estimate
+            handler.publish("local_position_sp",&pose_msg);
+
             // Reset
             nat._isReady = false;
             prev_pose_msg.position[0] = pose_msg.position[0];
             prev_pose_msg.position[1] = pose_msg.position[1];
             prev_pose_msg.position[2] = pose_msg.position[2];
-            prev_pose_msg.timestamp = pose_msg.timestamp;
+            prev_pose_msg.timestamp   = pose_msg.timestamp;
 
         }
 

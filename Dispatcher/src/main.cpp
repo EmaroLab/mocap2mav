@@ -23,15 +23,7 @@ public:
 
     void callback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
 
-        if (_vision_pos.position[0] == msg->position[0] && _vision_pos.position[1] == msg->position[1] && _vision_pos.position[2] == msg->position[2]){
-            count++;
-            if(count >= 5)
-                _vision_pos.isValid = 0;
-        }
-        else{
-            count = 0;
-            _vision_pos.isValid = 1;
-        }
+
 
         for (int i = 0; i < 3; ++i) {
             _vision_pos.position[i] = msg->position[i];

@@ -50,7 +50,7 @@ int main(int argc, char** argv){
 
 
             //Publish pose estimate
-            handler.publish("local_position_sp",&pose_msg);
+            handler.publish("vision_position_estimate",&pose_msg);
 
             // Reset
             nat._isReady = false;

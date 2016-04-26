@@ -1,15 +1,10 @@
 #include "Executioner.h"
 #include <vector>
-#include<stdio.h>
 #include<math.h>
 #include <iostream>
 #include<string>
+
 #define PI 3.141592653589
-
-
-
-
-
 
 namespace executioner{
 namespace land{
@@ -44,6 +39,7 @@ bool traj_done;
 }
 
 std::vector<exec::task> nodeList;
+
 int move_count = 0;
 bool message;
 bool endList = false;
@@ -74,42 +70,7 @@ Executioner::Executioner(){
     rotate.yaw = 0;
     nodeList.push_back(rotate);
 
-  /*  exec::task  land;
-    land.action= "l";
-    land.params[0] = 4; //height velocity
-    land.params[1] = 0; // offset
-    nodeList.push_back(land);*/
 
-    //nodeList.push_back(node1);
-
-    /* move.x = 1.0;
-    move.y = 0;
-    move.z = -1.95;
-    move.params[0] = 0.6;
-    move.params[1] = 3;
-    nodeList.push_back(move);
-
-    move.x = -0.5;
-    move.y = 0;
-    move.z = -0.8;
-    move.params[0] = 0.6;
-    move.params[1] = 0;
-    nodeList.push_back(move);
-
-    rotate.params[0] = 1;
-    rotate.yaw = -PI/4;
-    nodeList.push_back(rotate);
-
-    move.x = 0.264;
-    move.y = -0.914;
-    move.z = -1;
-    move.params[0] = 0.5;
-    move.params[1] = 5;
-    nodeList.push_back(move);
-
-    land.params[0] = 5; //height velocity
-    land.params[1] = -0.31; // offset
-    nodeList.push_back(land);*/
     if(nodeList.size()>0){
 
         _can_run = true;
@@ -135,12 +96,12 @@ void Executioner::run(geometry::pose state){
     _actualTask.params[3] = nodeList[_actualNode].params[3];
 
     _can_run =_actualNode < nodeList.size();
-    // std::cout<<state.position[2] - nodeList[_actualNode].params[0]<<"\n";
-    // std::cout<< "la differenza tra le x è "<<state.position[0] - nodeList [_actualNode].x <<"\n";
+
     if(message) {
         std::cout << "Performing node: " << _actualNode << " with action: " << _actualTask.action<<std::endl;
         message = false;
     }
+
     if(CheckActions(_actualTask.action, state)) {
         if(_actualNode != nodeList.size()-1){
             _actualNode++;

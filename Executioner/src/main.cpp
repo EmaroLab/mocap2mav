@@ -1,8 +1,8 @@
 #include <iostream>
 #include <lcm/lcm-cpp.hpp>
-#include <Executioner.h>
+#include "Executioner.h"
 #include <math.h>
-#include <stdio.h>
+
 
 class callbackHandler
 {
@@ -40,8 +40,10 @@ int main(int argc, char** argv){
 
     handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
     while(0==handler.handle()){
+
         if(e._can_run == true)
             e.run(call._vision_pos);
+
     }
 
 

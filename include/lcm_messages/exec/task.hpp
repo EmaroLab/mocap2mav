@@ -6,25 +6,30 @@
 
 #include <lcm/lcm_coretypes.h>
 
-#ifndef __geometry_pose_hpp__
-#define __geometry_pose_hpp__
+#ifndef __exec_task_hpp__
+#define __exec_task_hpp__
 
+#include <string>
 
-namespace geometry
+namespace exec
 {
 
-class pose
+class task
 {
     public:
-        int64_t    timestamp;
+        double     x;
 
-        double     position[3];
+        double     y;
 
-        double     orientation[4];
+        double     z;
 
         double     yaw;
 
-        int8_t     isValid;
+        std::string action;
+
+        double     params[4];
+
+        int8_t     id;
 
     public:
         /**
@@ -62,7 +67,7 @@ class pose
         inline static int64_t getHash();
 
         /**
-         * Returns "pose"
+         * Returns "task"
          */
         inline static const char* getTypeName();
 
@@ -73,7 +78,7 @@ class pose
         inline static uint64_t _computeHash(const __lcm_hash_ptr *p);
 };
 
-int pose::encode(void *buf, int offset, int maxlen) const
+int task::encode(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
     int64_t hash = (int64_t)getHash();
@@ -87,7 +92,7 @@ int pose::encode(void *buf, int offset, int maxlen) const
     return pos;
 }
 
-int pose::decode(const void *buf, int offset, int maxlen)
+int task::decode(const void *buf, int offset, int maxlen)
 {
     int pos = 0, thislen;
 
@@ -102,80 +107,99 @@ int pose::decode(const void *buf, int offset, int maxlen)
     return pos;
 }
 
-int pose::getEncodedSize() const
+int task::getEncodedSize() const
 {
     return 8 + _getEncodedSizeNoHash();
 }
 
-int64_t pose::getHash()
+int64_t task::getHash()
 {
     static int64_t hash = _computeHash(NULL);
     return hash;
 }
 
-const char* pose::getTypeName()
+const char* task::getTypeName()
 {
-    return "pose";
+    return "task";
 }
 
-int pose::_encodeNoHash(void *buf, int offset, int maxlen) const
+int task::_encodeNoHash(void *buf, int offset, int maxlen) const
 {
     int pos = 0, tlen;
 
-    tlen = __int64_t_encode_array(buf, offset + pos, maxlen - pos, &this->timestamp, 1);
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->x, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
-    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->position[0], 3);
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->y, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
-    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->orientation[0], 4);
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->z, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->yaw, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
-    tlen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, &this->isValid, 1);
+    char* action_cstr = (char*) this->action.c_str();
+    tlen = __string_encode_array(buf, offset + pos, maxlen - pos, &action_cstr, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
+    tlen = __double_encode_array(buf, offset + pos, maxlen - pos, &this->params[0], 4);
+    if(tlen < 0) return tlen; else pos += tlen;
+
+    tlen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, &this->id, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
 }
 
-int pose::_decodeNoHash(const void *buf, int offset, int maxlen)
+int task::_decodeNoHash(const void *buf, int offset, int maxlen)
 {
     int pos = 0, tlen;
 
-    tlen = __int64_t_decode_array(buf, offset + pos, maxlen - pos, &this->timestamp, 1);
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->x, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
-    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->position[0], 3);
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->y, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
-    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->orientation[0], 4);
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->z, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->yaw, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
-    tlen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, &this->isValid, 1);
+    int32_t __action_len__;
+    tlen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &__action_len__, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+    if(__action_len__ > maxlen - pos) return -1;
+    this->action.assign(((const char*)buf) + offset + pos, __action_len__ - 1);
+    pos += __action_len__;
+
+    tlen = __double_decode_array(buf, offset + pos, maxlen - pos, &this->params[0], 4);
+    if(tlen < 0) return tlen; else pos += tlen;
+
+    tlen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, &this->id, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
     return pos;
 }
 
-int pose::_getEncodedSizeNoHash() const
+int task::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
-    enc_size += __int64_t_encoded_array_size(NULL, 1);
-    enc_size += __double_encoded_array_size(NULL, 3);
-    enc_size += __double_encoded_array_size(NULL, 4);
     enc_size += __double_encoded_array_size(NULL, 1);
+    enc_size += __double_encoded_array_size(NULL, 1);
+    enc_size += __double_encoded_array_size(NULL, 1);
+    enc_size += __double_encoded_array_size(NULL, 1);
+    enc_size += this->action.size() + 4 + 1;
+    enc_size += __double_encoded_array_size(NULL, 4);
     enc_size += __int8_t_encoded_array_size(NULL, 1);
     return enc_size;
 }
 
-uint64_t pose::_computeHash(const __lcm_hash_ptr *)
+uint64_t task::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x423270575d9d3575LL;
+    uint64_t hash = 0x46b315b1489bcfc2LL;
     return (hash<<1) + ((hash>>63)&1);
 }
 

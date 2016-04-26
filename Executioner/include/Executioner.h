@@ -10,13 +10,15 @@ class Executioner
 
 public:
 
-  Executioner();
-        void run(geometry::pose state);
-        bool CheckActions(std::string a,geometry::pose state);
-        exec::task _actualTask;
+	Executioner();
+	void run(geometry::pose state);
+	bool CheckActions(std::string a,geometry::pose state);
+
+	exec::task _actualTask;
 	bool _can_run;
-        exec::task _node;
+	exec::task _node;
 	int _actualNode;
+    bool _newTask;
 };
 #endif
 		

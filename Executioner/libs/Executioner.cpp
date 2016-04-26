@@ -40,26 +40,24 @@ bool traj_done;
 
 std::vector<exec::task> nodeList;
 
-int move_count = 0;
-bool message;
 bool endList = false;
 
 Executioner::Executioner(){
     _actualNode = 0;
     _can_run = false;
-    message = true;
-    // Fill Node list
+    _newTask = true;
 
+    // Fill Node list
     exec::task node1;
     node1.action = "t";
-    node1.params[0] = -1.95; //height
+    node1.params[0] = -0; //height
     nodeList.push_back(node1);
 
     exec::task  move;
     move.action = "m";
     move.x = 1.00;
     move.y = 0.00;
-    move.z = -1.95;
+    move.z = -1;
     move.params[0] = 0.6;
     move.params[1] = 3;
     nodeList.push_back(move);
@@ -67,7 +65,7 @@ Executioner::Executioner(){
     exec::task rotate;
     rotate.action= "r";
     rotate.params[0] = 1;
-    rotate.yaw = 0;
+    rotate.yaw = PI/2;
     nodeList.push_back(rotate);
 
 
@@ -97,28 +95,29 @@ void Executioner::run(geometry::pose state){
 
     _can_run =_actualNode < nodeList.size();
 
-    if(message) {
+    if(_newTask) {
+
         std::cout << "Performing node: " << _actualNode << " with action: " << _actualTask.action<<std::endl;
-        message = false;
+
     }
 
+    // Check for next task
     if(CheckActions(_actualTask.action, state)) {
         if(_actualNode != nodeList.size()-1){
             _actualNode++;
-
-            message = true;
+            _newTask = true;
         }
         else if(!endList){
             std::cout<<"tasks finished"<<std::endl;
             endList = true;
+            _newTask = false;
         }
     }
-
+    else{
+        _newTask = false;
+    }
 
 }
-
-
-
 
 
 bool Executioner::CheckActions(std::string a,geometry::pose state)

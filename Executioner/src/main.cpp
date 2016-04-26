@@ -41,10 +41,16 @@ int main(int argc, char** argv){
     handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
     while(0==handler.handle()){
 
-        if(e._can_run == true)
+        if(e._can_run) {
+            //Run state machine
             e.run(call._vision_pos);
+            //Publish next task
+            if(e._newTask) {
+                handler.publish("actual_task", &e._actualTask);
+                //e._newTask = false;
+            }
+        }
 
     }
-
 
 }

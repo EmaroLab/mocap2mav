@@ -45,9 +45,7 @@ int main(int argc, char** argv){
 
             // Check for position validity
 
-            if(isPoseValid(pose_msg, prev_pose_msg)) std::cout << "Untracked object" << std::endl;
-
-
+            if(!isPoseValid(pose_msg, prev_pose_msg)) std::cout << "Untracked object" << std::endl;
 
             //Publish pose estimate
             handler.publish("vision_position_estimate",&pose_msg);

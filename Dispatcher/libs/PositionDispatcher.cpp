@@ -58,7 +58,7 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
             roll, //rad
             pitch, //rad
             yaw); //rad
-
+/*
     mavlink_msg_vicon_position_estimate_pack(
             1,
             MAV_COMP_ID_ALL, &msg2,
@@ -69,6 +69,29 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
             0, //rad
             0,//rad
             sp.yaw); //rad
+
+*/
+
+   mavlink_msg_set_position_target_local_ned_pack(
+           1,
+           MAV_COMP_ID_ALL,
+           &msg2,
+           (uint64_t) ts * 1000,
+           1,
+           MAV_COMP_ID_ALL,
+           MAV_FRAME_LOCAL_NED,
+           0b0000000000000000,
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           0,
+           0);
 
 
 

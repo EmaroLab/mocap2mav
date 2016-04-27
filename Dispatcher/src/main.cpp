@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <iostream>
 #include "QDebug"
+#include <poll.h>
 
 
 class callbackHandler
@@ -46,7 +47,7 @@ public:
             _position_sp.orientation[j] = msg->orientation[j];
         }
         _position_sp.yaw = msg->yaw;
-        _position_sp_ready = true;
+
 
     }
 
@@ -55,7 +56,7 @@ public:
 
 int main(int argc, char** argv){
 
-    lcm::LCM handler;
+    lcm::LCM handler, handler2;
 
     if (!handler.good())
         return 1;
@@ -66,18 +67,38 @@ int main(int argc, char** argv){
 
     callbackHandler call;
 
-    handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
-    handler.subscribe("local_position_sp", &callbackHandler::callback2, &call); // Do we need to bufferize sp messages?
+    lcm::Subscription *sub  = handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
+    lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &callbackHandler::callback2, &call);
+
+    sub->setQueueCapacity(1);
+    sub2->setQueueCapacity(1);
+
+    struct pollfd fds[1];
+
+    fds[0].fd = handler2.getFileno();
+    fds[0].events = POLLIN;
+
+
 
     while(0==handler.handle()){
+
+        int ret = poll(fds,1,0);
+
+
+        if (fds[0].revents & POLLIN){
+
+            call._position_sp_ready = true;
+            handler2.handle();
+
+        }
 
         p.sendPosition(call._vision_pos.timestamp, call._vision_pos, call._position_sp, call._estimate_ready, call._position_sp_ready);
 
         if(call._estimate_ready)    call._estimate_ready = false;
-        //if(call._position_sp_ready) call._position_sp_ready = false;
+
 
         if (call._vision_pos.isValid == 0)
-        std::cout<<"The rigid body has gone out from mocap"<<std::endl;
+            std::cout<<"The rigid body has gone out from mocap"<<std::endl;
 
     }
 

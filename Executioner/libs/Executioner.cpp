@@ -2,7 +2,6 @@
 #include <vector>
 #include<math.h>
 #include <iostream>
-#include<string>
 
 #define PI 3.141592653589
 
@@ -68,7 +67,6 @@ Executioner::Executioner(){
     rotate.yaw = PI/2;
     nodeList.push_back(rotate);
 
-
     if(nodeList.size()>0){
 
         _can_run = true;
@@ -132,14 +130,11 @@ bool Executioner::CheckActions(std::string a,geometry::pose state)
                 fabs(state.position[1] - nodeList[_actualNode].y) < 0.15 &&
                 fabs(state.position[2] - nodeList[_actualNode].z) < 0.15 ){
 
-
             executioner::move::move_done = true;
 
         }
         else
             executioner::move::move_done = false;
-
-
 
         return executioner::move::move_done;
         break;
@@ -174,13 +169,13 @@ bool Executioner::CheckActions(std::string a,geometry::pose state)
         break;
 
         //LAND
-   /* case 'l' :
+    case 'l' :
         if(fabs(state.velocity[2]) < 0.01 && (state.position[2] - _actualTask.params[1]) >= - 0.10)
             executioner::land::landed = true;
         else
             executioner::land::landed = false;
         return executioner::land::landed;
-        break;*/
+        break;
     }
 }
 

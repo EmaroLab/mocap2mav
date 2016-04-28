@@ -17,8 +17,8 @@ ${PROJECT_SOURCE_DIR}/main.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
-include_directories("libs")
-include_directories("include")
+
+
 
 add_executable(pub ${PROJECT_SRCS})
 

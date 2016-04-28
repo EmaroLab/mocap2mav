@@ -81,17 +81,17 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
            MAV_COMP_ID_ALL,
            MAV_FRAME_LOCAL_NED,
            0b0000001111111000,
-           1,
-           2,
-           3,
-           0,
-           0,
-           0,
-           0,
-           0,
-           0,
-           0,
-           0);
+           sp.position[0],     //x        [m]
+           sp.position[1],     //y
+           sp.position[2],     //z        Be careful, z is directed downwards!!
+           0,                  //vx       [m/s]
+           0,                  //vy
+           0,                  //vz
+           0,                  //ax       [m/s^2]
+           0,                  //ay
+           0,                  //az
+           0,                  //yaw      [rad]
+           0);                 //yaw_rate [rad/s]
 
 
 

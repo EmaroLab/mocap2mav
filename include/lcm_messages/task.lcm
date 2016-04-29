@@ -1,0 +1,12 @@
+package exec;
+struct task 
+{
+    double x;
+    double y;
+    double z;
+    double yaw;
+    string action;
+    double params[4];
+    int8_t  id;
+
+}

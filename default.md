@@ -1,4 +1,4 @@
 sub
 pub
-tester
+exec
 >

@@ -12,10 +12,12 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
- 
+set(PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+
 include_directories("${PROJECT_INCLUDE_DIR}")
+include_directories("${PROJECT_SRC_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
- 
+
 add_subdirectory(NatNetReceiver)
 add_subdirectory(Dispatcher)
 add_subdirectory(test)

@@ -7,6 +7,7 @@
 #include <QMutex>
 #include "mavlink/common/mavlink.h"
 #include "lcm_messages/geometry/pose.hpp"
+#include "MavState.h"
 
 
 class PositionDispatcher : public QObject
@@ -14,7 +15,7 @@ class PositionDispatcher : public QObject
     Q_OBJECT
 public:
     explicit PositionDispatcher(QObject *parent = 0);
-    void sendPosition(int64_t ts, geometry::pose vision, geometry::pose sp, bool visionValid, bool spValid);
+    void sendPosition(int64_t ts, MavState vision, MavState sp, bool visionValid, bool spValid);
     ~PositionDispatcher();
 
 

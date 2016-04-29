@@ -8,8 +8,9 @@
 #include <iostream>
 #include "QDebug"
 #include <poll.h>
+#include "CallbackHandler.hpp"
 
-
+/*
 class callbackHandler
 {
 public:
@@ -23,8 +24,6 @@ public:
     bool _position_sp_ready = false;
 
     void callback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
-
-
 
         for (int i = 0; i < 3; ++i) {
             _vision_pos.position[i] = msg->position[i];
@@ -48,10 +47,11 @@ public:
         }
         _position_sp.yaw = msg->yaw;
 
-
     }
 
 };
+*/
+
 
 
 int main(int argc, char** argv){
@@ -65,10 +65,10 @@ int main(int argc, char** argv){
 
     PositionDispatcher p;
 
-    callbackHandler call;
+    CallbackHandler call;
 
-    lcm::Subscription *sub  = handler.subscribe("vision_position_estimate", &callbackHandler::callback, &call);
-    lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &callbackHandler::callback2, &call);
+    lcm::Subscription *sub  = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
+    lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback, &call);
 
     sub->setQueueCapacity(1);
     sub2->setQueueCapacity(1);
@@ -78,12 +78,9 @@ int main(int argc, char** argv){
     fds[0].fd = handler2.getFileno();
     fds[0].events = POLLIN;
 
-
-
     while(0==handler.handle()){
 
         int ret = poll(fds,1,0);
-
 
         if (fds[0].revents & POLLIN){
 
@@ -95,10 +92,6 @@ int main(int argc, char** argv){
         p.sendPosition(call._vision_pos.timestamp, call._vision_pos, call._position_sp, call._estimate_ready, call._position_sp_ready);
 
         if(call._estimate_ready)    call._estimate_ready = false;
-
-
-        if (call._vision_pos.isValid == 0)
-            std::cout<<"The rigid body has gone out from mocap"<<std::endl;
 
     }
 

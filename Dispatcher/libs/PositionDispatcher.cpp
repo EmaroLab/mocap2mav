@@ -1,7 +1,6 @@
 #include <QtSerialPort/QtSerialPort>
 #include <iostream>
 #include "PositionDispatcher.h"
-#include "MavState.h"
 
 #define DISPATCH_INTERVAL 100 //ms
 
@@ -37,24 +36,23 @@ PositionDispatcher::~PositionDispatcher()
 }
 
 
-void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometry::pose sp, bool visionValid, bool spValid)
+void PositionDispatcher::sendPosition(int64_t ts, MavState vision, MavState sp, bool visionValid, bool spValid)
 {
 
     mavlink_message_t msg1;
     mavlink_message_t msg2;
-    MavState conv;
-    conv.setOrientation(vision.orientation[0],vision.orientation[1],vision.orientation[2],vision.orientation[3]);
+
     float roll,pitch,yaw;
-    conv.orientation(&roll,&pitch,&yaw);
+    vision.orientation(&roll,&pitch,&yaw);
 
 
     mavlink_msg_vision_position_estimate_pack(
             1,
             MAV_COMP_ID_ALL, &msg1,
             (uint64_t) ts * 1000,
-            (float)vision.position[0],
-            (float)vision.position[1],
-            (float)vision.position[2],
+            vision.getX(),
+            vision.getY(),
+            vision.getZ(),
             roll, //rad
             pitch, //rad
             yaw); //rad
@@ -81,17 +79,17 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
            MAV_COMP_ID_ALL,
            MAV_FRAME_LOCAL_NED,
            0b0000001111111000,
-           (float)sp.position[0],     //x        [m]
-           (float)sp.position[1],     //y
-           (float)sp.position[2],     //z        Be careful, z is directed downwards!!
-           0,                  //vx       [m/s]
-           0,                  //vy
-           0,                  //vz
-           0,                  //ax       [m/s^2]
-           0,                  //ay
-           0,                  //az
-           0,                  //yaw      [rad]
-           0);                 //yaw_rate [rad/s]
+           sp.getX(),   //x        [m]
+           sp.getY(),   //y
+           sp.getZ(),   //z        Be careful, z is directed downwards!!
+           0,           //vx       [m/s]
+           0,           //vy
+           0,           //vz
+           0,           //ax       [m/s^2]
+           0,           //ay
+           0,           //az
+           0,           //yaw      [rad]
+           0);          //yaw_rate [rad/s]
 
 
 
@@ -99,14 +97,14 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
 
        // if(visionValid) {
             _sendMavlinkMessage(&msg1);
-            std::cout << "Vision estimate: " << vision.position[0] << " " << vision.position[1] <<
-            " " << vision.position[2] <<" \\ " <<roll <<" " <<pitch <<" " <<" " <<yaw << std::endl;
+            std::cout << "Vision estimate: " << vision.getX() << " " << vision.getY() <<
+            " " << vision.getZ() <<" \\ " <<roll <<" " <<pitch <<" " <<" " <<yaw << std::endl;
         //}
 
         if(spValid){
             _sendMavlinkMessage(&msg2);
-            std::cout << "Position SP: " << sp.position[0] << " " <<sp.position[1] <<
-            " " << sp.position[2] << std::endl;
+            std::cout << "Position SP: " << sp.getX() << " " <<sp.getY() <<
+            " " << sp.getZ() << std::endl;
 
         }
 

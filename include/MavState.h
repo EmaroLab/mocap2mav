@@ -93,27 +93,49 @@ public:
             dcm_to_euler( dcm, roll, pitch, yaw);
         }
 
-    inline float x() const
+    inline float getX() const
     {
         return _x;
     }
 
-    inline float y() const
+    inline float getY() const
     {
         return _y;
     }
 
-    inline float z() const
+    inline float getZ() const
     {
         return _z;
     }
 
-    inline float yaw() const
+    inline float getYaw() const
     {
         return _yaw;
     }
 
-    inline float getYaw() const
+
+    inline float getQx() const
+    {
+        return _qx;
+    }
+
+    inline float getQy() const
+    {
+        return _qy;
+    }
+
+    inline float getQz() const
+    {
+        return _qz;
+    }
+
+    inline float getQw() const
+    {
+        return _qw;
+    }
+
+
+    inline float getYawFromQuat() const
     {
         return std::atan2(2*(_qw*_qz+_qx*_qy), 1-2*(_qy*_qy + _qz*_qz));
     }
@@ -122,10 +144,9 @@ public:
 
     void operator=(MavState &m){
 
-        this->setPosition(m.x(),m.y(),m.z());
+        this->setPosition(m.getX(),m.getY(),m.getZ());
 
-        this->setYaw(m.yaw());
-
+        this->setYaw(m.getYaw());
 
     }
 
@@ -141,11 +162,6 @@ public:
     float _qy = 0.0;
     float _qz = 0.0;
 
-    // Telemetry
-    uint16_t rc[8];
-
-    // Control
-    uint16_t rc_override[8];
 };
 
 inline float rad2deg(float rad)

@@ -81,9 +81,9 @@ void PositionDispatcher::sendPosition(int64_t ts, geometry::pose vision, geometr
            MAV_COMP_ID_ALL,
            MAV_FRAME_LOCAL_NED,
            0b0000001111111000,
-           sp.position[0],     //x        [m]
-           sp.position[1],     //y
-           sp.position[2],     //z        Be careful, z is directed downwards!!
+           (float)sp.position[0],     //x        [m]
+           (float)sp.position[1],     //y
+           (float)sp.position[2],     //z        Be careful, z is directed downwards!!
            0,                  //vx       [m/s]
            0,                  //vy
            0,                  //vz

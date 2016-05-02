@@ -48,6 +48,24 @@ public:
         _z = z;
     }
 
+    inline void setV(float vx, float vy, float vz){
+        _vx = vx;
+        _vy = vy;
+        _vz = vz;
+    }
+
+    inline float getVx(){
+        return _vx;
+    }
+
+    inline float getVy(){
+        return _vy;
+    }
+
+    inline float getVz(){
+        return _vz;
+    }
+
     inline void setYaw(float yaw)
     {
         _yaw = yaw;
@@ -146,16 +164,22 @@ public:
 
         this->setPosition(m.getX(),m.getY(),m.getZ());
 
+        this->setOrientation(m.getQw(),m.getQx(),m.getQy(),m.getQz());
+
+        this->setV(m.getVx(),m.getVy(),m.getVz());
+
         this->setYaw(m.getYaw());
 
     }
-
-
+    
     // MOCAP
     long int timestamp; //"Latency" from motion capture server
     float _x = 0.0;
     float _y = 0.0;
     float _z = 0.0;
+    float _vx = 0.0;
+    float _vy = 0.0;
+    float _vz = 0.0;
     float _yaw = 0.0;
     float _qw = 0.0;
     float _qx = 0.0;

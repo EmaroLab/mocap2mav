@@ -3,6 +3,7 @@
 #include "lcm_messages/geometry/pose.hpp"
 #include "lcm_messages/exec/task.hpp"
 #include <string>
+#include "MavState.h"
 
 
 class Executioner
@@ -11,8 +12,8 @@ class Executioner
 public:
 
 	Executioner();
-	void run(geometry::pose state);
-	bool CheckActions(std::string a,geometry::pose state);
+	void run(MavState state);
+	bool CheckActions(std::string a,MavState state);
 
 	exec::task _actualTask;
 	bool _can_run;

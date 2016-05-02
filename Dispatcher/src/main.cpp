@@ -8,49 +8,6 @@
 #include <poll.h>
 #include "CallbackHandler.hpp"
 
-/*
-class callbackHandler
-{
-public:
-    ~callbackHandler() {}
-
-    geometry::pose _vision_pos;
-    geometry::pose _position_sp;
-    int count = 0;
-
-    bool _estimate_ready = false;
-    bool _position_sp_ready = false;
-
-    void callback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
-
-        for (int i = 0; i < 3; ++i) {
-            _vision_pos.position[i] = msg->position[i];
-        }
-
-        for (int j = 0; j < 4; ++j) {
-            _vision_pos.orientation[j] = msg->orientation[j];
-        }
-        _estimate_ready = true;
-
-    }
-
-    void callback2(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
-
-        for (int i = 0; i < 3; ++i) {
-            _position_sp.position[i] = msg->position[i];
-        }
-
-        for (int j = 0; j < 4; ++j) {
-            _position_sp.orientation[j] = msg->orientation[j];
-        }
-        _position_sp.yaw = msg->yaw;
-
-    }
-
-};
-*/
-
-
 
 int main(int argc, char** argv){
 

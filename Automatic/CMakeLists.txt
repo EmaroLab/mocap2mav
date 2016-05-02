@@ -17,8 +17,6 @@ ${PROJECT_SOURCE_DIR}/main.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
-include_directories("libs")
-include_directories("include")
 
 add_executable(autom ${PROJECT_SRCS})
 
@@ -39,6 +37,6 @@ target_link_libraries( autom
         Qt5::Core
         Qt5::Network
         Qt5::Widgets
-	Automlib
+	    Automlib
 	)
 

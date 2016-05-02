@@ -8,6 +8,7 @@
 #include "MavState.h"
 #include "lcm/lcm-cpp.hpp"
 #include "lcm_messages/geometry/pose.hpp"
+#include "lcm_messages/exec/task.hpp"
 
 class CallbackHandler {
 
@@ -15,6 +16,7 @@ public:
 
     MavState _vision_pos;
     MavState _position_sp;
+    exec::task _task;
 
     bool _estimate_ready;
     bool _position_sp_ready;
@@ -52,6 +54,25 @@ public:
         _position_sp.setOrientation((float)msg->orientation[0],(float)msg->orientation[1],(float)msg->orientation[2],(float)msg->orientation[3]);
 
         _position_sp.setYaw((float)msg->yaw);
+
+    }
+
+    void actualTaskCallback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const exec::task* msg){
+
+        _task.action = msg->action;
+        _task.id = msg->id;
+
+        _task.params[0] = msg->params[0];
+        _task.params[1] = msg->params[1];
+        _task.params[2] = msg->params[2];
+        _task.params[3] = msg->params[3];
+
+        _task.x = msg->x;
+        _task.y = msg->y;
+        _task.z = msg->z;
+
+        _task.yaw = msg->yaw;
+
 
     }
 

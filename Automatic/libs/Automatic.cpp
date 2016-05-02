@@ -17,21 +17,18 @@ Automatic::Automatic()
 
 }
 
-geometry::pose Automatic::getState()
-{ return _state;}
-exec::task Automatic::getTask()
-{return _actualTask;}
-
-void Automatic::setState(geometry::pose rState)
+MavState Automatic::getState()
 {
-    _state.position[0]=rState.position[0];
-    _state.position[1]=rState.position[1];
-    _state.position[2]=rState.position[2];
-    _state.yaw=rState.yaw;
-    _state.orientation[0]=rState.orientation[0];
-    _state.orientation[1]=rState.orientation[1];
-    _state.orientation[2]=rState.orientation[2];
-    _state.orientation[3]=rState.orientation[3];
+    return _state;
+}
+exec::task Automatic::getTask()
+{
+    return _actualTask;
+}
+
+void Automatic::setState(MavState rState)
+{
+   _state = rState;
 }
 
 void Automatic::setTask(exec::task rTask)
@@ -45,45 +42,49 @@ void Automatic::setTask(exec::task rTask)
     _actualTask.params[1]=rTask.params[1];
     _actualTask.params[2]=rTask.params[2];
     _actualTask.params[3]=rTask.params[3];
+
 }
 
-void calculatePositionInterm(double alpha,exec::task target,geometry::pose state, geometry::pose comm);
+void Automatic::rotate() {
 
-void Automatic::move(exec::task target,geometry::pose state)
+}
+void Automatic::land(float dt, double vz) {
+
+
+}
+
+void Automatic::takeOff() {
+
+
+}
+
+void Automatic::move()
 {
-    double alpha = getTask().params[0];
-    target.x=getTask().x;
-    target.y=getTask().y;
-    target.z=getTask().z;
-    state.position[0]=getState().position[0];
-    state.position[1]=getState().position[1];
-    state.position[2]=getState().position[2];
-    geometry::pose comm;
-    comm.position[0]=target.x;
-    comm.position[1]=target.y;
-    comm.position[2]=target.z;
-    calculatePositionInterm(alpha,target,state,comm);
+    double alpha = _actualTask.params[0];
+
+    calculatePositionInterm(alpha,_actualTask,_state,_comm);
 }
 
 
-void calculatePositionInterm(double alpha,exec::task target,geometry::pose state, geometry::pose comm)
+void Automatic::calculatePositionInterm(const double alpha, const exec::task target, const MavState state, MavState &comm)
 {
 
-    double positionError[3] = {target.x - state.position[0] ,target.y - state.position[1] , target.z - state.position[2]};
-    double incrementVect[3];
+    double positionError[3] = {target.x - state.getX() ,target.y - state.getY() , target.z - state.getZ()};
 
     double dist = sqrt(pow(positionError[0],2) + pow(positionError[1],2) + pow(positionError[2],2));
 
     //Publish
     if(fabs(dist) <= alpha)
     {
-        comm.position[0]=target.x;
-        comm.position[1]=target.y;
-        comm.position[2]=target.z;
+        comm.setX((float)target.x);
+        comm.setY((float)target.y);
+        comm.setZ((float)target.z);
     }
 
     else if(fabs(dist) > alpha)
     {
+
+        double incrementVect[3];
         //Normalize
         positionError[0] = positionError[0] / dist;
         positionError[1] = positionError[1] / dist;
@@ -94,8 +95,8 @@ void calculatePositionInterm(double alpha,exec::task target,geometry::pose state
         incrementVect[1] = positionError[1] * alpha;
         incrementVect[2] = positionError[2] * alpha;
 
-        comm.position[0]=(state.position[0] + incrementVect[0]);
-        comm.position[1]=(state.position[1] + incrementVect[1]);
-        comm.position[2]=(state.position[2] + incrementVect[2]);
+        comm.setX(state.getX() + (float)incrementVect[0]);
+        comm.setY(state.getY() + (float)incrementVect[1]);
+        comm.setZ(state.getZ() + (float)incrementVect[2]);
     }
 }

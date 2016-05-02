@@ -20,6 +20,7 @@ public:
     bool _position_sp_ready;
 
     CallbackHandler(){
+
         _position_sp.setPosition(0,0,0);
         _position_sp_ready = false;
         _position_sp.setOrientation(1,0,0,0);
@@ -29,11 +30,14 @@ public:
         _estimate_ready = false;
         _vision_pos.setOrientation(1,0,0,0);
         _vision_pos.setYaw(0);
+
     }
 
     void visionEstimateCallback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
 
         _vision_pos.setPosition((float)msg->position[0],(float)msg->position[1],(float)msg->position[2]);
+
+        _vision_pos.setV((float)msg->velocity[0], (float)msg->velocity[1], (float)msg->velocity[2]);
 
         _vision_pos.setOrientation((float)msg->orientation[0],(float)msg->orientation[1],(float)msg->orientation[2],(float)msg->orientation[3]);
 

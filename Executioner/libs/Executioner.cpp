@@ -3,6 +3,7 @@
 #include<math.h>
 #include <iostream>
 
+
 #define PI 3.141592653589
 
 namespace executioner{
@@ -78,7 +79,7 @@ Executioner::Executioner(){
     }
 }
 
-void Executioner::run(geometry::pose state){
+void Executioner::run(MavState state){
 
     _actualTask.x = nodeList[_actualNode].x;
     _actualTask.y = nodeList[_actualNode].y;
@@ -118,7 +119,7 @@ void Executioner::run(geometry::pose state){
 }
 
 
-bool Executioner::CheckActions(std::string a,geometry::pose state)
+bool Executioner::CheckActions(std::string a,MavState state)
 {
     char c = a[0];
     switch (c)
@@ -126,9 +127,9 @@ bool Executioner::CheckActions(std::string a,geometry::pose state)
     //MOVE
     case 'm':
 
-        if(fabs(state.position[0]- nodeList[_actualNode].x) < 0.15 &&
-                fabs(state.position[1] - nodeList[_actualNode].y) < 0.15 &&
-                fabs(state.position[2] - nodeList[_actualNode].z) < 0.15 ){
+        if(fabs(state.getX()- nodeList[_actualNode].x) < 0.15 &&
+                fabs(state.getY() - nodeList[_actualNode].y) < 0.15 &&
+                fabs(state.getZ() - nodeList[_actualNode].z) < 0.15 ){
 
             executioner::move::move_done = true;
 
@@ -142,7 +143,7 @@ bool Executioner::CheckActions(std::string a,geometry::pose state)
         //TAKE_OFF
     case 't':
 
-        if(fabs(state.position[2] - nodeList[_actualNode].params[0]) < 0.1 ){
+        if(fabs(state.getZ() - nodeList[_actualNode].params[0]) < 0.1 ){
             executioner::take_off::take_off_done = true;
 
         }
@@ -155,7 +156,7 @@ bool Executioner::CheckActions(std::string a,geometry::pose state)
 
         //ROTATE
     case 'r' :
-        if( fabs(fabs(_actualTask.yaw) - fabs(state.yaw)) < PI/10){
+        if( fabs(fabs(_actualTask.yaw) - fabs(state.getYawFromQuat())) < PI/10){
             executioner::rotate::rotate_done = true;
         }
         else{ executioner::rotate::rotate_done = false;
@@ -170,7 +171,7 @@ bool Executioner::CheckActions(std::string a,geometry::pose state)
 
         //LAND
     case 'l' :
-        if(fabs(state.velocity[2]) < 0.01 && (state.position[2] - _actualTask.params[1]) >= - 0.10)
+        if(fabs(state.getVz()) < 0.01 && (state.getZ() - _actualTask.params[1]) >= - 0.10)
             executioner::land::landed = true;
         else
             executioner::land::landed = false;

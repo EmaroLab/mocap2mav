@@ -5,8 +5,6 @@
 #include <lcm/lcm-cpp.hpp>
 #include "PositionDispatcher.h"
 #include <QApplication>
-#include <iostream>
-#include "QDebug"
 #include <poll.h>
 #include "CallbackHandler.hpp"
 

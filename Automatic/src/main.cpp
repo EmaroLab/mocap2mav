@@ -84,7 +84,6 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom.getState().getY();
 			}
 
-
 			autom.takeOff();
 
 		}
@@ -95,7 +94,7 @@ int main(int argc, char** argv){
 				autom._actualTask.x = autom._comm.getX();
 				autom._actualTask.y = autom._comm.getY();
 			}
-			autom.land(0.008, autom.getState().getVz()); //TODO: fix hard coding for dt
+			autom.land(dt, autom.getState().getVz());
 
 		}
 		if (autom.getTask().action == "r"){

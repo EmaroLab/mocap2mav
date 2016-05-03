@@ -1,6 +1,4 @@
 #include "Automatic.h"
-#include <string>
-#include <math.h>
 #define PI 3.141592653589
 
 int land_count = 0;int rot_count = 0;int circle_count = 0; int land_plat_count = 0;
@@ -48,12 +46,13 @@ void Automatic::setTask(exec::task rTask)
 
 void Automatic::rotate() {
 
-    double angleValid = getTask().params[0];
-    double yawSP = getTask().yaw;
+    double angleValid = _actualTask.params[0];
+    double yawSP = _actualTask.yaw;
     double yawComm;
     if(angleValid==0){
-        double x_target = getTask().x;//nodeList[executioner::rotate::rotate_id].p.x;
-        double y_target = getTask().y;//nodeList[executioner::rotate::rotate_id].p.y;
+
+        double x_target = _actualTask.x;
+        double y_target = _actualTask.y;
 
         yawSP = atan2(y_target - _state.getY(),x_target - _state.getX());
 
@@ -65,7 +64,6 @@ void Automatic::rotate() {
 }
 
 void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawComm){
-
 
     double yawSp_h = yawTarget - heading;
 
@@ -102,6 +100,81 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
 
 void Automatic::land(float dt, double vz) {
 
+  /*  //landing procedure
+
+    MavState comm = g::setPoint;
+    position error, sP;
+    float descending_rate = 0;
+
+    float offset = nodeList[actualNode].a.params[1];
+    float z = comm.z();
+
+    bool descend_valid = false;
+    if(fabs(vz) < 0.01 && (robot_state.z - offset) >= - 0.10){
+
+
+        if(++land_count == land_wait * r_auto) {
+
+            land_count = 0;
+            output_land << g::state.x()<<" "<<g::state.y()<<";\n";
+            executioner::land::landed = true;
+
+        }
+
+    }
+    else{
+
+        //Descending task
+
+        error.x = p.x - robot_state.x;
+        error.y = p.y - robot_state.y;
+
+        if (robot_state.z - offset >= - 0.15 ){
+
+            if(fabs(error.x) < 0.03 && fabs(error.y) < 0.03) {
+
+                descend_valid = true;
+
+            }
+            else speed = 0;
+
+            sP.x = error.x * land_gain * 0.8 + p.x;
+            sP.y = error.y * land_gain * 0.8 + p.y;
+
+            comm.setX(sP.x);
+            comm.setY(sP.y);
+
+            z += speed*dt;
+        }
+        else{
+
+            //Centering task
+
+
+            sP.x = error.x * land_gain + p.x;
+            sP.y = error.y * land_gain + p.y;
+
+            //wait to recenter
+
+            if(fabs(error.x) < 0.08 && fabs(error.y) < 0.08){ z = g::state.z() + 0.3; descend_valid = true;}
+
+            else if(fabs(error.x) < 0.05 && fabs(error.y) < 0.05){ z = g::state.z() + 0.5; descend_valid = true;}
+
+            //z += descending_rate * dt;
+            comm.setX(sP.x);
+            comm.setY(sP.y);
+
+        }
+
+        land_count = 0;
+        executioner::land::landed = false;
+
+    }
+
+    if(descend_valid) comm.setZ(z);
+    autoCommand.push_back(comm);
+    publish();*/
+
 
 }
 
@@ -109,7 +182,7 @@ void Automatic::takeOff() {
         
     double height = _actualTask.params[0];
 
-    _comm.setZ(height);
+    _comm.setZ((float)height);
 
 }
 

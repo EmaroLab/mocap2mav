@@ -17,7 +17,6 @@ public:
 
 	exec::task _actualTask;
 	bool _can_run;
-	exec::task _node;
 	int _actualNode;
     bool _newTask;
 };

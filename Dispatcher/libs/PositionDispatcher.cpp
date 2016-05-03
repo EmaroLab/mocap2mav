@@ -23,6 +23,7 @@ PositionDispatcher::PositionDispatcher(QObject *parent) :
 
     _serial.setBaudRate(QSerialPort::Baud57600);
     _serial.setFlowControl(QSerialPort::NoFlowControl);
+    //_serial.setReadBufferSize(MAVLINK_MAX_PACKET_LEN);
 
     // Start dispatch time counter
     _dispatchTime.start();
@@ -45,7 +46,6 @@ void PositionDispatcher::sendPosition(int64_t ts, MavState vision, MavState sp, 
     float roll,pitch,yaw;
     vision.orientation(&roll,&pitch,&yaw);
 
-
     mavlink_msg_vision_position_estimate_pack(
             1,
             MAV_COMP_ID_ALL, &msg1,
@@ -56,19 +56,6 @@ void PositionDispatcher::sendPosition(int64_t ts, MavState vision, MavState sp, 
             roll, //rad
             pitch, //rad
             yaw); //rad
-/*
-    mavlink_msg_vicon_position_estimate_pack(
-            1,
-            MAV_COMP_ID_ALL, &msg2,
-            (uint64_t) ts * 1000,
-            (float)sp.position[0],
-            (float)sp.position[1],
-            (float)sp.position[2],
-            0, //rad
-            0,//rad
-            sp.yaw); //rad
-
-*/
 
    mavlink_msg_set_position_target_local_ned_pack(
            1,

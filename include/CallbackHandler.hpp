@@ -9,7 +9,7 @@
 #include "lcm/lcm-cpp.hpp"
 #include "lcm_messages/geometry/pose.hpp"
 #include "lcm_messages/exec/task.hpp"
-
+#include <iostream>
 class CallbackHandler {
 
 public:

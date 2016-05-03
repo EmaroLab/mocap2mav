@@ -16,7 +16,9 @@ int main(int argc, char** argv){
     Executioner e;
 
     handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
+
     while(0==handler.handle()){
+
 
         if(e._can_run) {
             //Run state machine

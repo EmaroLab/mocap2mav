@@ -47,43 +47,44 @@ void Automatic::setTask(exec::task rTask)
 
 
 void Automatic::rotate() {
-    MavState state;
 
-    float commRot = _comm.getYaw();
     double angleValid = getTask().params[0];
-    double yawSP= getTask().yaw;
+    double yawSP = getTask().yaw;
     double yawComm;
     if(angleValid==0){
         double x_target = getTask().x;//nodeList[executioner::rotate::rotate_id].p.x;
         double y_target = getTask().y;//nodeList[executioner::rotate::rotate_id].p.y;
 
-        yawSP = atan2(y_target - state.getY(),x_target - state.getX());
+        yawSP = atan2(y_target - _state.getY(),x_target - _state.getX());
 
     }
-    calculateYawInterm(state,yawComm);
-    commRot = (float)yawComm;
+
+    calculateYawInterm(_state.getYawFromQuat(),yawSP,yawComm);
+    _comm.setYaw((float)yawComm);
 
 }
 
-void Automatic::calculateYawInterm(MavState state, double &yawComm){
+void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawComm){
 
 
-    double yawSp_h = getTask().yaw - state.getYaw();
+    double yawSp_h = yawTarget - heading;
 
-    if (fabs(yawSp_h) <= PI/10) yawComm = getTask().yaw;
+    if (fabs(yawSp_h) <= PI/10) yawComm = yawTarget;
     else if(fabs(yawSp_h) > PI - PI/18){
         //Increase yaw
 
-        yawComm = state.getYaw() + PI / 10 ;
+        yawComm = heading + PI / 10 ;
         if (yawComm > PI){
             yawComm = yawComm - 2*PI;
         }
     }
+
+
     else{
         if (yawSp_h > 0){
             //Increase yaw
 
-            yawComm = state.getYaw() + PI / 10 ;
+            yawComm = heading + PI / 10 ;
             if (yawComm > PI){
                 yawComm = yawComm - 2*PI;
             }
@@ -91,7 +92,7 @@ void Automatic::calculateYawInterm(MavState state, double &yawComm){
         else{
             //decrease yaw
 
-            yawComm = state.getYaw() - PI / 10 ;
+            yawComm = heading - PI / 10 ;
             if (yawComm < -PI){
                 yawComm = yawComm + 2*PI;
             }
@@ -105,7 +106,10 @@ void Automatic::land(float dt, double vz) {
 }
 
 void Automatic::takeOff() {
+        
+    double height = _actualTask.params[0];
 
+    _comm.setZ(height);
 
 }
 

@@ -17,15 +17,17 @@ public:
     void setTask(exec::task task);
     exec::task getTask();
     void calculatePositionInterm(const double alpha,const exec::task target, const MavState state, MavState &comm);
-    void calculateYawInterm(MavState state, double &comm);
+    void calculateYawInterm(float heading, double yawTarget, double &yawComm);
     MavState getState();
     MavState _comm;
+    exec::task _actualTask;
+
     //void trajectory(double omega, double rad, double c[2], float t, int secs, float look, position robot_state);
     //void land_plat(MavState platform, MavState robot_state,float  = 1);
 
 private:
    MavState _state;
-   exec::task _actualTask;
+
 
 };
 

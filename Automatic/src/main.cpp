@@ -4,6 +4,7 @@
 #include "CallbackHandler.hpp"
 #include "poll.h"
 #include "QDebug"
+#include "common/common.h"
 
 int main(int argc, char** argv){
 
@@ -13,13 +14,11 @@ int main(int argc, char** argv){
 		return 1;
 
 
-
-
 	CallbackHandler call;
 	Automatic autom;
 
 	lcm::Subscription *sub  = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
-	lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback, &call);
+	lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::visionEstimateCallback, &call);
 	lcm::Subscription *sub3= handler3.subscribe("actual_task",&CallbackHandler::actualTaskCallback, &call);
 
 	sub->setQueueCapacity(1);
@@ -34,8 +33,17 @@ int main(int argc, char** argv){
 	fds[1].fd = handler3.getFileno(); // Actual task
 	fds[1].events = POLLIN;
 
+	bool newTask = true;
+
+	uint64_t t = 0;
+	uint64_t t_prev = 0;
+
 	while(0==handler.handle()){
 
+
+		t = getTimeMilliSecond();
+		float dt = t_prev != 0 ? (t - t_prev) * (float)MILLI2SECS : 0.0f;
+		t_prev = t;
 
 		autom.setState(call._vision_pos);
 
@@ -45,10 +53,10 @@ int main(int argc, char** argv){
 
 
 			handler2.handle();
-
-
-
+			qDebug() << call._position_sp._x;
 			qDebug() << "New setpoint arrived";
+
+			//Perform init for task which need it
 
 		}
 
@@ -56,8 +64,11 @@ int main(int argc, char** argv){
 
 			autom.setTask(call._task);
 			qDebug() << "New task arrived";
+			newTask = true;
 
-
+		}
+		else{
+			newTask = false;
 		}
 
 		if (autom.getTask().action == "m"){
@@ -67,14 +78,24 @@ int main(int argc, char** argv){
 		}
 		if (autom.getTask().action == "t"){
 
-			//TODO: perform init
+			//Save initial state if we have a new task
+			if (newTask){
+				autom._actualTask.x = autom.getState().getX();
+				autom._actualTask.y = autom.getState().getY();
+			}
+
+
 			autom.takeOff();
 
 		}
 		if (autom.getTask().action == "l"){
 
-			//TODO: perform init
-			autom.land(0.03, autom.getState().getVz()); //TODO: fix hard coding for dt
+			//Land on last set point command, is it good?
+			if (newTask){
+				autom._actualTask.x = autom._comm.getX();
+				autom._actualTask.y = autom._comm.getY();
+			}
+			autom.land(0.008, autom.getState().getVz()); //TODO: fix hard coding for dt
 
 		}
 		if (autom.getTask().action == "r"){

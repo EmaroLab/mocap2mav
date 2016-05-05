@@ -46,11 +46,12 @@ Executioner::Executioner(){
     _actualNode = 0;
     _can_run = false;
     _newTask = true;
+    _publish_task = false;
 
     // Fill Node list
     exec::task node1;
     node1.action = "t";
-    node1.params[0] = -0; //height
+    node1.params[0] = -1; //height
     nodeList.push_back(node1);
 
     exec::task  move;
@@ -67,6 +68,10 @@ Executioner::Executioner(){
     rotate.params[0] = 1;
     rotate.yaw = PI/2;
     nodeList.push_back(rotate);
+
+    exec::task land;
+    land.action= "l";
+    nodeList.push_back(land);
 
     if(nodeList.size()>0){
 
@@ -97,6 +102,7 @@ void Executioner::run(MavState state){
     if(_newTask) {
 
         std::cout << "Performing node: " << _actualNode << " with action: " << _actualTask.action<<std::endl;
+        _publish_task = true;
 
     }
 
@@ -117,7 +123,6 @@ void Executioner::run(MavState state){
     }
 
 }
-
 
 bool Executioner::CheckActions(std::string a,MavState state)
 {

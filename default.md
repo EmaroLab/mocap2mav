@@ -1,4 +1,5 @@
 sub
 pub
 exec
+autom
 >

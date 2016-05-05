@@ -23,17 +23,14 @@ int main(int argc, char** argv){
 
 	sub->setQueueCapacity(1);
 	sub2->setQueueCapacity(1);
-	sub3->setQueueCapacity(5);
+	sub3->setQueueCapacity(1);
 
-	struct pollfd fds[2];
+	struct pollfd fds[1];
 
-	fds[0].fd = handler2.getFileno(); //Position setpoint
+	fds[0].fd = handler3.getFileno(); // Actual task
 	fds[0].events = POLLIN;
 
-	fds[1].fd = handler3.getFileno(); // Actual task
-	fds[1].events = POLLIN;
-
-	bool newTask = true;
+	bool newTask;
 
 	uint64_t t = 0;
 	uint64_t t_prev = 0;
@@ -47,23 +44,14 @@ int main(int argc, char** argv){
 
 		autom.setState(call._vision_pos);
 
-		int ret = poll(fds,2,0);
-
-		if (fds[0].revents & POLLIN){
+		int ret = poll(fds,1,0);
 
 
-			handler2.handle();
-			qDebug() << call._position_sp._x;
-			qDebug() << "New setpoint arrived";
+		if(fds[0].revents & POLLIN){
 
-			//Perform init for task which need it
-
-		}
-
-		if(fds[1].revents & POLLIN){
-
+			handler3.handle();
 			autom.setTask(call._task);
-			qDebug() << "New task arrived";
+			std::cout<<  "New task arrived with action: " << autom._actualTask.action;
 			newTask = true;
 
 		}
@@ -77,7 +65,7 @@ int main(int argc, char** argv){
 
 		}
 		if (autom.getTask().action == "t"){
-
+			qDebug() << "take off";
 			//Save initial state if we have a new task
 			if (newTask){
 				autom._actualTask.x = autom.getState().getX();
@@ -105,6 +93,7 @@ int main(int argc, char** argv){
 		}
 
 		geometry::pose command = call.mavState2LcmPose(autom._comm);
+
 
 		handler.publish("local_position_sp", &command);
 

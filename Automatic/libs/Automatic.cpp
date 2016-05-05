@@ -1,4 +1,5 @@
 #include "Automatic.h"
+
 #define PI 3.141592653589
 
 int land_count = 0;int rot_count = 0;int circle_count = 0; int land_plat_count = 0;
@@ -98,83 +99,64 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
     }
 }
 
-void Automatic::land(float dt, double vz) {
+void Automatic::land(float dt, float speed, float offset, float land_gain) {
 
-  /*  //landing procedure
+    //landing procedure
 
-    MavState comm = g::setPoint;
-    position error, sP;
+
+
+    MavState error, sP;
     float descending_rate = 0;
 
-    float offset = nodeList[actualNode].a.params[1];
-    float z = comm.z();
+    //float offset = nodeList[actualNode].a.params[1];
+    float z = _comm.getZ();
 
     bool descend_valid = false;
-    if(fabs(vz) < 0.01 && (robot_state.z - offset) >= - 0.10){
 
 
-        if(++land_count == land_wait * r_auto) {
+    //Descending task
 
-            land_count = 0;
-            output_land << g::state.x()<<" "<<g::state.y()<<";\n";
-            executioner::land::landed = true;
+    error.setX( (float)_actualTask.x - _state.getX());
+    error.setY( (float)_actualTask.y - _state.getY());
+
+    if (_state.getZ() - offset >= - 0.15 ){
+
+        if(fabs(error.getX()) < 0.03 && fabs(error.getY()) < 0.03) {
+
+            descend_valid = true;
 
         }
+        else speed = 0;
+
+        sP.setX((float)(error.getX() * land_gain * 0.0 + _actualTask.x)); //TODO: test if we need that
+        sP.setY((float)(error.getY() * land_gain * 0.0 + _actualTask.y));
+
+        _comm.setX(sP.getX());
+        _comm.setY(sP.getY());
+
+        z += speed*dt;
 
     }
     else{
 
-        //Descending task
+        //Centering task
 
-        error.x = p.x - robot_state.x;
-        error.y = p.y - robot_state.y;
+        sP.setX(error.getX() * land_gain  + (float)_actualTask.x); //TODO: test if we need that
+        sP.setY(error.getY() * land_gain  + (float)_actualTask.y);
 
-        if (robot_state.z - offset >= - 0.15 ){
+        //wait to recenter
 
-            if(fabs(error.x) < 0.03 && fabs(error.y) < 0.03) {
+        if(fabs(error.getX()) < 0.08 && fabs(error.getY()) < 0.08){ z = _state.getZ() + 0.3f; descend_valid = true;}
 
-                descend_valid = true;
+        else if(fabs(error.getX()) < 0.05 && fabs(error.getY()) < 0.05){ z = _state.getZ() + 0.5f; descend_valid = true;}
 
-            }
-            else speed = 0;
-
-            sP.x = error.x * land_gain * 0.8 + p.x;
-            sP.y = error.y * land_gain * 0.8 + p.y;
-
-            comm.setX(sP.x);
-            comm.setY(sP.y);
-
-            z += speed*dt;
-        }
-        else{
-
-            //Centering task
-
-
-            sP.x = error.x * land_gain + p.x;
-            sP.y = error.y * land_gain + p.y;
-
-            //wait to recenter
-
-            if(fabs(error.x) < 0.08 && fabs(error.y) < 0.08){ z = g::state.z() + 0.3; descend_valid = true;}
-
-            else if(fabs(error.x) < 0.05 && fabs(error.y) < 0.05){ z = g::state.z() + 0.5; descend_valid = true;}
-
-            //z += descending_rate * dt;
-            comm.setX(sP.x);
-            comm.setY(sP.y);
-
-        }
-
-        land_count = 0;
-        executioner::land::landed = false;
+        //z += descending_rate * dt;
+        _comm.setX(sP.getX());
+        _comm.setY(sP.getY());
 
     }
 
-    if(descend_valid) comm.setZ(z);
-    autoCommand.push_back(comm);
-    publish();*/
-
+    if(descend_valid) _comm.setZ(z);
 
 }
 
@@ -192,7 +174,6 @@ void Automatic::move()
 
     calculatePositionInterm(alpha,_actualTask,_state,_comm);
 }
-
 
 void Automatic::calculatePositionInterm(const double alpha, const exec::task target, const MavState state, MavState &comm)
 {

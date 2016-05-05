@@ -94,12 +94,12 @@ int main(int argc, char** argv){
 				autom._actualTask.x = autom._comm.getX();
 				autom._actualTask.y = autom._comm.getY();
 			}
-			autom.land(dt, autom.getState().getVz());
+
+			autom.land(dt,1,(float)autom._actualTask.params[0],0.8);
 
 		}
 		if (autom.getTask().action == "r"){
 
-			//TODO: perform init
 			autom.rotate();
 
 		}

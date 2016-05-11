@@ -161,9 +161,11 @@ void Automatic::land(float dt, float speed, float offset, float land_gain) {
 }
 
 void Automatic::takeOff() {
-        
+
     double height = _actualTask.params[0];
 
+    _comm.setX((float)_actualTask.x);
+    _comm.setY((float)_actualTask.y);
     _comm.setZ((float)height);
 
 }

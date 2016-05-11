@@ -10,9 +10,8 @@ int main(int argc, char** argv){
 
 	lcm::LCM handler, handler2, handler3;
 
-	if (!handler.good())
+	if (!handler.good() && !handler2.good() && !handler3.good())
 		return 1;
-
 
 	CallbackHandler call;
 	Automatic autom;
@@ -65,7 +64,7 @@ int main(int argc, char** argv){
 
 		}
 		if (autom.getTask().action == "t"){
-			qDebug() << "take off";
+
 			//Save initial state if we have a new task
 			if (newTask){
 				autom._actualTask.x = autom.getState().getX();
@@ -83,7 +82,7 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-			autom.land(dt,1,(float)autom._actualTask.params[0],0.8);
+			autom.land(dt,5,(float)autom._actualTask.params[0],0.8);
 
 		}
 		if (autom.getTask().action == "r"){

@@ -75,7 +75,7 @@ void PositionDispatcher::sendPosition(int64_t ts, MavState vision, MavState sp, 
            0,           //ax       [m/s^2]
            0,           //ay
            0,           //az
-           0,           //yaw      [rad]
+           sp.getYaw(),           //yaw      [rad]
            0);          //yaw_rate [rad/s]
 
 

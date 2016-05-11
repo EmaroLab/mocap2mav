@@ -56,12 +56,21 @@ Executioner::Executioner(){
 
     exec::task  move;
     move.action = "m";
-    move.x = 1.00;
-    move.y = 0.00;
+    move.x = 1.0;
+    move.y = 0.0;
     move.z = -1;
-    move.params[0] = 0.6;
+    move.params[0] = 1;
     move.params[1] = 3;
     nodeList.push_back(move);
+
+    exec::task  move2;
+    move2.action = "m";
+    move2.x = 0.0;
+    move2.y = 0.0;
+    move2.z = -1;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
 
     exec::task rotate;
     rotate.action= "r";

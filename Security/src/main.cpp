@@ -42,7 +42,7 @@ int main(int argc, char** argv)
             secur.CalculateNewSP();
 
             geometry::pose command = call.mavState2LcmPose(secur._comm);
-            handler.publish("local_position_sp", &command);
+            handler.publish("local_position_spOK", &command);
      }
 
 

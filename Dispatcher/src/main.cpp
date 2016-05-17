@@ -9,6 +9,8 @@
 #include "CallbackHandler.hpp"
 
 
+bool useSecurity;
+
 int main(int argc, char** argv){
 
     lcm::LCM handler, handler2;
@@ -23,7 +25,19 @@ int main(int argc, char** argv){
     CallbackHandler call;
 
     lcm::Subscription *sub  = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
-    lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback, &call);
+    lcm::Subscription *sub2;
+
+    useSecurity = true;
+
+    if (!useSecurity) {
+
+        sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback,
+                                  &call);
+    } else{
+
+        sub2 = handler2.subscribe("local_position_spOK", &CallbackHandler::positionSetpointCallback, &call);
+
+    }
 
     sub->setQueueCapacity(1);
     sub2->setQueueCapacity(1);

@@ -7,27 +7,28 @@
 
 class Security
 {
-	public:
-	        Security();
-	        // sides of the window
-	        double _x1Max;
-	        double _y1Max;
-	        double _x1Min;
-		double _y1Min;
-		double _x2Max;
-		double _y2Max;
-		double _x2Min;
-		double _y2Min;	        
-		void CalculateNewSP();
-	        void CalculateIntersection(MavState rState,MavState rSP, double position[]);
-	        MavState getState();
-	        void setState(MavState pose);
-		MavState getSetPoint();
-	        void setSetPoint(MavState SP);
-		MavState _comm;
-	private: 
-	        MavState _state;
-		MavState _setPoint;
+public:
+	Security();
+	// sides of the window
+	double _x1Max;
+	double _y1Max;
+	double _x1Min;
+	double _y1Min;
+	double _x2Max;
+	double _y2Max;
+	double _x2Min;
+	double _y2Min;
+	double _d;
+	void CalculateNewSP();
+	void CalculateIntersection(double position[]);
+	MavState getState();
+	void setState(MavState pose);
+	MavState getSetPoint();
+	void setSetPoint(MavState SP);
+	MavState _comm;
+private:
+	MavState _state;
+	MavState _setPoint;
 };	
 
 #endif // SECURITY_H

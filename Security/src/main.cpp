@@ -3,8 +3,6 @@
 #include "Security.h"
 #include "CallbackHandler.hpp"
 #include "poll.h"
-#include "QDebug"
-#include "common/common.h"
 
 int main(int argc, char** argv)
 {
@@ -18,7 +16,7 @@ int main(int argc, char** argv)
     Security secur;
 
     lcm::Subscription *sub  = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
-    lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::visionEstimateCallback, &call);
+    lcm::Subscription *sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback, &call);
 
     sub->setQueueCapacity(1);
     sub2->setQueueCapacity(1);

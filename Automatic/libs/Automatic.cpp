@@ -128,8 +128,8 @@ void Automatic::land(float dt, float speed, float offset, float land_gain) {
         }
         else speed = 0;
 
-        sP.setX((float)(error.getX() * land_gain * 0.0 + _actualTask.x)); //TODO: test if we need that
-        sP.setY((float)(error.getY() * land_gain * 0.0 + _actualTask.y));
+        sP.setX((float)(error.getX() * land_gain  + _actualTask.x));
+        sP.setY((float)(error.getY() * land_gain  + _actualTask.y));
 
         _comm.setX(sP.getX());
         _comm.setY(sP.getY());
@@ -141,7 +141,7 @@ void Automatic::land(float dt, float speed, float offset, float land_gain) {
 
         //Centering task
 
-        sP.setX(error.getX() * land_gain  + (float)_actualTask.x); //TODO: test if we need that
+        sP.setX(error.getX() * land_gain  + (float)_actualTask.x);
         sP.setY(error.getY() * land_gain  + (float)_actualTask.y);
 
         //wait to recenter

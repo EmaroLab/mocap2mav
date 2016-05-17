@@ -2,7 +2,7 @@
 #include <iostream>
 #include "PositionDispatcher.h"
 
-#define DISPATCH_INTERVAL 100 //ms
+#define DISPATCH_INTERVAL 95 //ms
 
 
 

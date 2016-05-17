@@ -27,24 +27,24 @@ int main(int argc, char** argv)
     while(0==handler.handle())
     {
 
-            secur.setState(call._vision_pos);
+        secur.setState(call._vision_pos);
 
-            int ret = poll(fds,1,0);
+        int ret = poll(fds,1,0);
 
 
-            if(fds[0].revents & POLLIN)
-            {
-                handler2.handle();
-                secur.setSetPoint(call._position_sp);
-		std::cout<<"x: "<<secur.getSetPoint().getX()<<" y: "<<secur.getSetPoint().getY()<<" z "<<secur.getSetPoint().getZ()<<std::endl;
-            }
-            if(secur.IsOutside())
-	    secur.CalculateNewSP();
+        if(fds[0].revents & POLLIN)
+        {
+            handler2.handle();
+            secur.setSetPoint(call._position_sp);
+            std::cout<<"x: "<<secur.getSetPoint().getX()<<" y: "<<secur.getSetPoint().getY()<<" z:cd "<<secur.getSetPoint().getZ()<<std::endl;
+        }
+        if(secur.IsOutside())
+            secur.CalculateNewSP();
 
-            geometry::pose command = call.mavState2LcmPose(secur.getSetPoint());
-            std::cout<<"second message "<<"x: "<<command.position[0]<<" y: "<<command.position[1]<<" z "<<command.position[2]<<std::endl;
-            handler.publish("local_position_spOK", &command);
-     }
+        geometry::pose command = call.mavState2LcmPose(secur.getSetPoint());
+        std::cout<<"command "<<"x: "<<command.position[0]<<" y: "<<command.position[1]<<" z "<<command.position[2]<<std::endl;
+        handler.publish("local_position_spOK", &command);
+    }
 
 
 }

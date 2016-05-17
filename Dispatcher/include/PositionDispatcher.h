@@ -7,7 +7,7 @@
 #include <QMutex>
 #include "mavlink/common/mavlink.h"
 #include "lcm_messages/geometry/pose.hpp"
-#include "MavState.h"
+#include "common/MavState.h"
 
 
 class PositionDispatcher : public QObject

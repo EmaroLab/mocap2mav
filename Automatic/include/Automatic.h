@@ -2,7 +2,8 @@
 #define AUTOMATIC_H
 #include "lcm_messages/geometry/pose.hpp"
 #include "lcm_messages/exec/task.hpp"
-#include "MavState.h"
+#include "common/MavState.h"
+#include "common/common.h"
 
 class Automatic
 {

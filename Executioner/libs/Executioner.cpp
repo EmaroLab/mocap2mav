@@ -1,48 +1,17 @@
 #include "Executioner.h"
 #include <vector>
-#include<math.h>
 #include <iostream>
 
 
 #define PI 3.141592653589
 
-namespace executioner{
-namespace land{
-
-bool landed;
-
-
-}
-namespace move{
-
-bool move_done;
-
-
-}
-namespace take_off{
-
-bool take_off_done;
-
-
-}
-namespace rotate{
-
-bool rotate_done;
-
-
-}
-namespace trajectory{
-
-bool traj_done;
-
-}
-}
-
 std::vector<exec::task> nodeList;
 
 bool endList = false;
 
-Executioner::Executioner(){
+
+
+    Executioner::Executioner(){
     _actualNode = 0;
     _can_run = false;
     _newTask = true;
@@ -50,12 +19,12 @@ Executioner::Executioner(){
 
     // Fill Node list
     exec::task node1;
-    node1.action = "t";
+    node1.action = actions::TAKE_OFF;
     node1.params[0] = -1; //height
     nodeList.push_back(node1);
 
     exec::task  move;
-    move.action = "m";
+    move.action = actions::MOVE;
     move.x = 1.0;
     move.y = 0.0;
     move.z = -1;
@@ -64,7 +33,7 @@ Executioner::Executioner(){
     nodeList.push_back(move);
 
     exec::task  move2;
-    move2.action = "m";
+    move2.action = actions::MOVE;
     move2.x = 0.0;
     move2.y = 0.0;
     move2.z = -1;
@@ -73,13 +42,13 @@ Executioner::Executioner(){
     nodeList.push_back(move2);
 
     exec::task rotate;
-    rotate.action= "r";
+    rotate.action= actions::ROTATE;
     rotate.params[0] = 1;
     rotate.yaw = PI/2;
     nodeList.push_back(rotate);
 
     exec::task land;
-    land.action= "l";
+    land.action= actions::LAND;
     nodeList.push_back(land);
 
     if(nodeList.size()>0){
@@ -93,7 +62,7 @@ Executioner::Executioner(){
     }
 }
 
-void Executioner::run(MavState state){
+void Executioner::run(){
 
     _actualTask.x = nodeList[_actualNode].x;
     _actualTask.y = nodeList[_actualNode].y;
@@ -116,7 +85,7 @@ void Executioner::run(MavState state){
     }
 
     // Check for next task
-    if(CheckActions(_actualTask.action, state)) {
+    if(CheckActions(_actualTask.action)) {
         if(_actualNode != nodeList.size()-1){
             _actualNode++;
             _newTask = true;
@@ -133,64 +102,40 @@ void Executioner::run(MavState state){
 
 }
 
-bool Executioner::CheckActions(std::string a,MavState state)
+bool Executioner::CheckActions(int a)
 {
-    char c = a[0];
+    int c = a;
     switch (c)
     {
-    //MOVE
-    case 'm':
+        //MOVE
+        case actions::MOVE:
 
-        if(fabs(state.getX()- nodeList[_actualNode].x) < 0.15 &&
-                fabs(state.getY() - nodeList[_actualNode].y) < 0.15 &&
-                fabs(state.getZ() - nodeList[_actualNode].z) < 0.15 ){
+            return (fabs(_state.getX() - nodeList[_actualNode].x) < 0.15 &&
+                    fabs(_state.getY() - nodeList[_actualNode].y) < 0.15 &&
+                    fabs(_state.getZ() - nodeList[_actualNode].z) < 0.15 );
 
-            executioner::move::move_done = true;
+            //TAKE_OFF
+        case actions::TAKE_OFF:
 
-        }
-        else
-            executioner::move::move_done = false;
+            return (fabs(_state.getZ() - nodeList[_actualNode].params[0]) < 0.1 );
 
-        return executioner::move::move_done;
-        break;
+            //ROTATE
+        case actions::ROTATE:
 
-        //TAKE_OFF
-    case 't':
-
-        if(fabs(state.getZ() - nodeList[_actualNode].params[0]) < 0.1 ){
-            executioner::take_off::take_off_done = true;
-
-        }
-        else{
-            executioner::take_off::take_off_done = false;
-        }
-
-        return executioner::take_off::take_off_done;
-        break;
-
-        //ROTATE
-    case 'r' :
-        if( fabs(fabs(_actualTask.yaw) - fabs(state.getYawFromQuat())) < PI/10){
-            executioner::rotate::rotate_done = true;
-        }
-        else{ executioner::rotate::rotate_done = false;
-            // if(++rot_count == rot_wait * r_auto){
+            return (fabs(fabs(_actualTask.yaw) - fabs(_state.getYawFromQuat())) < PI/10);
 
 
-            //rot_count = 0;}
+            //LAND
+        case actions::LAND:
+            if(fabs(_state.getVz()) < 0.01 && (_state.getZ() - _actualTask.params[1]) >= - 0.10)
+                return true;
+            else
+                return false;
 
-        }
-        return executioner::rotate::rotate_done;
-        break;
-
-        //LAND
-    case 'l' :
-        if(fabs(state.getVz()) < 0.01 && (state.getZ() - _actualTask.params[1]) >= - 0.10)
-            executioner::land::landed = true;
-        else
-            executioner::land::landed = false;
-        return executioner::land::landed;
-        break;
+        default:
+            std::cout << "Unrecognized type" << std::endl;
+            return true;
     }
+
 }
 

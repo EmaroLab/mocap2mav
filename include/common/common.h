@@ -22,4 +22,13 @@ return std::chrono::system_clock::now().time_since_epoch() / std::chrono::millis
 
 }
 
+enum actions {
+
+    TAKE_OFF,
+    MOVE,
+    ROTATE,
+    LAND
+
+};
+
 #endif //MOCAP2MAV_COMMON_H

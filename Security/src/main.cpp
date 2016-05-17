@@ -1,7 +1,7 @@
 #include <iostream>
 #include "lcm/lcm-cpp.hpp"
 #include "Security.h"
-#include "CallbackHandler.hpp"
+#include "common/CallbackHandler.hpp"
 #include "poll.h"
 
 int main(int argc, char** argv)

@@ -5,7 +5,7 @@ struct task
     double y;
     double z;
     double yaw;
-    string action;
+    int8_t action;
     double params[4];
     int8_t  id;
 

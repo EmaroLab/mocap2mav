@@ -2,7 +2,7 @@
 #include <lcm/lcm-cpp.hpp>
 #include "Executioner.h"
 #include "qdebug.h"
-#include "CallbackHandler.hpp"
+#include "common/CallbackHandler.hpp"
 
 
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv){
 
         if(e._can_run) {
             //Run state machine
-            e.run(call._vision_pos);
+            e.run();
             //Publish next task
             if(e._publish_task) {
 

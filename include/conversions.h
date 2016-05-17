@@ -6,14 +6,14 @@
 
 inline static void quaternion_to_dcm(const float quaternion[4], float dcm[3][3])
 {
-    double a = quaternion[0];
-    double b = quaternion[1];
-    double c = quaternion[2];
-    double d = quaternion[3];
-    double aSq = a * a;
-    double bSq = b * b;
-    double cSq = c * c;
-    double dSq = d * d;
+    float a = quaternion[0];
+    float b = quaternion[1];
+    float c = quaternion[2];
+    float d = quaternion[3];
+    float aSq = a * a;
+    float bSq = b * b;
+    float cSq = c * c;
+    float dSq = d * d;
     dcm[0][0] = aSq + bSq - cSq - dSq;
     dcm[0][1] = 2.0 * (b * c - a * d);
     dcm[0][2] = 2.0 * (a * c + b * d);

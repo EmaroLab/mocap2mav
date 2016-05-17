@@ -6,7 +6,7 @@
 #include "PositionDispatcher.h"
 #include <QApplication>
 #include <poll.h>
-#include "CallbackHandler.hpp"
+#include "common/CallbackHandler.hpp"
 
 
 bool useSecurity;

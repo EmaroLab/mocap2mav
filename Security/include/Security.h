@@ -25,7 +25,8 @@ public:
 	void setState(MavState pose);
 	MavState getSetPoint();
 	void setSetPoint(MavState SP);
-	MavState _comm;
+	bool IsOutside();
+	
 private:
 	MavState _state;
 	MavState _setPoint;

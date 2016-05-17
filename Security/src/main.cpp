@@ -36,10 +36,13 @@ int main(int argc, char** argv)
             {
                 handler2.handle();
                 secur.setSetPoint(call._position_sp);
+		std::cout<<"x: "<<secur.getSetPoint().getX()<<" y: "<<secur.getSetPoint().getY()<<" z "<<secur.getSetPoint().getZ()<<std::endl;
             }
-            secur.CalculateNewSP();
+            if(secur.IsOutside())
+	    secur.CalculateNewSP();
 
-            geometry::pose command = call.mavState2LcmPose(secur._comm);
+            geometry::pose command = call.mavState2LcmPose(secur.getSetPoint());
+            std::cout<<"second message "<<"x: "<<command.position[0]<<" y: "<<command.position[1]<<" z "<<command.position[2]<<std::endl;
             handler.publish("local_position_spOK", &command);
      }
 

@@ -1,17 +1,17 @@
 #include "Executioner.h"
-#include <vector>
+#include <deque>
 #include <iostream>
 
 
 #define PI 3.141592653589
 
-std::vector<exec::task> nodeList;
+std::deque<exec::task> nodeList;
 
 bool endList = false;
 
 
 
-    Executioner::Executioner(){
+Executioner::Executioner(){
     _actualNode = 0;
     _can_run = false;
     _newTask = true;
@@ -86,12 +86,14 @@ void Executioner::run(){
 
     // Check for next task
     if(CheckActions(_actualTask.action)) {
-        if(_actualNode != nodeList.size()-1){
-            _actualNode++;
+
+        if(!nodeList.empty()){
+            nodeList.pop_front();
+            nodeList.shrink_to_fit();
             _newTask = true;
         }
-        else if(!endList){
-            std::cout<<"tasks finished"<<std::endl;
+        else{
+            std::cout<<"Empty list, send last setpoint"<<std::endl; //TODO: implement idle function
             endList = true;
             _newTask = false;
         }

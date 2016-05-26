@@ -82,7 +82,7 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-			autom.land(dt,5,(float)autom._actualTask.params[0],0.8);
+			autom.land(dt,8,(float)autom._actualTask.params[0],0.8);
 
 		}
 		if (autom.getTask().action == "r"){

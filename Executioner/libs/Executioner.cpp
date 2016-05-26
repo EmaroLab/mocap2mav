@@ -56,9 +56,9 @@ Executioner::Executioner(){
 
     exec::task  move;
     move.action = "m";
-    move.x = 1.0;
+    move.x = 0.5;
     move.y = 0.0;
-    move.z = -1;
+    move.z = -0.8;
     move.params[0] = 1;
     move.params[1] = 3;
     nodeList.push_back(move);
@@ -66,17 +66,36 @@ Executioner::Executioner(){
     exec::task  move2;
     move2.action = "m";
     move2.x = 0.0;
+    move2.y = 0.5;
+    move2.z = -1;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+
+    move2.action = "m";
+    move2.x = -0.5;
     move2.y = 0.0;
     move2.z = -1;
     move2.params[0] = 1;
     move2.params[1] = 3;
     nodeList.push_back(move2);
 
-    exec::task rotate;
-    rotate.action= "r";
-    rotate.params[0] = 1;
-    rotate.yaw = PI/2;
-    nodeList.push_back(rotate);
+    move2.action = "m";
+    move2.x = 0.0;
+    move2.y = -0.5;
+    move2.z = -1;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+    move2.action = "m";
+    move2.x = 0.0;
+    move2.y = 0.0;
+    move2.z = -1;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
 
     exec::task land;
     land.action= "l";

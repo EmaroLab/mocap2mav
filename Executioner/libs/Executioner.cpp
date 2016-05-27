@@ -1,13 +1,13 @@
 #include "Executioner.h"
-#include <deque>
 #include <iostream>
 
 
 #define PI 3.141592653589
 
-std::deque<exec::task> nodeList;
+
 
 bool endList = false;
+
 
 
 
@@ -21,7 +21,7 @@ Executioner::Executioner(){
     exec::task node1;
     node1.action = actions::TAKE_OFF;
     node1.params[0] = -1; //height
-    nodeList.push_back(node1);
+    _nodeList.push_back(node1);
 
     exec::task  move;
     move.action = actions::MOVE;
@@ -30,7 +30,7 @@ Executioner::Executioner(){
     move.z = -1;
     move.params[0] = 1;
     move.params[1] = 3;
-    nodeList.push_back(move);
+    _nodeList.push_back(move);
 
     exec::task  move2;
     move2.action = actions::MOVE;
@@ -39,19 +39,19 @@ Executioner::Executioner(){
     move2.z = -1;
     move2.params[0] = 1;
     move2.params[1] = 3;
-    nodeList.push_back(move2);
+    _nodeList.push_back(move2);
 
     exec::task rotate;
     rotate.action= actions::ROTATE;
     rotate.params[0] = 1;
     rotate.yaw = PI/2;
-    nodeList.push_back(rotate);
+    _nodeList.push_back(rotate);
 
     exec::task land;
     land.action= actions::LAND;
-    nodeList.push_back(land);
+    _nodeList.push_back(land);
 
-    if(nodeList.size()>0){
+    if(_nodeList.size()>0){
 
         _can_run = true;
     }
@@ -64,19 +64,25 @@ Executioner::Executioner(){
 
 void Executioner::run(){
 
-    _actualTask.x = nodeList[_actualNode].x;
-    _actualTask.y = nodeList[_actualNode].y;
-    _actualTask.z = nodeList[_actualNode].z;
-    _actualTask.yaw = nodeList[_actualNode].yaw;
-    _actualTask.action= nodeList[_actualNode].action;
-    _actualTask.id = nodeList[_actualNode].id;
-    _actualTask.params[0] = nodeList[_actualNode].params[0];
-    _actualTask.params[1] = nodeList[_actualNode].params[1];
-    _actualTask.params[2] = nodeList[_actualNode].params[2];
-    _actualTask.params[3] = nodeList[_actualNode].params[3];
 
-    _can_run =_actualNode < nodeList.size();
+if(!_nodeList.empty()) {
 
+    _actualTask.x = _nodeList[_actualNode].x;
+    _actualTask.y = _nodeList[_actualNode].y;
+    _actualTask.z = _nodeList[_actualNode].z;
+    _actualTask.yaw = _nodeList[_actualNode].yaw;
+    _actualTask.action = _nodeList[_actualNode].action;
+    _actualTask.id = _nodeList[_actualNode].id;
+    _actualTask.params[0] = _nodeList[_actualNode].params[0];
+    _actualTask.params[1] = _nodeList[_actualNode].params[1];
+    _actualTask.params[2] = _nodeList[_actualNode].params[2];
+    _actualTask.params[3] = _nodeList[_actualNode].params[3];
+
+    _can_run = _actualNode < _nodeList.size();
+}
+    else{
+    _can_run = false;
+}
     if(_newTask) {
 
         std::cout << "Performing node: " << _actualNode << " with action: " << _actualTask.action<<std::endl;
@@ -87,9 +93,9 @@ void Executioner::run(){
     // Check for next task
     if(CheckActions(_actualTask.action)) {
 
-        if(!nodeList.empty()){
-            nodeList.pop_front();
-            nodeList.shrink_to_fit();
+        if(!_nodeList.empty()){
+            _nodeList.pop_front();
+            _nodeList.shrink_to_fit();
             _newTask = true;
         }
         else{
@@ -112,14 +118,14 @@ bool Executioner::CheckActions(int a)
         //MOVE
         case actions::MOVE:
 
-            return (fabs(_state.getX() - nodeList[_actualNode].x) < 0.15 &&
-                    fabs(_state.getY() - nodeList[_actualNode].y) < 0.15 &&
-                    fabs(_state.getZ() - nodeList[_actualNode].z) < 0.15 );
+            return (fabs(_state.getX() - _nodeList[_actualNode].x) < 0.15 &&
+                    fabs(_state.getY() - _nodeList[_actualNode].y) < 0.15 &&
+                    fabs(_state.getZ() - _nodeList[_actualNode].z) < 0.15 );
 
             //TAKE_OFF
         case actions::TAKE_OFF:
 
-            return (fabs(_state.getZ() - nodeList[_actualNode].params[0]) < 0.1 );
+            return (fabs(_state.getZ() - _nodeList[_actualNode].params[0]) < 0.1 );
 
             //ROTATE
         case actions::ROTATE:
@@ -141,3 +147,21 @@ bool Executioner::CheckActions(int a)
 
 }
 
+void Executioner::setNextTask(const exec::task task){
+
+    _nodeList.shrink_to_fit();
+    _nodeList.push_front(task);
+
+}
+void Executioner::setLastTask(const exec::task task){
+
+    _nodeList.shrink_to_fit();
+    _nodeList.push_back(task);
+
+}
+void Executioner::clearList(){
+
+    _nodeList.clear();
+    _nodeList.shrink_to_fit();
+
+}

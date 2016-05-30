@@ -24,6 +24,10 @@ public:
 	void setNextTask(const exec::task task);
 	void setLastTask(const exec::task task);
 	void clearList();
+    void abort();
+	void rtl();
+    void loadTask();
+
 
 private:
 	MavState _state;

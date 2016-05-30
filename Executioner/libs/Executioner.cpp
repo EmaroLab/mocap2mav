@@ -7,7 +7,7 @@
 
 
 bool endList = false;
-
+int node = 0;
 
 
 
@@ -65,28 +65,20 @@ Executioner::Executioner(){
 void Executioner::run(){
 
 
-if(!_nodeList.empty()) {
+    if(!_nodeList.empty()) {
 
-    _actualTask.x = _nodeList[_actualNode].x;
-    _actualTask.y = _nodeList[_actualNode].y;
-    _actualTask.z = _nodeList[_actualNode].z;
-    _actualTask.yaw = _nodeList[_actualNode].yaw;
-    _actualTask.action = _nodeList[_actualNode].action;
-    _actualTask.id = _nodeList[_actualNode].id;
-    _actualTask.params[0] = _nodeList[_actualNode].params[0];
-    _actualTask.params[1] = _nodeList[_actualNode].params[1];
-    _actualTask.params[2] = _nodeList[_actualNode].params[2];
-    _actualTask.params[3] = _nodeList[_actualNode].params[3];
+        loadTask();
 
-    _can_run = _actualNode < _nodeList.size();
-}
+        _can_run = _actualNode < _nodeList.size();
+    }
     else{
-    _can_run = false;
-}
+        _can_run = false;
+    }
     if(_newTask) {
 
-        std::cout << "Performing node: " << _actualNode << " with action: " << _actualTask.action<<std::endl;
+        std::cout << "Performing node: " << node++ << " with action: " << _actualTask.action<<std::endl;
         _publish_task = true;
+
 
     }
 
@@ -165,3 +157,33 @@ void Executioner::clearList(){
     _nodeList.shrink_to_fit();
 
 }
+
+void Executioner::abort() {
+
+
+
+}
+
+void Executioner::rtl() {
+
+}
+
+void Executioner::loadTask() {
+
+    _actualTask.x         = _nodeList[_actualNode].x;
+    _actualTask.y         = _nodeList[_actualNode].y;
+    _actualTask.z         = _nodeList[_actualNode].z;
+    _actualTask.yaw       = _nodeList[_actualNode].yaw;
+    _actualTask.action    = _nodeList[_actualNode].action;
+    _actualTask.id        = _nodeList[_actualNode].id;
+    _actualTask.params[0] = _nodeList[_actualNode].params[0];
+    _actualTask.params[1] = _nodeList[_actualNode].params[1];
+    _actualTask.params[2] = _nodeList[_actualNode].params[2];
+    _actualTask.params[3] = _nodeList[_actualNode].params[3];
+
+}
+
+
+
+
+

@@ -111,7 +111,10 @@ void PositionDispatcher::_sendMavlinkMessage(mavlink_message_t *msg)
 
     // Send the message
     QByteArray sendBuff((const char*)buf, len);
-    int written = _serial.write(sendBuff);
+    qint64 written = _serial.write(sendBuff);
+
+
+    if(written < 0) qCritical() << "Error writing data";
 
     //Wait for data to be sent
     if(!_serial.waitForBytesWritten(500)) {

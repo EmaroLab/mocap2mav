@@ -6,6 +6,8 @@
 #include "QDebug"
 #include "common/common.h"
 
+using namespace common;
+
 int main(int argc, char** argv){
 
 	lcm::LCM handler, handler2, handler3;
@@ -37,7 +39,7 @@ int main(int argc, char** argv){
 	while(0==handler.handle()){
 
 
-		t = getTimeMilliSecond();
+		t = time::getTimeMilliSecond();
 		float dt = t_prev != 0 ? (t - t_prev) * (float)MILLI2SECS : 0.0f;
 		t_prev = t;
 

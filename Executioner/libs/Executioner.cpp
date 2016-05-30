@@ -6,10 +6,10 @@
 
 
 
-bool endList = false;
+
 int node = 0;
 
-
+using namespace common;
 
 Executioner::Executioner(){
     _actualNode = 0;
@@ -76,7 +76,7 @@ void Executioner::run(){
     }
     if(_newTask) {
 
-        std::cout << "Performing node: " << node++ << " with action: " << _actualTask.action<<std::endl;
+        std::cout << "Performing node: " << node++ << " with action: " << common::printAction(_actualTask.action)<<std::endl;
         _publish_task = true;
 
 

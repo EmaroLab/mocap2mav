@@ -6,8 +6,9 @@
 
 
 
-
+bool endList = false;
 int node = 0;
+bool skip = false;
 
 using namespace common;
 
@@ -76,19 +77,58 @@ void Executioner::run(){
     }
     if(_newTask) {
 
+        bool done = false;
+        char in;
+        std::cout<<std::endl;
+        std::cout << "***************************************"<<std::endl;
         std::cout << "Performing node: " << node++ << " with action: " << common::printAction(_actualTask.action)<<std::endl;
-        _publish_task = true;
+        std::cout << "Do you want to proceed? Y/N"<<std::endl;
+        std::cout << "***************************************"<<std::endl;
+        std::cout<<std::endl;
+        std::cin  >> in;
 
+        do {
+            switch (in) {
+
+                case 'y':
+
+                    _publish_task = true;
+                    done = true;
+                    skip = false;
+                    break;
+
+                case 'n':
+
+                    _publish_task = false;
+                    skip = true;
+                    std::cout << "Skipping task, moving to the next" << std::endl;
+                    done = true;
+                    break;
+
+                default :
+
+                    std::cout << "Wrong command, type y or n" << std::endl;
+                    done = false;
+
+            }
+        }while(!done);
 
     }
 
     // Check for next task
-    if(CheckActions(_actualTask.action)) {
+    if(CheckActions(_actualTask.action) || skip) {
 
-        if(!_nodeList.empty()){
+
+
+        if(_nodeList.size() > 0){
+
             _nodeList.pop_front();
             _nodeList.shrink_to_fit();
-            _newTask = true;
+            std::cout << "popping, size: "<< _nodeList.size() << std::endl;
+
+            if (_nodeList.empty()) _newTask = false;
+            else                   _newTask = true;
+
         }
         else{
             std::cout<<"Empty list, send last setpoint"<<std::endl; //TODO: implement idle function
@@ -100,6 +140,7 @@ void Executioner::run(){
         _newTask = false;
     }
 
+    std::cout << _nodeList.size() << std::endl;
 }
 
 bool Executioner::CheckActions(int a)

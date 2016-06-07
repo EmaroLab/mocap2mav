@@ -3,7 +3,7 @@
 #include "Executioner.h"
 #include "qdebug.h"
 #include "common/CallbackHandler.hpp"
-
+#include "AndOr/aograph.h"
 
 
 int main(int argc, char** argv){
@@ -17,6 +17,8 @@ int main(int argc, char** argv){
 
     handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
 
+
+    AOgraph graph("DEFAULT");
     while(0==handler.handle()){
 
         if(e._can_run) {

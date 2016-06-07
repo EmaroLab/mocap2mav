@@ -39,9 +39,8 @@ target_link_libraries(exec
         Qt5::Core
         Qt5::Network
         Qt5::Widgets
-	
-
-
         Execlib
+        AndOrLib
 	)
 
+add_subdirectory(libs/AndOr)

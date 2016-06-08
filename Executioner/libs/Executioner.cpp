@@ -63,6 +63,16 @@ Executioner::Executioner(){
     }
 }
 
+bool Executioner::readyToPublish() {
+
+    if(_publish_task) {
+        _publish_task = false;
+        return true;
+    }
+    else return false;
+
+}
+
 void Executioner::run(){
 
 
@@ -180,18 +190,20 @@ bool Executioner::CheckActions(int a)
 
 }
 
-void Executioner::setNextTask(const exec::task task){
-
-    _nodeList.shrink_to_fit();
-    _nodeList.push_front(task);
-
-}
 void Executioner::setLastTask(const exec::task task){
 
     _nodeList.shrink_to_fit();
     _nodeList.push_back(task);
 
 }
+
+void Executioner::setNextTask(const exec::task task){
+
+    _nodeList.shrink_to_fit();
+    _nodeList.push_front(task);
+
+}
+
 void Executioner::clearList(){
 
     _nodeList.clear();

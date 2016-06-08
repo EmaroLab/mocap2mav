@@ -29,7 +29,8 @@ link_directories( ~/usr/local/lib )
 ##Declare a C++ library
  add_library(Execlib
          libs/Executioner.cpp
-         include/Executioner.h)
+         include/Executioner.h
+         libs/AndOr/aograph.h libs/AndOr/aograph.cpp libs/AndOr/aonode.h libs/AndOr/aonode.cpp) #AndOr, Temp solution
 
 ##qt5_use_modules(exec Widgets Core Network SerialPort)
 ##qt5_use_modules(Dis Widgets Core Network SerialPort)
@@ -40,7 +41,7 @@ target_link_libraries(exec
         Qt5::Network
         Qt5::Widgets
         Execlib
-        AndOrLib
+        #AndOrLib
 	)
 
-add_subdirectory(libs/AndOr)
+#add_subdirectory(libs/AndOr)

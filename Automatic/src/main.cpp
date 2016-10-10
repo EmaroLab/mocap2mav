@@ -1,10 +1,12 @@
 #include <iostream>
 #include "lcm/lcm-cpp.hpp"
 #include "Automatic.h"
-#include "CallbackHandler.hpp"
+#include "common/CallbackHandler.hpp"
 #include "poll.h"
 #include "QDebug"
 #include "common/common.h"
+
+using namespace common;
 
 int main(int argc, char** argv){
 
@@ -37,7 +39,7 @@ int main(int argc, char** argv){
 	while(0==handler.handle()){
 
 
-		t = getTimeMilliSecond();
+		t = time::getTimeMilliSecond();
 		float dt = t_prev != 0 ? (t - t_prev) * (float)MILLI2SECS : 0.0f;
 		t_prev = t;
 
@@ -58,12 +60,12 @@ int main(int argc, char** argv){
 			newTask = false;
 		}
 
-		if (autom.getTask().action == "m"){
+		if (autom.getTask().action == actions::MOVE){
 
 			autom.move();
 
 		}
-		if (autom.getTask().action == "t"){
+		if (autom.getTask().action == actions::TAKE_OFF){
 
 			//Save initial state if we have a new task
 			if (newTask){
@@ -74,7 +76,7 @@ int main(int argc, char** argv){
 			autom.takeOff();
 
 		}
-		if (autom.getTask().action == "l"){
+		if (autom.getTask().action == actions::LAND){
 
 			//Land on last set point command, is it good?
 			if (newTask){
@@ -85,7 +87,7 @@ int main(int argc, char** argv){
 			autom.land(dt,5,(float)autom._actualTask.params[0],0.8);
 
 		}
-		if (autom.getTask().action == "r"){
+		if (autom.getTask().action == actions::ROTATE){
 
 			autom.rotate();
 

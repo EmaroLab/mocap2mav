@@ -78,7 +78,7 @@ void setPositionMsg(NatNetReceiver &nat, geometry::pose &msg){
     msg.orientation[2] = nat.get_orientation()[2]; //y
     msg.orientation[3] = nat.get_orientation()[3]; //z
 
-    msg.timestamp = getTimeMilliSecond();
+    msg.timestamp = common::time::getTimeMilliSecond();
 
 }
 

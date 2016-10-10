@@ -1,46 +1,16 @@
 #include "Executioner.h"
-#include <vector>
-#include<math.h>
 #include <iostream>
 
 
 #define PI 3.141592653589
 
-namespace executioner{
-namespace land{
 
-bool landed;
-
-
-}
-namespace move{
-
-bool move_done;
-
-
-}
-namespace take_off{
-
-bool take_off_done;
-
-
-}
-namespace rotate{
-
-bool rotate_done;
-
-
-}
-namespace trajectory{
-
-bool traj_done;
-
-}
-}
-
-std::vector<exec::task> nodeList;
 
 bool endList = false;
+int node = 0;
+bool skip = false;
+
+using namespace common;
 
 Executioner::Executioner(){
     _actualNode = 0;
@@ -50,39 +20,39 @@ Executioner::Executioner(){
 
     // Fill Node list
     exec::task node1;
-    node1.action = "t";
+    node1.action = actions::TAKE_OFF;
     node1.params[0] = -1; //height
-    nodeList.push_back(node1);
+    _nodeList.push_back(node1);
 
     exec::task  move;
-    move.action = "m";
+    move.action = actions::MOVE;
     move.x = 1.0;
     move.y = 0.0;
     move.z = -1;
     move.params[0] = 1;
     move.params[1] = 3;
-    nodeList.push_back(move);
+    _nodeList.push_back(move);
 
     exec::task  move2;
-    move2.action = "m";
+    move2.action = actions::MOVE;
     move2.x = 0.0;
     move2.y = 0.0;
     move2.z = -1;
     move2.params[0] = 1;
     move2.params[1] = 3;
-    nodeList.push_back(move2);
+    _nodeList.push_back(move2);
 
     exec::task rotate;
-    rotate.action= "r";
+    rotate.action= actions::ROTATE;
     rotate.params[0] = 1;
     rotate.yaw = PI/2;
-    nodeList.push_back(rotate);
+    _nodeList.push_back(rotate);
 
     exec::task land;
-    land.action= "l";
-    nodeList.push_back(land);
+    land.action= actions::LAND;
+    _nodeList.push_back(land);
 
-    if(nodeList.size()>0){
+    if(_nodeList.size()>0){
 
         _can_run = true;
     }
@@ -93,36 +63,85 @@ Executioner::Executioner(){
     }
 }
 
-void Executioner::run(MavState state){
+bool Executioner::readyToPublish() {
 
-    _actualTask.x = nodeList[_actualNode].x;
-    _actualTask.y = nodeList[_actualNode].y;
-    _actualTask.z = nodeList[_actualNode].z;
-    _actualTask.yaw = nodeList[_actualNode].yaw;
-    _actualTask.action= nodeList[_actualNode].action;
-    _actualTask.id = nodeList[_actualNode].id;
-    _actualTask.params[0] = nodeList[_actualNode].params[0];
-    _actualTask.params[1] = nodeList[_actualNode].params[1];
-    _actualTask.params[2] = nodeList[_actualNode].params[2];
-    _actualTask.params[3] = nodeList[_actualNode].params[3];
+    if(_publish_task) {
+        _publish_task = false;
+        return true;
+    }
+    else return false;
 
-    _can_run =_actualNode < nodeList.size();
+}
 
+void Executioner::run(){
+
+
+    if(!_nodeList.empty()) {
+
+        loadTask();
+
+        _can_run = _actualNode < _nodeList.size();
+    }
+    else{
+        _can_run = false;
+    }
     if(_newTask) {
 
-        std::cout << "Performing node: " << _actualNode << " with action: " << _actualTask.action<<std::endl;
-        _publish_task = true;
+        bool done = false;
+        char in;
+        std::cout<<std::endl;
+        std::cout << "***************************************"<<std::endl;
+        std::cout << "Performing node: " << node++ << " with action: " << common::printAction(_actualTask.action)<<std::endl;
+        std::cout << "Do you want to proceed? Y/N"<<std::endl;
+        std::cout << "***************************************"<<std::endl;
+        std::cout<<std::endl;
+        std::cin  >> in;
+
+        do {
+            switch (in) {
+
+                case 'y':
+
+                    _publish_task = true;
+                    done = true;
+                    skip = false;
+                    break;
+
+                case 'n':
+
+                    _publish_task = false;
+                    skip = true;
+                    std::cout << "Skipping task, moving to the next" << std::endl;
+                    done = true;
+                    break;
+
+                default :
+
+                    std::cout << "Wrong command, type y or n" << std::endl;
+                    done = false;
+
+            }
+        }while(!done);
 
     }
 
     // Check for next task
-    if(CheckActions(_actualTask.action, state)) {
-        if(_actualNode != nodeList.size()-1){
-            _actualNode++;
-            _newTask = true;
+    if(CheckActions(_actualTask.action) || skip) {
+
+
+
+        if(_nodeList.size() > 0){
+
+            _nodeList.pop_front();
+            _nodeList.shrink_to_fit();
+            std::cout << "popping, size: "<< _nodeList.size() << std::endl;
+
+            if (_nodeList.empty()) _newTask = false;
+            else                   _newTask = true;
+
         }
-        else if(!endList){
-            std::cout<<"tasks finished"<<std::endl;
+        else{
+            std::cout<<"Empty list, send last setpoint"<<std::endl; //TODO: implement idle function
             endList = true;
             _newTask = false;
         }
@@ -131,66 +150,93 @@ void Executioner::run(MavState state){
         _newTask = false;
     }
 
+    std::cout << _nodeList.size() << std::endl;
 }
 
-bool Executioner::CheckActions(std::string a,MavState state)
+bool Executioner::CheckActions(int a)
 {
-    char c = a[0];
+    int c = a;
     switch (c)
     {
-    //MOVE
-    case 'm':
+        //MOVE
+        case actions::MOVE:
 
-        if(fabs(state.getX()- nodeList[_actualNode].x) < 0.15 &&
-                fabs(state.getY() - nodeList[_actualNode].y) < 0.15 &&
-                fabs(state.getZ() - nodeList[_actualNode].z) < 0.15 ){
+            return (fabs(_state.getX() - _nodeList[_actualNode].x) < 0.15 &&
+                    fabs(_state.getY() - _nodeList[_actualNode].y) < 0.15 &&
+                    fabs(_state.getZ() - _nodeList[_actualNode].z) < 0.15 );
 
-            executioner::move::move_done = true;
+            //TAKE_OFF
+        case actions::TAKE_OFF:
 
-        }
-        else
-            executioner::move::move_done = false;
+            return (fabs(_state.getZ() - _nodeList[_actualNode].params[0]) < 0.1 );
 
-        return executioner::move::move_done;
-        break;
+            //ROTATE
+        case actions::ROTATE:
 
-        //TAKE_OFF
-    case 't':
-
-        if(fabs(state.getZ() - nodeList[_actualNode].params[0]) < 0.1 ){
-            executioner::take_off::take_off_done = true;
-
-        }
-        else{
-            executioner::take_off::take_off_done = false;
-        }
-
-        return executioner::take_off::take_off_done;
-        break;
-
-        //ROTATE
-    case 'r' :
-        if( fabs(fabs(_actualTask.yaw) - fabs(state.getYawFromQuat())) < PI/10){
-            executioner::rotate::rotate_done = true;
-        }
-        else{ executioner::rotate::rotate_done = false;
-            // if(++rot_count == rot_wait * r_auto){
+            return (fabs(fabs(_actualTask.yaw) - fabs(_state.getYawFromQuat())) < PI/10);
 
 
-            //rot_count = 0;}
+            //LAND
+        case actions::LAND:
+            if(fabs(_state.getVz()) < 0.01 && (_state.getZ() - _actualTask.params[1]) >= - 0.10)
+                return true;
+            else
+                return false;
 
-        }
-        return executioner::rotate::rotate_done;
-        break;
-
-        //LAND
-    case 'l' :
-        if(fabs(state.getVz()) < 0.01 && (state.getZ() - _actualTask.params[1]) >= - 0.10)
-            executioner::land::landed = true;
-        else
-            executioner::land::landed = false;
-        return executioner::land::landed;
-        break;
+        default:
+            std::cout << "Unrecognized type" << std::endl;
+            return true;
     }
+
 }
+
+void Executioner::setLastTask(const exec::task task){
+
+    _nodeList.shrink_to_fit();
+    _nodeList.push_back(task);
+
+}
+
+void Executioner::setNextTask(const exec::task task){
+
+    _nodeList.shrink_to_fit();
+    _nodeList.push_front(task);
+
+}
+
+void Executioner::clearList(){
+
+    _nodeList.clear();
+    _nodeList.shrink_to_fit();
+
+}
+
+void Executioner::abort() {
+
+
+
+}
+
+void Executioner::rtl() {
+
+}
+
+void Executioner::loadTask() {
+
+    _actualTask.x         = _nodeList[_actualNode].x;
+    _actualTask.y         = _nodeList[_actualNode].y;
+    _actualTask.z         = _nodeList[_actualNode].z;
+    _actualTask.yaw       = _nodeList[_actualNode].yaw;
+    _actualTask.action    = _nodeList[_actualNode].action;
+    _actualTask.id        = _nodeList[_actualNode].id;
+    _actualTask.params[0] = _nodeList[_actualNode].params[0];
+    _actualTask.params[1] = _nodeList[_actualNode].params[1];
+    _actualTask.params[2] = _nodeList[_actualNode].params[2];
+    _actualTask.params[3] = _nodeList[_actualNode].params[3];
+
+}
+
+
+
+
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo "Choose the application file"
+pids=()
+echo "Choose the application configuration file"
 read file
 
 while read name
@@ -12,8 +13,33 @@ do
           
 	  echo "STARTING: " $name;
           xterm -e ./build/bin/$name &
-           
+          let temp=$!
+          pids+=($temp)
+	  
   fi
  
 done < $file.md;
 
+echo ${#pids[*]} ' modules are running'
+
+
+echo 'type q to exit program, do NOT do it during flight'
+while true
+do
+
+	read q
+	if [ "$q" = "q" ]; then
+		  
+		for i in ${pids[*]}
+		do
+
+			echo killing process $i	
+			kill -INT $i
+
+		done
+		exit
+
+	else
+		echo 'invalid command'
+	fi
+done

@@ -50,7 +50,7 @@ Thumbs.db
 # Distribution / packaging
 .Python
 
-build/*
+build/
 lib/
 lib64/
 parts/

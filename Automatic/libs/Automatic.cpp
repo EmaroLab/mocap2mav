@@ -27,7 +27,8 @@ exec::task Automatic::getTask()
 
 void Automatic::setState(MavState rState)
 {
-   _state = rState;
+    _state = rState;
+
 }
 
 void Automatic::setTask(exec::task rTask)

@@ -42,7 +42,7 @@ int main(int argc, char** argv){
 		t_prev = t;
 
 		autom.setState(call._vision_pos);
-
+        std::cout << autom.getState()._x << " " << autom.getState()._y << " " << autom.getState()._z << std::endl;
 		int ret = poll(fds,1,0);
 
 
@@ -93,8 +93,9 @@ int main(int argc, char** argv){
 
 		geometry::pose command = call.mavState2LcmPose(autom._comm);
 
-
+        std::cout << "COMMAND " <<command.position[0] << " " << command.position[1] << " " << command.position[2] << std::endl;
 		handler.publish("local_position_sp", &command);
+
 
 
 	}

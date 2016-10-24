@@ -51,51 +51,82 @@ Executioner::Executioner(){
     // Fill Node list
     exec::task node1;
     node1.action = "t";
-    node1.params[0] = -1; //height
+    node1.params[0] = -2; //height
     nodeList.push_back(node1);
 
     exec::task  move;
     move.action = "m";
-    move.x = 0.5;
+    move.x = 2;
     move.y = 0.0;
-    move.z = -0.8;
+    move.z = -2;
     move.params[0] = 1;
     move.params[1] = 3;
     nodeList.push_back(move);
 
     exec::task  move2;
-    move2.action = "m";
-    move2.x = 0.0;
-    move2.y = 0.5;
-    move2.z = -1;
-    move2.params[0] = 1;
-    move2.params[1] = 3;
-    nodeList.push_back(move2);
-
-
-    move2.action = "m";
-    move2.x = -0.5;
-    move2.y = 0.0;
-    move2.z = -1;
-    move2.params[0] = 1;
-    move2.params[1] = 3;
-    nodeList.push_back(move2);
-
-    move2.action = "m";
-    move2.x = 0.0;
-    move2.y = -0.5;
-    move2.z = -1;
-    move2.params[0] = 1;
-    move2.params[1] = 3;
-    nodeList.push_back(move2);
-
-    move2.action = "m";
+    move2.action = "r";
     move2.x = 0.0;
     move2.y = 0.0;
-    move2.z = -1;
+    move2.yaw = -PI/2;
+    move2.params[0] = 1;
+    nodeList.push_back(move2);
+
+
+    move2.action = "m";
+    move2.x = 2;
+    move2.y = 1.5;
+    move2.z = -2;
     move2.params[0] = 1;
     move2.params[1] = 3;
     nodeList.push_back(move2);
+
+    move2.action = "m";
+    move2.x = 2;
+    move2.y = -1.5;
+    move2.z = -2.5;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+    move2.action = "m";
+    move2.x = -2.0;
+    move2.y = -1.5;
+    move2.z = -3.0;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+    move2.action = "m";
+    move2.x =  -2.0;
+    move2.y = 1.5;
+    move2.z = -2;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+    move2.action = "m";
+    move2.x =  2.0;
+    move2.y = 1.5;
+    move2.z = -2.5;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+    move2.action = "m";
+    move2.x =  0.0;
+    move2.y = 0.0;
+    move2.z = -2.5;
+    move2.params[0] = 1;
+    move2.params[1] = 3;
+    nodeList.push_back(move2);
+
+    exec::task  move3;
+    move3.action = "r";
+    move3.x = 0.0;
+    move3.y = 0.0;
+    move3.yaw = PI/4;
+    move3.params[0] = 1;
+    nodeList.push_back(move3);
 
     exec::task land;
     land.action= "l";

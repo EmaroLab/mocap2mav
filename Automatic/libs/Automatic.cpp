@@ -62,6 +62,10 @@ void Automatic::rotate() {
 
     calculateYawInterm(_state.getYawFromQuat(),yawSP,yawComm);
     _comm.setYaw((float)yawComm);
+    std::cout << yawComm << std::endl;
+    Eigen::Quaterniond q_interm = _comm.quaternionFromYaw();
+
+    _comm.setOrientation((float)q_interm.w(),(float)q_interm.x(),(float)q_interm.y(),(float)q_interm.z());
 
 }
 
@@ -78,7 +82,6 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
             yawComm = yawComm - 2*PI;
         }
     }
-
 
     else{
         if (yawSp_h > 0){

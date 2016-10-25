@@ -20,7 +20,6 @@ Executioner::Executioner(){
 
     // Fill Node list
     exec::task node1;
-
     node1.action = actions::TAKE_OFF;
     node1.params[0] = -1; //height
     _nodeList.push_back(node1);
@@ -28,30 +27,26 @@ Executioner::Executioner(){
     exec::task  move;
     move.action = actions::MOVE;
     move.x = 1.0;
-
     move.y = 0.0;
-    move.z = -2;
+    move.z = -1;
     move.params[0] = 1;
-    move.params[1] = 3;
     _nodeList.push_back(move);
 
     exec::task  move2;
-
     move2.action = actions::MOVE;
-
     move2.x = 0.0;
-    move2.y = 0.0;
-    move2.yaw = -PI/2;
+    move2.y = 1.0;
+    move2.z = -1;
     move2.params[0] = 1;
     _nodeList.push_back(move2);
-
+/*
     exec::task rotate;
     rotate.action= actions::ROTATE;
     rotate.params[0] = 1;
     rotate.yaw = PI/2;
     _nodeList.push_back(rotate);
 
-
+*/
     exec::task land;
     land.action= actions::LAND;
     _nodeList.push_back(land);
@@ -65,6 +60,12 @@ Executioner::Executioner(){
         std::cout << "WARNING, empty list"<<std::endl;
         _can_run = false;
     }
+}
+
+void Executioner::setState(MavState s){
+
+    _state = s;
+
 }
 
 bool Executioner::readyToPublish() {
@@ -154,7 +155,7 @@ void Executioner::run(){
         _newTask = false;
     }
 
-    std::cout << _nodeList.size() << std::endl;
+    //std::cout << _nodeList.size() << std::endl;
 }
 
 bool Executioner::CheckActions(int a)
@@ -162,7 +163,7 @@ bool Executioner::CheckActions(int a)
     int c = a;
     switch (c)
     {
-        //MOVE
+            //MOVE
         case actions::MOVE:
 
             return (fabs(_state.getX() - _nodeList[_actualNode].x) < 0.15 &&
@@ -171,7 +172,7 @@ bool Executioner::CheckActions(int a)
 
             //TAKE_OFF
         case actions::TAKE_OFF:
-
+            std::cout << fabs(_state.getZ() - _nodeList[_actualNode].params[0]) << std::endl;
             return (fabs(_state.getZ() - _nodeList[_actualNode].params[0]) < 0.1 );
 
             //ROTATE

@@ -21,6 +21,7 @@ int main(int argc, char** argv){
 
 
             //Run state machine
+            e.setState(call._vision_pos);
             e.run();
             //Publish next task
             if(e.readyToPublish()) {

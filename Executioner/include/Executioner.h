@@ -17,16 +17,17 @@ public:
 	Executioner();
 	void run();
 	bool CheckActions(int a);
-	exec::task _actualTask;
-	bool _can_run;
-    bool readyToPublish();
-	int _actualNode;
+	bool readyToPublish();
 	void setNextTask(const exec::task task);
 	void setLastTask(const exec::task task);
 	void clearList();
     void abort();
 	void rtl();
     void loadTask();
+	void setState(MavState s);
+	exec::task _actualTask;
+	bool _can_run;
+	int _actualNode;
 	std::string name;
 
 private:

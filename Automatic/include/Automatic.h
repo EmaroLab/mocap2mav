@@ -5,6 +5,8 @@
 #include "common/MavState.h"
 #include "common/common.h"
 
+#include <iostream>
+
 class Automatic
 {
    

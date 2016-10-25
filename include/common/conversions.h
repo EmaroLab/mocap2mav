@@ -2,6 +2,7 @@
 #define CONVERSIONS_H
 #include <cmath>
 #include <cstdint>
+#include <Eigen/Geometry>
 
 
 inline static void quaternion_to_dcm(const float quaternion[4], float dcm[3][3])
@@ -60,6 +61,11 @@ inline static void dcm_to_quaternion(const float dcm[3][3], float quaternion[4])
             (double)(-dcm[0][0] + dcm[1][1] - dcm[2][2])));
     quaternion[3] = (0.5 * sqrt(1.0 +
             (double)(-dcm[0][0] - dcm[1][1] + dcm[2][2])));
+}
+
+inline double yawFromQuaternion(const Eigen::Quaterniond& q) {
+    return atan2(2.0 * (q.w() * q.z() + q.x() * q.y()),
+                 1.0 - 2.0 * (q.y() * q.y() + q.z() * q.z()));
 }
 
 

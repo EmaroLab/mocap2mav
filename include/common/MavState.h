@@ -111,6 +111,8 @@ public:
             dcm_to_euler( dcm, roll, pitch, yaw);
         }
 
+
+
     inline float getX() const
     {
         return _x;
@@ -156,6 +158,10 @@ public:
     inline float getYawFromQuat() const
     {
         return std::atan2(2*(_qw*_qz+_qx*_qy), 1-2*(_qy*_qy + _qz*_qz));
+    }
+    inline Eigen::Quaterniond quaternionFromYaw() {
+        return Eigen::Quaterniond(Eigen::AngleAxisd(_yaw, Eigen::Vector3d::UnitZ()));
+
     }
 
     // OPERATORS

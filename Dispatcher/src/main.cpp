@@ -31,8 +31,7 @@ int main(int argc, char** argv){
 
     if (!useSecurity) {
 
-        sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback,
-                                  &call);
+        sub2 = handler2.subscribe("local_position_sp", &CallbackHandler::positionSetpointCallback, &call);
     } else{
 
         sub2 = handler2.subscribe("local_position_spOK", &CallbackHandler::positionSetpointCallback, &call);

@@ -13,12 +13,13 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp)
+${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("libs")
 include_directories("include")
+include_directories("dir")
 
 add_executable(exec ${PROJECT_SRCS})
 

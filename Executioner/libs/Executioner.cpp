@@ -62,6 +62,12 @@ Executioner::Executioner(){
     }
 }
 
+void Executioner::init(){
+
+
+
+}
+
 void Executioner::setState(MavState s){
 
     _state = s;

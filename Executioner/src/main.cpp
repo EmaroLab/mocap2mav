@@ -3,10 +3,15 @@
 #include "Executioner.h"
 #include "qdebug.h"
 #include "common/CallbackHandler.hpp"
-
+#include "Parser.h"
 
 
 int main(int argc, char** argv){
+
+    Parser p;
+
+
+    p.loadFile("../../lists/list.txt");
 
     lcm::LCM handler;
 
@@ -34,5 +39,7 @@ int main(int argc, char** argv){
 
 
     }
+
+
 
 }

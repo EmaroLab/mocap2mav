@@ -25,6 +25,7 @@ public:
 	void rtl();
     void loadTask();
 	void setState(MavState s);
+    void init();
 	exec::task _actualTask;
 	bool _can_run;
 	int _actualNode;

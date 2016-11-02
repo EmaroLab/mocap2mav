@@ -74,6 +74,12 @@ void Executioner::setState(MavState s){
 
 }
 
+void::Executioner::setList(std::deque<exec::task> list) {
+
+    _nodeList = list;
+
+}
+
 bool Executioner::readyToPublish() {
 
     if(_publish_task) {

@@ -26,6 +26,7 @@ public:
     void loadTask();
 	void setState(MavState s);
     void init();
+	void setList(std::deque<exec::task> list);
 	exec::task _actualTask;
 	bool _can_run;
 	int _actualNode;

@@ -14,6 +14,8 @@
 #include <fstream>
 #include <vector>
 #include <list>
+#include "lcm_messages/exec/task.hpp"
+#include "common/common.h"
 
 class Parser{
 
@@ -21,10 +23,11 @@ public:
 
     Parser();
 
-    void parse();
+    bool parse();
     bool loadFile(std::string file);
     std::vector<std::vector<std::string>> _tokens;
-    int _ntakeoff, _nmove, _nrotate,_nland;
+    std::deque<exec::task> _taskListParsed;
+    bool parseAction(std::string a, int pos);
 
 private:
 

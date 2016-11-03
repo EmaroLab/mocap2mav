@@ -25,6 +25,7 @@ bool Parser::loadFile(std::string file) {
         std::string line;
         while ( getline (myfile,line)){
 
+            if(line == "#") break;
             std::vector<std::string> str_vector;
             strtk::parse(line,"=",str_vector);
 
@@ -138,11 +139,11 @@ bool Parser::parseAction(std::string a, int pos) {
     }
     else if(a == "move"){
         std::cout << "Move found" << std::endl;
-        const unsigned char xFound = 0x01; // hex for 0000 0001
-        const unsigned char yFound = 0x02; // hex for 0000 0010
-        const unsigned char zFound = 0x04; // hex for 0000 0100
-        const unsigned char aFound = 0x08; // hex for 0000 1000
-        unsigned char mask = 0;
+        const unsigned char xFound = 0b0001; // hex for 0000 0001
+        const unsigned char yFound = 0b0010; // hex for 0000 0010
+        const unsigned char zFound = 0b0100; // hex for 0000 0100
+        const unsigned char aFound = 0b1000; // hex for 0000 1000
+        unsigned char mask = 0b0000;
         task.action = common::actions::MOVE;
 
         for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
@@ -234,7 +235,7 @@ bool Parser::parseAction(std::string a, int pos) {
             }
 
         }
-        if(mask & xFound & yFound & zFound & aFound) _taskListParsed.push_back(task);
+        if((mask & (xFound | yFound | zFound | aFound)) == (xFound | yFound | zFound | aFound)) _taskListParsed.push_back(task);
         else {
             std::cout << "field missing in action: " << pos << std::endl;
             return false;
@@ -243,7 +244,7 @@ bool Parser::parseAction(std::string a, int pos) {
 
     }
     else if (a == "rotate") {
-        //TODO: rotate is bugged, do the parsing when bu is fixed.
+        //TODO: rotate is bugged, do the parsing when bug is fixed.
 
 
     }
@@ -251,10 +252,9 @@ bool Parser::parseAction(std::string a, int pos) {
         std::cout << "Land found" << std::endl;
         bool hFound = false;
         task.action = common::actions::LAND;
-        double height = 0;
+
 
         for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
-            std::cout << i << std::endl;
             std::string field = _tokens[i][0];
 
             if(field == "height"){
@@ -282,8 +282,6 @@ bool Parser::parseAction(std::string a, int pos) {
                 return false;
 
             }
-
-
 
         }
         if(hFound) _taskListParsed.push_back(task);

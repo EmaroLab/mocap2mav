@@ -1,4 +1,0 @@
-type=takeoff
-z=10.256
-type=land
-height=-1

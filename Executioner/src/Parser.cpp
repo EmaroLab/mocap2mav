@@ -75,9 +75,9 @@ bool Parser::parse() {
 
             //Store the position in the token vector of the value "type"
             int pos = type_pos[j];
-            std::string action = _tokens[pos][1];
-            //
-            if(!parseAction(action,pos)) return false;
+
+            //Parse single actions
+            if(!parseAction(pos)) return false;
 
         }
 
@@ -91,8 +91,10 @@ bool Parser::parse() {
 
 }
 
-bool Parser::parseAction(std::string a, int pos) {
+bool Parser::parseAction(int pos) {
 
+    //Look for the action
+    std::string a = _tokens[pos][1];
     //create task
     exec::task task;
 
@@ -245,7 +247,123 @@ bool Parser::parseAction(std::string a, int pos) {
     }
     else if (a == "rotate") {
         //TODO: rotate is bugged, do the parsing when bug is fixed.
+        std::cout << "Move found" << std::endl;
+        const unsigned char xFound = 0b0001; // hex for 0000 0001
+        const unsigned char yFound = 0b0010; // hex for 0000 0010
+        const unsigned char aFound = 0b0100; // hex for 0000 0100
+        const unsigned char yawFound = 0b1000; // hex for 0000 0100
+        unsigned char mask = 0b0000;
+        task.action = common::actions::ROTATE;
 
+        for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
+
+            std::string field = _tokens[i][0];
+
+            if(field == "x") {
+
+                //atof Helper, cast string into double
+                char *cstr = new char[_tokens[i][1].length() + 1];
+                std::strcpy(cstr, _tokens[i][1].c_str());
+                double value = atof(cstr);
+                delete (cstr);
+
+                if (std::isfinite(value)) {
+                    mask |= xFound;
+                    task.x = value;
+                    std::cout << "X: " <<value<< " found for action: " << pos << std::endl;
+
+                } else {
+                    std::cout << "value is not finite" << std::endl;
+                    return false;
+                }
+
+            }
+            else if(field == "y"){
+
+                //atof Helper, cast string into double
+                char *cstr = new char[_tokens[i][1].length() + 1];
+                std::strcpy(cstr, _tokens[i][1].c_str());
+                double value = atof(cstr);
+                delete (cstr);
+
+                if (std::isfinite(value)) {
+                    mask |= yFound;
+                    task.y = value;
+                    std::cout << "Y: " <<value<< " found for action: " << pos << std::endl;
+
+                } else {
+                    std::cout << "value is not finite" << std::endl;
+                    return false;
+                }
+
+
+            }
+            else if(field == "yaw"){
+
+                //atof Helper, cast string into double
+                char *cstr = new char[_tokens[i][1].length() + 1];
+                std::strcpy(cstr, _tokens[i][1].c_str());
+                double value = atof(cstr);
+                delete (cstr);
+
+                if (std::isfinite(value)) {
+                    mask |= yawFound;
+                    task.yaw = value;
+                    std::cout << "Yaw: " <<value<< " found for action: " << pos << std::endl;
+
+                } else {
+                    std::cout << "value is not finite" << std::endl;
+                    return false;
+                }
+
+            }
+            else if(field == "angle_valid"){
+
+                //atof Helper, cast string into double
+                char *cstr = new char[_tokens[i][1].length() + 1];
+                std::strcpy(cstr, _tokens[i][1].c_str());
+                double value = atof(cstr);
+                delete (cstr);
+
+                if (std::isfinite(value)) {
+                    mask |= aFound;
+                    task.params[0] = value;
+                    std::cout << "Angle valid: " <<value<< " found for action: " << pos << std::endl;
+
+                } else {
+                    std::cout << "value is not finite" << std::endl;
+                    return false;
+                }
+
+            }
+
+            else{
+
+                std::cout << "unrecognized field" << std::endl;
+
+            }
+
+        }
+        if((mask & yawFound ) == (yawFound)) {
+
+            //Setting yaw valid which has the highest priority
+            task.params[0] = 1;
+
+            _taskListParsed.push_back(task);
+
+
+        }
+        else if((mask & (xFound | yFound)) == (xFound | yFound) ){
+
+            //Yaw not found, look for x and y
+            task.params[0] = 0;
+            _taskListParsed.push_back(task);
+
+        }
+        else {
+            std::cout << "field missing in action: " << pos << std::endl;
+            return false;
+        }
 
     }
     else if (a == "land"){

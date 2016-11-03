@@ -27,7 +27,7 @@ public:
     bool loadFile(std::string file);
     std::vector<std::vector<std::string>> _tokens;
     std::deque<exec::task> _taskListParsed;
-    bool parseAction(std::string a, int pos);
+    bool parseAction(int pos);
 
 private:
 

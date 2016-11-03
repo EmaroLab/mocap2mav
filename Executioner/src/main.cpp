@@ -23,7 +23,7 @@ int main(int argc, char** argv){
         return 1;
     }
 
-
+    e.init();
     lcm::LCM handler;
 
     if (!handler.good())

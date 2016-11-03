@@ -13,43 +13,15 @@ bool skip = false;
 using namespace common;
 
 Executioner::Executioner(){
+
     _actualNode = 0;
     _can_run = false;
     _newTask = true;
     _publish_task = false;
 
-    // Fill Node list
-    exec::task node1;
-    node1.action = actions::TAKE_OFF;
-    node1.params[0] = -1; //height
-    _nodeList.push_back(node1);
+}
 
-    exec::task  move;
-    move.action = actions::MOVE;
-    move.x = 1.0;
-    move.y = 0.0;
-    move.z = -1;
-    move.params[0] = 1;
-    _nodeList.push_back(move);
-
-    exec::task  move2;
-    move2.action = actions::MOVE;
-    move2.x = 0.0;
-    move2.y = 1.0;
-    move2.z = -1;
-    move2.params[0] = 1;
-    _nodeList.push_back(move2);
-/*
-    exec::task rotate;
-    rotate.action= actions::ROTATE;
-    rotate.params[0] = 1;
-    rotate.yaw = PI/2;
-    _nodeList.push_back(rotate);
-
-*/
-    exec::task land;
-    land.action= actions::LAND;
-    _nodeList.push_back(land);
+void Executioner::init(){
 
     if(_nodeList.size()>0){
 
@@ -60,11 +32,6 @@ Executioner::Executioner(){
         std::cout << "WARNING, empty list"<<std::endl;
         _can_run = false;
     }
-}
-
-void Executioner::init(){
-
-
 
 }
 

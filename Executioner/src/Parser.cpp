@@ -117,7 +117,7 @@ bool Parser::parseAction(std::string a, int pos) {
                 if(std::isfinite(value)){
                     zFound = true;
                     task.z = value;
-                    std::cout << "Z found, take off parsed: " << value << std::endl;
+                    std::cout << "  Z: " << value << std::endl;
 
                 }else{
                     std::cout << "value is not finite" << std::endl;
@@ -161,7 +161,7 @@ bool Parser::parseAction(std::string a, int pos) {
                 if (std::isfinite(value)) {
                     mask |= xFound;
                     task.x = value;
-                    std::cout << "X: " <<value<< " found for action: " << pos << std::endl;
+                    std::cout << "  X: " <<value<< " found for action: " << pos << std::endl;
 
                 } else {
                     std::cout << "value is not finite" << std::endl;
@@ -180,7 +180,7 @@ bool Parser::parseAction(std::string a, int pos) {
                 if (std::isfinite(value)) {
                     mask |= yFound;
                     task.y = value;
-                    std::cout << "Y: " <<value<< " found for action: " << pos << std::endl;
+                    std::cout << "  Y: " <<value<< " found for action: " << pos << std::endl;
 
                 } else {
                     std::cout << "value is not finite" << std::endl;
@@ -200,7 +200,7 @@ bool Parser::parseAction(std::string a, int pos) {
                 if (std::isfinite(value)) {
                     mask |= zFound;
                     task.z = value;
-                    std::cout << "Z: " <<value<< " found for action: " << pos << std::endl;
+                    std::cout << "  Z: " <<value<< " found for action: " << pos << std::endl;
 
                 } else {
                     std::cout << "value is not finite" << std::endl;
@@ -219,7 +219,7 @@ bool Parser::parseAction(std::string a, int pos) {
                 if (std::isfinite(value)) {
                     mask |= aFound;
                     task.params[0] = value;
-                    std::cout << "Alpha: " <<value<< " found for action: " << pos << std::endl;
+                    std::cout << "  Alpha: " <<value<< " found for action: " << pos << std::endl;
 
                 } else {
                     std::cout << "value is not finite" << std::endl;
@@ -268,7 +268,7 @@ bool Parser::parseAction(std::string a, int pos) {
                 if(std::isfinite(value)){
                     hFound = true;
                     task.params[0] = value;
-                    std::cout << "H found, land parsed: " << value << std::endl;
+                    std::cout << "  H: " << value << std::endl;
 
                 }else{
                     std::cout << "value is not finite" << std::endl;

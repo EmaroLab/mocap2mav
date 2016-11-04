@@ -11,7 +11,7 @@ int main(int argc, char** argv){
     Parser p;
     Executioner e;
 
-    p.loadFile("../../lists/list.txt");
+    p.loadFile("lists/list.txt");
     std::cout << "Parsing ....." << std::endl;
 
     if(p.parse()){
@@ -20,9 +20,8 @@ int main(int argc, char** argv){
     }else{
 
         std::cout << "Unable to parse the file" << std::endl;
-        return 1;
-    }
 
+    }
     e.init();
     lcm::LCM handler;
 

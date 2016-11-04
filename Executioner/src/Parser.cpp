@@ -47,7 +47,6 @@ bool Parser::loadFile(std::string file) {
         std::cout << "Unable to open file" << std::endl;
         return false;
 
-
     }
 
 

@@ -112,8 +112,6 @@ void Executioner::run(){
     // Check for next task
     if(CheckActions(_actualTask.action) || skip) {
 
-
-
         if(_nodeList.size() > 0){
 
             _nodeList.pop_front();

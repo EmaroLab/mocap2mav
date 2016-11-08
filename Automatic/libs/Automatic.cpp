@@ -11,6 +11,20 @@ bool  try_land = false;
 bool start_try_land = false;
 bool landing = false;
 
+
+Eigen::Quaterniond getQuatFromYaw(double yaw){
+
+    Eigen::Quaterniond quaterniond;
+
+    quaterniond.w() = cos(yaw/2);
+    quaterniond.x() = 0;
+    quaterniond.y() = 0;
+    quaterniond.z() = sin(yaw/2);
+
+    return quaterniond;
+
+}
+
 Automatic::Automatic()
 {
 
@@ -60,10 +74,16 @@ void Automatic::rotate() {
 
     }
 
-    calculateYawInterm(_state.getYawFromQuat(),yawSP,yawComm);
+
+
+    //calculateYawInterm(_state.getYawFromQuat(),yawSP,yawComm);
+
+    yawComm = yawSP;
+
+
     _comm.setYaw((float)yawComm);
-    std::cout << yawComm << std::endl;
-    Eigen::Quaterniond q_interm = _comm.quaternionFromYaw();
+
+    Eigen::Quaterniond q_interm = getQuatFromYaw(yawComm);
 
     _comm.setOrientation((float)q_interm.w(),(float)q_interm.x(),(float)q_interm.y(),(float)q_interm.z());
 
@@ -73,6 +93,9 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
 
     double yawSp_h = yawTarget - heading;
 
+
+
+/*  DISABLE ALGORITHM FOR BUG FIXING
     if (fabs(yawSp_h) <= PI/10) yawComm = yawTarget;
     else if(fabs(yawSp_h) > PI - PI/18){
         //Increase yaw
@@ -101,6 +124,7 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
             }
         }
     }
+    */
 }
 
 void Automatic::land(float dt, float speed, float offset, float land_gain) {
@@ -171,6 +195,10 @@ void Automatic::takeOff() {
     _comm.setX((float)_actualTask.x);
     _comm.setY((float)_actualTask.y);
     _comm.setZ((float)height);
+
+    Eigen::Quaterniond q = getQuatFromYaw(_actualTask.yaw);
+
+    _comm.setOrientation((float)q.w(),(float)q.x(),(float)q.y(),(float)q.z());
 
 }
 

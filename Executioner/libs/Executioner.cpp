@@ -18,6 +18,9 @@ Executioner::Executioner(){
     _can_run = false;
     _newTask = true;
     _publish_task = false;
+    _nodeList.clear();
+    _nodeList.shrink_to_fit();
+
 
 }
 
@@ -29,6 +32,8 @@ void Executioner::init(){
     }
     else{
 
+        _nodeList.clear();
+        _nodeList.shrink_to_fit();
         std::cout << "WARNING, empty list"<<std::endl;
         _can_run = false;
     }
@@ -63,7 +68,6 @@ void Executioner::run(){
     if(!_nodeList.empty()) {
 
         loadTask();
-
         _can_run = _actualNode < _nodeList.size();
     }
     else{
@@ -149,7 +153,7 @@ bool Executioner::CheckActions(int a)
 
             //TAKE_OFF
         case actions::TAKE_OFF:
-            std::cout << fabs(_state.getZ() - _nodeList[_actualNode].params[0]) << std::endl;
+
             return (fabs(_state.getZ() - _nodeList[_actualNode].params[0]) < 0.1 );
 
             //ROTATE

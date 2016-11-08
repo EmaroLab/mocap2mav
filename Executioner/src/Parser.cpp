@@ -3,7 +3,7 @@
 //
 
 #include "Parser.h"
-
+#define PI 3.141592653589
 
 
 Parser::Parser() {
@@ -117,7 +117,7 @@ bool Parser::parseAction(int pos) {
 
                 if(std::isfinite(value)){
                     zFound = true;
-                    task.z = value;
+                    task.params[0] = value;
                     std::cout << "  Z: " << value << std::endl;
 
                 }else{
@@ -246,7 +246,7 @@ bool Parser::parseAction(int pos) {
     }
     else if (a == "rotate") {
         //TODO: rotate is bugged, do the parsing when bug is fixed.
-        std::cout << "Move found" << std::endl;
+        std::cout << "Rotate found" << std::endl;
         const unsigned char xFound = 0b0001; // hex for 0000 0001
         const unsigned char yFound = 0b0010; // hex for 0000 0010
         const unsigned char aFound = 0b0100; // hex for 0000 0100
@@ -307,7 +307,7 @@ bool Parser::parseAction(int pos) {
 
                 if (std::isfinite(value)) {
                     mask |= yawFound;
-                    task.yaw = value;
+                    task.yaw = value * PI/180;
                     std::cout << "Yaw: " <<value<< " found for action: " << pos << std::endl;
 
                 } else {

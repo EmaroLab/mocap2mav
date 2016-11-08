@@ -71,6 +71,7 @@ int main(int argc, char** argv){
 			if (newTask){
 				autom._actualTask.x = autom.getState().getX();
 				autom._actualTask.y = autom.getState().getY();
+				autom._actualTask.yaw = autom.getState().getYawFromQuat();
 			}
 
 			autom.takeOff();

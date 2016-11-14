@@ -21,8 +21,13 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 add_executable(autom ${PROJECT_SRCS})
 
 #Set LCM
-set ( PROJECT_LINK_LIBS liblcm.so )
-link_directories( ~/usr/local/lib )
+#set ( PROJECT_LINK_LIBS liblcm.so )
+#link_directories( ~/usr/local/lib )
+
+find_package(PkgConfig REQUIRED)
+pkg_search_module(LCM REQUIRED lcm)
+
+
 
 ##Declare a C++ library
  add_library(Automlib
@@ -38,5 +43,6 @@ target_link_libraries( autom
         Qt5::Network
         Qt5::Widgets
 	    Automlib
+		${LCM_LIBRARIES}
 	)
 

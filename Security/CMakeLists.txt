@@ -21,9 +21,10 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 add_executable(secur ${PROJECT_SRCS})
 
 #Set LCM
-set ( PROJECT_LINK_LIBS liblcm.so )
-link_directories( ~/usr/local/lib )
-
+#set ( PROJECT_LINK_LIBS liblcm.so )
+#link_directories( ~/usr/local/lib )
+find_package(PkgConfig REQUIRED)
+pkg_search_module(LCM REQUIRED lcm)
 ##Declare a C++ library
  add_library(SecLib
          libs/Security.cpp
@@ -38,5 +39,6 @@ target_link_libraries( secur
         Qt5::Network
         Qt5::Widgets
 	    SecLib
+		${LCM_LIBRARIES}
 	)
 

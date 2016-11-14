@@ -24,8 +24,11 @@ include_directories("dir")
 add_executable(exec ${PROJECT_SRCS})
 
 #Set LCM
-set ( PROJECT_LINK_LIBS liblcm.so )
-link_directories( ~/usr/local/lib )
+#set ( PROJECT_LINK_LIBS liblcm.so )
+#link_directories( ~/usr/local/lib )
+
+find_package(PkgConfig REQUIRED)
+pkg_search_module(LCM REQUIRED lcm)
 
 ##Declare a C++ library
  add_library(Execlib
@@ -42,6 +45,7 @@ target_link_libraries(exec
         Qt5::Network
         Qt5::Widgets
         Execlib
+        ${LCM_LIBRARIES}
         #AndOrLib
 	)
 

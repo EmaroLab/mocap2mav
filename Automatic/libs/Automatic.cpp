@@ -81,11 +81,11 @@ void Automatic::rotate() {
     yawComm = yawSP;
 
 
-    _comm.setYaw((float)yawComm);
+    _comm.setYaw(yawComm);
 
     Eigen::Quaterniond q_interm = getQuatFromYaw(yawComm);
 
-    _comm.setOrientation((float)q_interm.w(),(float)q_interm.x(),(float)q_interm.y(),(float)q_interm.z());
+    _comm.setOrientation(q_interm);
 
 }
 
@@ -137,15 +137,15 @@ void Automatic::land(float dt, float speed, float offset, float land_gain) {
     float descending_rate = 0;
 
     //float offset = nodeList[actualNode].a.params[1];
-    float z = _comm.getZ();
+    double z = _comm.getZ();
 
     bool descend_valid = false;
 
 
     //Descending task
 
-    error.setX( (float)_actualTask.x - _state.getX());
-    error.setY( (float)_actualTask.y - _state.getY());
+    error.setX( _actualTask.x - _state.getX());
+    error.setY( _actualTask.y - _state.getY());
 
     if (_state.getZ() - offset >= - 0.15 ){
 
@@ -169,8 +169,8 @@ void Automatic::land(float dt, float speed, float offset, float land_gain) {
 
         //Centering task
 
-        sP.setX(error.getX() * land_gain  + (float)_actualTask.x);
-        sP.setY(error.getY() * land_gain  + (float)_actualTask.y);
+        sP.setX(error.getX() * land_gain  + _actualTask.x);
+        sP.setY(error.getY() * land_gain  + _actualTask.y);
 
         //wait to recenter
 

@@ -43,19 +43,19 @@ void PositionDispatcher::sendPosition(int64_t ts, MavState vision, MavState sp, 
     mavlink_message_t msg1;
     mavlink_message_t msg2;
 
-    float roll,pitch,yaw;
-    vision.orientation(&roll,&pitch,&yaw);
+    double roll,pitch,yaw;
+    vision.getOrientationRPY(roll,pitch,yaw);
 
     mavlink_msg_vision_position_estimate_pack(
             1,
             MAV_COMP_ID_ALL, &msg1,
             (uint64_t) ts * 1000,
-            vision.getX(),
-            vision.getY(),
-            vision.getZ(),
-            roll, //rad
-            pitch, //rad
-            yaw); //rad
+            (float)vision.getX(),
+            (float)vision.getY(),
+            (float)vision.getZ(),
+            (float)roll, //rad
+            (float)pitch, //rad
+            (float)yaw); //rad
 
    mavlink_msg_set_position_target_local_ned_pack(
            1,
@@ -66,16 +66,16 @@ void PositionDispatcher::sendPosition(int64_t ts, MavState vision, MavState sp, 
            MAV_COMP_ID_ALL,
            MAV_FRAME_LOCAL_NED,
            0b0000001111111000,
-           sp.getX(),   //x        [m]
-           sp.getY(),   //y
-           sp.getZ(),   //z        Be careful, z is directed downwards!!
+           (float)sp.getX(),   //x        [m]
+           (float)sp.getY(),   //y
+           (float)sp.getZ(),   //z        Be careful, z is directed downwards!!
            0,           //vx       [m/s]
            0,           //vy
            0,           //vz
            0,           //ax       [m/s^2]
            0,           //ay
            0,           //az
-           sp.getYaw(),           //yaw      [rad]
+           (float)sp.getYaw(),           //yaw      [rad]
            0);          //yaw_rate [rad/s]
 
 

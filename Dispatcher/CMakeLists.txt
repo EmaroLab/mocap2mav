@@ -13,7 +13,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp)
+${PROJECT_SOURCE_DIR}/main.cpp ../src/MavState.cpp ../include/common/MavState.h)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")

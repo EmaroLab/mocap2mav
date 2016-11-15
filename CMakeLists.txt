@@ -11,17 +11,17 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
-
-
-
 find_package(Eigen 3 QUIET)
 if(NOT Eigen_FOUND)
     include(/usr/share/cmake-3.0/Modules/FindEigen3.cmake)
     set(Eigen_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
 endif()
 include_directories(${Eigen_INCLUDE_DIR})
+
+set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+set(PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+
+
 
 
 

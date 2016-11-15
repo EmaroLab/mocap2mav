@@ -1,168 +1,50 @@
-/*******************************************************************************
- * NatNet v. 2.7 Motion Capture Receiver for Qt
- * Based on PacketClient by Optitrack  
- * 
- * Copyright (C) 2014-2015 Tommaso Falchi Delitala <volalto86@gmail.com>
- * 
- * This file may be used under the terms of the GNU General Public License 
- * versions 2.0 as published by the Free Software Foundation
- ******************************************************************************/
+//
+// Created by andreanisti on 15/11/16.
+//
 
-#ifndef MAVSTATE_H
-#define MAVSTATE_H
+#ifndef MOCAP2MAV_MAVSTATE_H
+#define MOCAP2MAV_MAVSTATE_H
 
 #include <cmath>
 #include <cstdint>
 #include <math.h>
-#include <common/conversions.h>
+#include <Eigen/Eigen>
 
+class MavState {
 
-
-#define RAD2DEG 180.0/3.1415927
-
-
-class MavState
-{
 public:
     //MavState(const MavState&) = default;
+    MavState();
+    void setPosition(double x, double y, double z);
+    void setX(double x);
+    void setY(double y);
+    void setZ(double z);
+    double getX() const;
+    double getY() const;
+    double getZ() const;
 
-    inline void setPosition(float x, float y, float z)
-    {
-        _x = x;
-        _y = y;
-        _z = z;
-    }
+    void setV(double vx, double vy, double vz);
+    double getVx() const;
+    double getVy() const;
+    double getVz() const;
 
-    inline void setX(float x)
-    {
-        _x = x;
-    }
-
-    inline void setY(float y)
-    {
-        _y = y;
-    }
-
-    inline void setZ(float z)
-    {
-        _z = z;
-    }
-
-    inline void setV(float vx, float vy, float vz){
-        _vx = vx;
-        _vy = vy;
-        _vz = vz;
-    }
-
-    inline float getVx(){
-        return _vx;
-    }
-
-    inline float getVy(){
-        return _vy;
-    }
-
-    inline float getVz(){
-        return _vz;
-    }
-
-    inline void setYaw(float yaw)
-    {
-        _yaw = yaw;
-    }
-
-    inline void setOrientation(float qw, float qx, float qy, float qz)
-    {
-        _qw = qw;
-        _qx = qx;
-        _qy = qy;
-        _qz = qz;
-    }
-
-    inline void position(float* x, float* y, float* z)
-    {
-        *x = _x;
-        *y = _y;
-        *z = _z;
-    }
-
-    inline void orientation(float* qw, float* qx, float* qy, float* qz) const
-    {
-        *qw = _qw;
-        *qx = _qx;
-        *qy = _qy;
-        *qz = _qz;
-    }
-
-    inline void orientation(float* roll, float* pitch, float* yaw) const
-    {
-
-        *roll = std::atan2(2*(_qw*_qx+_qy*_qz), 1-2*(_qx*_qx+_qy*_qy));
-        *pitch = std::asin(2*(_qw*_qy - _qz*_qx));
-        *yaw = std::atan2(2*(_qw*_qz+_qx*_qy), 1-2*(_qy*_qy + _qz*_qz));
-
-    }
-
-    inline void orientation2(float* roll, float* pitch, float* yaw) const
-        {
-            float quaternion[4] = {_qw ,_qx , _qy , _qz };
-            float dcm[3][3];
-            quaternion_to_dcm(quaternion , dcm);
-            dcm_to_euler( dcm, roll, pitch, yaw);
-        }
+    void setYaw(double yaw);
+    double getYaw()const;
+    double getYawFromQuat() const;
 
 
+    //Use eigen
+    void setOrientation(Eigen::Quaterniond quat);
+    void setOrientation(double qw, double qx, double qy, double qz);
 
-    inline float getX() const
-    {
-        return _x;
-    }
+    void getPosition(double& x, double& y, double& z) const;
 
-    inline float getY() const
-    {
-        return _y;
-    }
+    //get quaternion
+    Eigen::Quaterniond getOrientation() const;
 
-    inline float getZ() const
-    {
-        return _z;
-    }
+    //convert from eigen
+    void getOrientationRPY(double& roll, double& pitch, double& yaw) const;
 
-    inline float getYaw() const
-    {
-        return _yaw;
-    }
-
-
-    inline float getQx() const
-    {
-        return _qx;
-    }
-
-    inline float getQy() const
-    {
-        return _qy;
-    }
-
-    inline float getQz() const
-    {
-        return _qz;
-    }
-
-    inline float getQw() const
-    {
-        return _qw;
-    }
-
-
-    inline float getYawFromQuat() const
-    {
-        return std::atan2(2*(_qw*_qz+_qx*_qy), 1-2*(_qy*_qy + _qz*_qz));
-    }
-    inline Eigen::Quaterniond quaternionFromYaw() {
-        return Eigen::Quaterniond(Eigen::AngleAxisd(_yaw, Eigen::Vector3d::UnitZ()));
-
-    }
 
     // OPERATORS
 
@@ -170,35 +52,27 @@ public:
 
         this->setPosition(m.getX(),m.getY(),m.getZ());
 
-        this->setOrientation(m.getQw(),m.getQx(),m.getQy(),m.getQz());
+        this->setOrientation(m.getOrientation());
 
         this->setV(m.getVx(),m.getVy(),m.getVz());
 
         this->setYaw(m.getYaw());
 
     }
-    
+    long int timestamp;
+private:
     // MOCAP
-    long int timestamp; //"Latency" from motion capture server
-    float _x = 0.0;
-    float _y = 0.0;
-    float _z = 0.0;
-    float _vx = 0.0;
-    float _vy = 0.0;
-    float _vz = 0.0;
-    float _yaw = 0.0;
-    float _qw = 0.0;
-    float _qx = 0.0;
-    float _qy = 0.0;
-    float _qz = 0.0;
+    //"Latency" from motion capture server
+    double _x;
+    double _y;
+    double _z;
+    double _vx;
+    double _vy;
+    double _vz;
+    double _yaw;
+    Eigen::Quaterniond _orientation;
 
 };
 
-inline float rad2deg(float rad)
-{
-    return rad*RAD2DEG;
-}
 
-
-#endif // MAVSTATE_H
-
+#endif //MOCAP2MAV_MAVSTATE_H

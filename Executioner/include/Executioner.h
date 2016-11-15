@@ -7,6 +7,7 @@
 #include "common/common.h"
 #include <deque>
 #include "AndOr/aograph.h"
+#include "common/MavState.h"
 
 
 
@@ -31,6 +32,7 @@ public:
 	bool _can_run;
 	int _actualNode;
 	std::string name;
+    MavState m2;
 
 private:
 

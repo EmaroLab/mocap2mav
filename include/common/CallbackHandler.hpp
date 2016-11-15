@@ -37,11 +37,11 @@ public:
 
     void visionEstimateCallback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
 
-        _vision_pos.setPosition((float)msg->position[0],(float)msg->position[1],(float)msg->position[2]);
+        _vision_pos.setPosition((double)msg->position[0],(double)msg->position[1],(double)msg->position[2]);
 
-        _vision_pos.setV((float)msg->velocity[0], (float)msg->velocity[1], (float)msg->velocity[2]);
+        _vision_pos.setV((double)msg->velocity[0], (double)msg->velocity[1], (double)msg->velocity[2]);
 
-        _vision_pos.setOrientation((float)msg->orientation[0],(float)msg->orientation[1],(float)msg->orientation[2],(float)msg->orientation[3]);
+        _vision_pos.setOrientation((double)msg->orientation[0],(double)msg->orientation[1],(double)msg->orientation[2],(double)msg->orientation[3]);
 
         _estimate_ready = true;
 
@@ -98,10 +98,10 @@ public:
 
         temp.yaw = mavPose.getYaw();
 
-        temp.orientation[0] = mavPose.getQw();
-        temp.orientation[1] = mavPose.getQx();
-        temp.orientation[2] = mavPose.getQy();
-        temp.orientation[3] = mavPose.getQz();
+        temp.orientation[0] = mavPose.getOrientation().w();
+        temp.orientation[1] = mavPose.getOrientation().x();
+        temp.orientation[2] = mavPose.getOrientation().y();
+        temp.orientation[3] = mavPose.getOrientation().z();
 
         temp.timestamp = mavPose.timestamp;
 

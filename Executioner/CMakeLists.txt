@@ -13,7 +13,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp)
+${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp ../src/MavState.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
@@ -34,6 +34,8 @@ pkg_search_module(LCM REQUIRED lcm)
  add_library(Execlib
          libs/Executioner.cpp
          include/Executioner.h
+         ../src/MavState.cpp
+         ../include/common/MavState.h
          libs/AndOr/aograph.h libs/AndOr/aograph.cpp libs/AndOr/aonode.h libs/AndOr/aonode.cpp) #AndOr, Temp solution
 
 ##qt5_use_modules(exec Widgets Core Network SerialPort)

@@ -11,14 +11,17 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-#find_package(Eigen 3 QUIET)
-#if(NOT Eigen_FOUND)
-#    include(/usr/share/cmake-3.0/Modules/FindEigen3.cmake)
-#    set(Eigen_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
-#endif()
+find_package(Eigen 3 QUIET)
+if(NOT Eigen_FOUND)
+    include(cmake/FindEigen3.cmake)
+    #include(/usr/share/cmake-3.0/Modules/FindEigen3.cmake)
+    set(Eigen_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
+endif()
 
-find_package( PkgConfig )
-pkg_check_modules( EIGEN3 REQUIRED eigen3 )
+
+
+#find_package(PkgConfig)
+#pkg_search_module(Eigen3 REQUIRED eigen3)
 
 
 

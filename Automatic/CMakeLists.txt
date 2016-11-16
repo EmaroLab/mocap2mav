@@ -39,9 +39,6 @@ pkg_search_module(LCM REQUIRED lcm)
 
 target_link_libraries( autom
         ${PROJECT_LINK_LIBS}
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets
 	    Automlib
 		${LCM_LIBRARIES}
 	)

@@ -43,9 +43,6 @@ pkg_search_module(LCM REQUIRED lcm)
 add_subdirectory(libs/AndOr)
 target_link_libraries(exec
         ${PROJECT_LINK_LIBS}
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets
         Execlib
         AndOrLib
         ${LCM_LIBRARIES}

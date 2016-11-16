@@ -9,8 +9,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #Set QT
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Network)
+#find_package(Qt5Widgets REQUIRED)
+#find_package(Qt5Network)
 
 set(PROJECT_SRCS
 ${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp ../src/MavState.cpp)

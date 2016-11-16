@@ -35,20 +35,20 @@ pkg_search_module(LCM REQUIRED lcm)
          libs/Executioner.cpp
          include/Executioner.h
          ../src/MavState.cpp
-         ../include/common/MavState.h
-         libs/AndOr/aograph.h libs/AndOr/aograph.cpp libs/AndOr/aonode.h libs/AndOr/aonode.cpp) #AndOr, Temp solution
+         ../include/common/MavState.h)
+         #libs/AndOr/aograph.h libs/AndOr/aograph.cpp libs/AndOr/aonode.h libs/AndOr/aonode.cpp) #AndOr, Temp solution
 
 ##qt5_use_modules(exec Widgets Core Network SerialPort)
 ##qt5_use_modules(Dis Widgets Core Network SerialPort)
-
+add_subdirectory(libs/AndOr)
 target_link_libraries(exec
         ${PROJECT_LINK_LIBS}
         Qt5::Core
         Qt5::Network
         Qt5::Widgets
         Execlib
+        AndOrLib
         ${LCM_LIBRARIES}
         #AndOrLib
 	)
 
-#add_subdirectory(libs/AndOr)

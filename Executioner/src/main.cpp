@@ -1,7 +1,6 @@
 #include <iostream>
 #include <lcm/lcm-cpp.hpp>
 #include "Executioner.h"
-#include "qdebug.h"
 #include "common/CallbackHandler.hpp"
 #include "Parser.h"
 

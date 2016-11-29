@@ -9,8 +9,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #Set QT
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Network)
+#find_package(Qt5Widgets REQUIRED)
+#find_package(Qt5Network)
 
 set(PROJECT_SRCS
 ${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp ../src/MavState.cpp)
@@ -43,9 +43,6 @@ pkg_search_module(LCM REQUIRED lcm)
 add_subdirectory(libs/AndOr)
 target_link_libraries(exec
         ${PROJECT_LINK_LIBS}
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets
         Execlib
         AndOrLib
         ${LCM_LIBRARIES}

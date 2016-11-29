@@ -1,5 +1,5 @@
 type=takeoff
-z=10.256
+z=-10.256
 type=move
 x=1
 y=2

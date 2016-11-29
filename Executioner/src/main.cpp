@@ -1,7 +1,6 @@
 #include <iostream>
 #include <lcm/lcm-cpp.hpp>
 #include "Executioner.h"
-#include "qdebug.h"
 #include "common/CallbackHandler.hpp"
 #include "Parser.h"
 
@@ -50,7 +49,7 @@ int main(int argc, char** argv){
             //Publish next task
             if(e.readyToPublish()) {
 
-                qDebug() << "publishing task";
+                std::cout << "publishing task" << std::endl;
                 handler.publish("actual_task", &e._actualTask);
 
             }

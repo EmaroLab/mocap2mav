@@ -9,8 +9,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 #Set QT
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Network)
+##find_package(Qt5Widgets REQUIRED)
+#find_package(Qt5Network)
 
 set(PROJECT_SRCS
 ${PROJECT_SOURCE_DIR}/main.cpp ../src/MavState.cpp)
@@ -39,9 +39,6 @@ pkg_search_module(LCM REQUIRED lcm)
 
 target_link_libraries( autom
         ${PROJECT_LINK_LIBS}
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets
 	    Automlib
 		${LCM_LIBRARIES}
 	)

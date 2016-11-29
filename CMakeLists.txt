@@ -13,9 +13,18 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 find_package(Eigen 3 QUIET)
 if(NOT Eigen_FOUND)
-    include(/usr/share/cmake-3.0/Modules/FindEigen3.cmake)
+    include(cmake/FindEigen3.cmake)
+    #include(/usr/share/cmake-3.0/Modules/FindEigen3.cmake)
     set(Eigen_INCLUDE_DIR ${EIGEN3_INCLUDE_DIR})
 endif()
+
+
+
+#find_package(PkgConfig)
+#pkg_search_module(Eigen3 REQUIRED eigen3)
+
+
+
 include_directories(${Eigen_INCLUDE_DIR})
 
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
@@ -29,8 +38,8 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("${PROJECT_SRC_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
 
-add_subdirectory(NatNetReceiver)
-add_subdirectory(Dispatcher)
+#add_subdirectory(NatNetReceiver)
+#add_subdirectory(Dispatcher)
 add_subdirectory(Executioner)
 add_subdirectory(Automatic)
-add_subdirectory(Security)
+#add_subdirectory(Security)

@@ -32,7 +32,7 @@ public:
 	bool _can_run;
 	int _actualNode;
 	std::string name;
-    MavState m2;
+
 
 private:
 

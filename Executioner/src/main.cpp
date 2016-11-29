@@ -8,6 +8,8 @@
 
 int main(int argc, char** argv){
 
+
+
     Parser p;
     Executioner e;
 
@@ -33,6 +35,13 @@ int main(int argc, char** argv){
     handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
 
     while(0==handler.handle()){
+
+
+
+            //AndOr
+
+
+
 
 
             //Run state machine

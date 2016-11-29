@@ -68,11 +68,12 @@ void Executioner::run(){
     if(!_nodeList.empty()) {
 
         loadTask();
-        _can_run = _actualNode < _nodeList.size();
+        _can_run = _actualNode < _nodeList.size(); //TRUE
     }
     else{
         _can_run = false;
     }
+
     if(_newTask) {
 
         bool done = false;

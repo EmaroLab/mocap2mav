@@ -89,6 +89,8 @@ void Automatic::rotate() {
 
 }
 
+//QUA
+
 void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawComm){
 
     double yawSp_h = yawTarget - heading;

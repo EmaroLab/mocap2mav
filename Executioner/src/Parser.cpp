@@ -140,10 +140,10 @@ bool Parser::parseAction(int pos) {
     }
     else if(a == "move"){
         std::cout << "Move found" << std::endl;
-        const unsigned char xFound = 0b0001; // hex for 0000 0001
-        const unsigned char yFound = 0b0010; // hex for 0000 0010
-        const unsigned char zFound = 0b0100; // hex for 0000 0100
-        const unsigned char aFound = 0b1000; // hex for 0000 1000
+        const unsigned char xFound = 0b0001; //
+        const unsigned char yFound = 0b0010; //
+        const unsigned char zFound = 0b0100; //
+        const unsigned char aFound = 0b1000; //
         unsigned char mask = 0b0000;
         task.action = common::actions::MOVE;
 

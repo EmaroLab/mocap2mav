@@ -34,7 +34,7 @@ public:
         _vision_pos.setYaw(0);
 
     }
-
+//TODO: use lcm2mavstate
     void visionEstimateCallback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const geometry::pose* msg){
 
         _vision_pos.setPosition((double)msg->position[0],(double)msg->position[1],(double)msg->position[2]);

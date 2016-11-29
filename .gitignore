@@ -49,7 +49,7 @@ Thumbs.db
 
 # Distribution / packaging
 .Python
-
+cmake-build-debug/
 build/
 lib/
 lib64/

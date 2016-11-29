@@ -3,7 +3,6 @@
 #include "Automatic.h"
 #include "common/CallbackHandler.hpp"
 #include "poll.h"
-#include "QDebug"
 #include "common/common.h"
 
 using namespace common;

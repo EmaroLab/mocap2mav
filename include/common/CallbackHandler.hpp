@@ -27,11 +27,13 @@ public:
         _position_sp_ready = false;
         _position_sp.setOrientation(1,0,0,0);
         _position_sp.setYaw(0);
+        _position_sp.setType(MavState::type::POSITION);
 
         _vision_pos.setPosition(0,0,0);
         _estimate_ready = false;
         _vision_pos.setOrientation(1,0,0,0);
         _vision_pos.setYaw(0);
+        _vision_pos.setType(MavState::type::POSITION);
 
     }
 //TODO: use lcm2mavstate
@@ -42,6 +44,17 @@ public:
         _vision_pos.setV((double)msg->velocity[0], (double)msg->velocity[1], (double)msg->velocity[2]);
 
         _vision_pos.setOrientation((double)msg->orientation[0],(double)msg->orientation[1],(double)msg->orientation[2],(double)msg->orientation[3]);
+
+
+        if (msg->type == 0){
+            _vision_pos.setType(MavState::type::POSITION);
+        }
+        else if(msg->type == 1){
+            _vision_pos.setType(MavState::type::VELOCITY);
+        }
+        else{
+            _vision_pos.setType(MavState::type::POSITION);
+        }
 
         _estimate_ready = true;
 
@@ -54,6 +67,16 @@ public:
         _position_sp.setOrientation((float)msg->orientation[0],(float)msg->orientation[1],(float)msg->orientation[2],(float)msg->orientation[3]);
 
         _position_sp.setYaw((float)msg->yaw);
+
+        if (msg->type == 0){
+            _position_sp.setType(MavState::type::POSITION);
+        }
+        else if(msg->type == 1){
+            _position_sp.setType(MavState::type::VELOCITY);
+        }
+        else{
+            _position_sp.setType(MavState::type::POSITION);
+        }
 
     }
 
@@ -84,6 +107,17 @@ public:
         temp.setYaw(lcmPose.yaw);
 
         temp.timestamp = lcmPose.timestamp;
+
+        if (lcmPose.type == 0){
+            temp.setType(MavState::type::POSITION);
+        }
+        else if(lcmPose.type == 1){
+            temp.setType(MavState::type::VELOCITY);
+        }
+        else{
+            temp.setType(MavState::type::POSITION);
+        }
+
         return temp;
 
     }
@@ -104,6 +138,8 @@ public:
         temp.orientation[3] = mavPose.getOrientation().z();
 
         temp.timestamp = mavPose.timestamp;
+
+        temp.type = mavPose.getType();
 
         return temp;
 

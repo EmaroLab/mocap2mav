@@ -7,4 +7,5 @@ struct pose
     double   orientation[4];
     double yaw;
     int8_t isValid;
+    int8_t type;
 }

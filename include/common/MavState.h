@@ -12,9 +12,20 @@
 
 class MavState {
 
+
+
 public:
     //MavState(const MavState&) = default;
+
     MavState();
+
+    enum type{
+
+        POSITION,
+        VELOCITY
+
+    };
+
     void setPosition(double x, double y, double z);
     void setX(double x);
     void setY(double y);
@@ -45,6 +56,10 @@ public:
     //convert from eigen
     void getOrientationRPY(double& roll, double& pitch, double& yaw) const;
 
+    void setType(type t);
+
+    type getType();
+
 
     // OPERATORS
 
@@ -58,8 +73,11 @@ public:
 
         this->setYaw(m.getYaw());
 
+        this->setType(m.getType());
+
     }
     long int timestamp;
+
 private:
     // MOCAP
     //"Latency" from motion capture server
@@ -70,6 +88,7 @@ private:
     double _vy;
     double _vz;
     double _yaw;
+    type   _type;
     Eigen::Quaterniond _orientation;
 
 };

@@ -12,6 +12,8 @@ int main(int argc, char** argv){
     Parser p;
     Executioner e;
 
+
+
     p.loadFile("lists/list.txt");
     std::cout << "Parsing ....." << std::endl;
 
@@ -38,8 +40,6 @@ int main(int argc, char** argv){
 
 
             //AndOr
-
-
 
 
 

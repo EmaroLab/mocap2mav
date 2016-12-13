@@ -13,7 +13,7 @@ class Automatic
 public:
 
     Automatic();
-    void land(const float dt,const float speed,const float offset,const float land_gain);
+    void land(MavState platPose);
     void takeOff();
     void move();
     void rotate();

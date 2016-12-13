@@ -28,6 +28,8 @@ class pose
 
         int8_t     isValid;
 
+        int8_t     type;
+
     public:
         /**
          * Encode a message into binary form.
@@ -142,6 +144,9 @@ int pose::_encodeNoHash(void *buf, int offset, int maxlen) const
     tlen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, &this->isValid, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    tlen = __int8_t_encode_array(buf, offset + pos, maxlen - pos, &this->type, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     return pos;
 }
 
@@ -167,6 +172,9 @@ int pose::_decodeNoHash(const void *buf, int offset, int maxlen)
     tlen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, &this->isValid, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    tlen = __int8_t_decode_array(buf, offset + pos, maxlen - pos, &this->type, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     return pos;
 }
 
@@ -179,12 +187,13 @@ int pose::_getEncodedSizeNoHash() const
     enc_size += __double_encoded_array_size(NULL, 4);
     enc_size += __double_encoded_array_size(NULL, 1);
     enc_size += __int8_t_encoded_array_size(NULL, 1);
+    enc_size += __int8_t_encoded_array_size(NULL, 1);
     return enc_size;
 }
 
 uint64_t pose::_computeHash(const __lcm_hash_ptr *)
 {
-    uint64_t hash = 0x57dd4863aa87386fLL;
+    uint64_t hash = 0x08f94d266b74058aLL;
     return (hash<<1) + ((hash>>63)&1);
 }
 

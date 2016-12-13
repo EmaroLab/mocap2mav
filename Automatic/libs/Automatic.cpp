@@ -2,15 +2,6 @@
 
 #define PI 3.141592653589
 
-int land_count = 0;int rot_count = 0;int circle_count = 0; int land_plat_count = 0;
-
-float error_int = 0;
-float error_int_x = 0;
-float error_int_y = 0;
-bool  try_land = false;
-bool start_try_land = false;
-bool landing = false;
-
 
 Eigen::Quaterniond getQuatFromYaw(double yaw){
 
@@ -74,8 +65,6 @@ void Automatic::rotate() {
 
     }
 
-
-
     //calculateYawInterm(_state.getYawFromQuat(),yawSP,yawComm);
 
     yawComm = yawSP;
@@ -129,64 +118,18 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
     */
 }
 
-void Automatic::land(float dt, float speed, float offset, float land_gain) {
+void Automatic::land(MavState platPose) {
 
-    //landing procedure
+    //Calculate difference
 
-
-
-    MavState error, sP;
-    float descending_rate = 0;
-
-    //float offset = nodeList[actualNode].a.params[1];
-    double z = _comm.getZ();
-
-    bool descend_valid = false;
+    double dx = _state.getX() - platPose.getX();
+    double dy = _state.getY() - platPose.getY();
+    double dz = _state.getZ() - platPose.getZ();
 
 
-    //Descending task
+    _comm.setType(MavState::type::VELOCITY);
+    _comm.setZ(-1);
 
-    error.setX( _actualTask.x - _state.getX());
-    error.setY( _actualTask.y - _state.getY());
-
-    if (_state.getZ() - offset >= - 0.15 ){
-
-        if(fabs(error.getX()) < 0.03 && fabs(error.getY()) < 0.03) {
-
-            descend_valid = true;
-
-        }
-        else speed = 0;
-
-        sP.setX((float)(error.getX() * land_gain  + _actualTask.x));
-        sP.setY((float)(error.getY() * land_gain  + _actualTask.y));
-
-        _comm.setX(sP.getX());
-        _comm.setY(sP.getY());
-
-        z += speed*dt;
-
-    }
-    else{
-
-        //Centering task
-
-        sP.setX(error.getX() * land_gain  + _actualTask.x);
-        sP.setY(error.getY() * land_gain  + _actualTask.y);
-
-        //wait to recenter
-
-        if(fabs(error.getX()) < 0.08 && fabs(error.getY()) < 0.08){ z = _state.getZ() + 0.3f; descend_valid = true;}
-
-        else if(fabs(error.getX()) < 0.05 && fabs(error.getY()) < 0.05){ z = _state.getZ() + 0.5f; descend_valid = true;}
-
-        //z += descending_rate * dt;
-        _comm.setX(sP.getX());
-        _comm.setY(sP.getY());
-
-    }
-
-    if(descend_valid) _comm.setZ(z);
 
 }
 

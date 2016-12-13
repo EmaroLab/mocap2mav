@@ -5,7 +5,7 @@
 #include "common/MavState.h"
 
 MavState::MavState()
-        : timestamp(0), _x(0.0), _y(0.0), _z(0.0), _vx(0.0), _vy(0.0), _vz(0.0), _yaw(0.0) {
+        : timestamp(0), _x(0.0), _y(0.0), _z(0.0), _vx(0.0), _vy(0.0), _vz(0.0), _yaw(0.0),_type(type::POSITION) {
 
     _orientation.setIdentity();
 }
@@ -103,6 +103,16 @@ void MavState::setOrientation(double qw, double qx, double qy, double qz) {
 
 double MavState::getYawFromQuat() const{
     return std::atan2(2*(_orientation.w()*_orientation.z()+_orientation.x()*_orientation.y()), 1-2*(_orientation.y()*_orientation.y()+_orientation.z()*_orientation.z()));
+}
+
+void MavState::setType(MavState::type t) {
+
+    _type = t;
+
+}
+
+MavState::type MavState::getType() {
+    return _type;
 }
 
 

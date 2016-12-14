@@ -1,13 +1,14 @@
 #include "Automatic.h"
 
-#define PI 3.141592653589
-#define Kland 2
-#define THRE  0.15
-#define DRATE_MIN 0.1
-#define DRATE_MAX 0.3
-#define VMAX  1
-
-
+#define PI              3.141592653589
+#define Kland           2
+#define THRE            0.15
+#define DRATE_MIN       0.07
+#define DRATE_MAX       0.3
+#define VMAX            1
+#define TMAX            2
+#define TMIN            1
+#define PLATFORM_OFFSET 0.1
 
 Eigen::Quaterniond getQuatFromYaw(double yaw){
 
@@ -126,21 +127,30 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
     */
 }
 
-double calculateDescendRate(double dz){
+double calculateDescendRate(double dz,double drate_max,double drate_min, double tmax, double tmin){
 
+    //Calculate the descend rate profile (linear) through y = mx + q
+    //where x is vertical distance between robot and platform
+    if(dz > tmax)      return drate_max;
+    else if(dz < tmin) return drate_min;
+    else{
 
+        double m = (drate_max - drate_min) / (tmax - tmin);
+        double q = drate_min - m * tmin;
+        return m * dz + q;
+
+    }
 
 }
 
 void Automatic::land(MavState platPose) {
 
-    std::cout << "robotV: " << _state.getVz()   << std::endl;
-    std::cout << "platfV: " << platPose.getVz() << std::endl;
+
     //Calculate difference
 
     double dx = - _state.getX() + platPose.getX();
     double dy = - _state.getY() + platPose.getY();
-    double dz = - _state.getZ() + platPose.getZ();
+    double dz = - _state.getZ() + platPose.getZ() + PLATFORM_OFFSET;
 
     // Be sure that we are on top of the target
 
@@ -165,7 +175,9 @@ void Automatic::land(MavState platPose) {
     //TODO: add security checks on vz
     if(fabs(dx) <= THRE && fabs(dy) <= THRE){
         //Descending is safe, is it?
-        double z_target_v = platPose.getVz() - DRATE;
+        double desc = calculateDescendRate(-dz, DRATE_MAX, DRATE_MIN, TMAX, TMIN);
+        std::cout << desc <<"-dz= "<<-dz<< std::endl;
+        double z_target_v = platPose.getVz() - desc;
         //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
         _comm.setVz(z_target_v);
 

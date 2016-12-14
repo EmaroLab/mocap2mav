@@ -21,7 +21,6 @@ Executioner::Executioner(){
     _nodeList.clear();
     _nodeList.shrink_to_fit();
 
-
 }
 
 void Executioner::init(){
@@ -84,9 +83,10 @@ void Executioner::run(){
         std::cout << "Do you want to proceed? Y/N"<<std::endl;
         std::cout << "***************************************"<<std::endl;
         std::cout<<std::endl;
-        std::cin  >> in;
+
 
         do {
+            std::cin  >> in;
             switch (in) {
 
                 case 'y':

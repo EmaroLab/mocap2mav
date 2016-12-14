@@ -53,7 +53,8 @@ int main(int argc, char** argv){
 
 			handler3.handle();
 			autom.setTask(call._task);
-			std::cout<<  "New task arrived with action: " << autom._actualTask.action;
+			//std::cout<<  "New task arrived with action: " << autom._actualTask.action;
+            printf("New task arrived with action: %c",autom._actualTask.action);
 			newTask = true;
             waiting = false;
 
@@ -64,9 +65,9 @@ int main(int argc, char** argv){
 
 		if(fds[1].revents & POLLIN){
 
+            //std::cout << platform.getX() << " " << platform.getY() << " " << platform.getZ() << std::endl;
 			handler2.handle();
 			platform = call._position_sp;
-            std::cout << platform.getZ() << std::endl;
 
 		}
 

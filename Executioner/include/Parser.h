@@ -25,14 +25,14 @@ public:
 
     bool parse();
     bool loadFile(std::string file);
-    std::vector<std::vector<std::string>> _tokens;
-    std::deque<exec::task> _taskListParsed;
-    bool parseAction(int pos);
+    std::deque<exec::task> getTaskListParsed();
+
+
 
 private:
-
-
-
+    bool parseAction(int pos);
+    std::vector<std::vector<std::string>> _tokens;
+    std::deque<exec::task> _taskListParsed;
 
 };
 

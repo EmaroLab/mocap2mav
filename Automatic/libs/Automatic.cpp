@@ -1,6 +1,12 @@
 #include "Automatic.h"
 
 #define PI 3.141592653589
+#define Kland 2
+#define THRE  0.15
+#define DRATE_MIN 0.1
+#define DRATE_MAX 0.3
+#define VMAX  1
+
 
 
 Eigen::Quaterniond getQuatFromYaw(double yaw){
@@ -53,6 +59,7 @@ void Automatic::setTask(exec::task rTask)
 
 void Automatic::rotate() {
 
+    _comm.setType(MavState::type::POSITION);
     double angleValid = _actualTask.params[0];
     double yawSP = _actualTask.yaw;
     double yawComm;
@@ -86,6 +93,7 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
 
 
 
+    _comm.setType(MavState::type::POSITION);
 /*  DISABLE ALGORITHM FOR BUG FIXING
     if (fabs(yawSp_h) <= PI/10) yawComm = yawTarget;
     else if(fabs(yawSp_h) > PI - PI/18){
@@ -118,23 +126,60 @@ void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawC
     */
 }
 
-void Automatic::land(MavState platPose) {
+double calculateDescendRate(double dz){
 
-    //Calculate difference
-
-    double dx = _state.getX() - platPose.getX();
-    double dy = _state.getY() - platPose.getY();
-    double dz = _state.getZ() - platPose.getZ();
-
-
-    _comm.setType(MavState::type::VELOCITY);
-    _comm.setZ(-1);
 
 
 }
 
+void Automatic::land(MavState platPose) {
+
+    std::cout << "robotV: " << _state.getVz()   << std::endl;
+    std::cout << "platfV: " << platPose.getVz() << std::endl;
+    //Calculate difference
+
+    double dx = - _state.getX() + platPose.getX();
+    double dy = - _state.getY() + platPose.getY();
+    double dz = - _state.getZ() + platPose.getZ();
+
+    // Be sure that we are on top of the target
+
+    double x_target_v = Kland * (dx);
+    double y_target_v = Kland * (dy);
+
+    //Normalize
+
+    Eigen::Vector2d v(x_target_v,y_target_v);
+
+    if(fabs(v.maxCoeff()) > VMAX){
+
+        v.normalize();
+
+        v = v * VMAX;
+
+    }
+
+    _comm.setVx(v(0));
+    _comm.setVy(v(1));
+
+    //TODO: add security checks on vz
+    if(fabs(dx) <= THRE && fabs(dy) <= THRE){
+        //Descending is safe, is it?
+        double z_target_v = platPose.getVz() - DRATE;
+        //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
+        _comm.setVz(z_target_v);
+
+    }else _comm.setVz(0); //Is it correct? Don't think so
+
+    _comm.setType(MavState::type::VELOCITY);
+
+}
+
+
+
 void Automatic::takeOff() {
 
+    _comm.setType(MavState::type::POSITION);
     double height = _actualTask.params[0];
 
     _comm.setX((float)_actualTask.x);
@@ -149,6 +194,7 @@ void Automatic::takeOff() {
 
 void Automatic::move()
 {
+    _comm.setType(MavState::type::POSITION);
     double alpha = _actualTask.params[0];
 
     calculatePositionInterm(alpha,_actualTask,_state,_comm);
@@ -157,6 +203,7 @@ void Automatic::move()
 void Automatic::calculatePositionInterm(const double alpha, const exec::task target, const MavState state, MavState &comm)
 {
 
+    _comm.setType(MavState::type::POSITION);
     double positionError[3] = {target.x - state.getX() ,target.y - state.getY() , target.z - state.getZ()};
 
     double dist = sqrt(pow(positionError[0],2) + pow(positionError[1],2) + pow(positionError[2],2));

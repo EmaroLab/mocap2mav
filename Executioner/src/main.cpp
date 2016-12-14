@@ -12,14 +12,12 @@ int main(int argc, char** argv){
     Parser p;
     Executioner e;
 
-
-
     p.loadFile("lists/list.txt");
     std::cout << "Parsing ....." << std::endl;
 
     if(p.parse()){
         std::cout << ".......Parsed" << std::endl;
-        e.setList(p._taskListParsed);
+        e.setList(p.getTaskListParsed());
     }else{
 
         std::cout << "Unable to parse the file" << std::endl;

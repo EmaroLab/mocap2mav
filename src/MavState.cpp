@@ -115,6 +115,24 @@ MavState::type MavState::getType() {
     return _type;
 }
 
+void MavState::setVx(double v) {
+
+    _vx = v;
+
+}
+
+void MavState::setVy(double v) {
+
+    _vy = v;
+
+}
+
+void MavState::setVz(double v) {
+
+    _vz = v;
+
+}
+
 
 
 

@@ -35,6 +35,9 @@ public:
     double getZ() const;
 
     void setV(double vx, double vy, double vz);
+    void setVx(double v);
+    void setVy(double v);
+    void setVz(double v);
     double getVx() const;
     double getVy() const;
     double getVz() const;

@@ -64,6 +64,8 @@ public:
 
         _position_sp.setPosition((float)msg->position[0],(float)msg->position[1],(float)msg->position[2]);
 
+        _position_sp.setV((float)msg->velocity[0],(float)msg->velocity[1],(float)msg->velocity[2]);
+
         _position_sp.setOrientation((float)msg->orientation[0],(float)msg->orientation[1],(float)msg->orientation[2],(float)msg->orientation[3]);
 
         _position_sp.setYaw((float)msg->yaw);
@@ -102,7 +104,9 @@ public:
     MavState lcmPose2MavState(const geometry::pose lcmPose){
 
         MavState temp;
+
         temp.setPosition((float)lcmPose.position[0],(float)lcmPose.position[1],(float)lcmPose.position[2]);
+        temp.setV((float)lcmPose.velocity[0],(float)lcmPose.velocity[1],(float)lcmPose.velocity[2]);
         temp.setOrientation((float)lcmPose.orientation[0],(float)lcmPose.orientation[1],(float)lcmPose.orientation[2],(float)lcmPose.orientation[3]);
         temp.setYaw(lcmPose.yaw);
 
@@ -129,6 +133,10 @@ public:
         temp.position[0] = mavPose.getX();
         temp.position[1] = mavPose.getY();
         temp.position[2] = mavPose.getZ();
+
+        temp.velocity[0] = mavPose.getVx();
+        temp.velocity[1] = mavPose.getVy();
+        temp.velocity[2] = mavPose.getVz();
 
         temp.yaw = mavPose.getYaw();
 

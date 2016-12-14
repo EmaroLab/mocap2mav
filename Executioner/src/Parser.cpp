@@ -32,13 +32,7 @@ bool Parser::loadFile(std::string file) {
             _tokens.push_back(str_vector);
 
         }
-/*
-        for (int i = 0; i < _tokens.size()-1; ++i) {
 
-            std::cout<<_tokens[i][0] << " " << _tokens[i][1] << std::endl;
-
-        }
-*/
         myfile.close();
         return true;
     }
@@ -245,7 +239,7 @@ bool Parser::parseAction(int pos) {
 
     }
     else if (a == "rotate") {
-        //TODO: rotate is bugged, do the parsing when bug is fixed.
+
         std::cout << "Rotate found" << std::endl;
         const unsigned char xFound = 0b0001; // hex for 0000 0001
         const unsigned char yFound = 0b0010; // hex for 0000 0010
@@ -416,6 +410,12 @@ bool Parser::parseAction(int pos) {
     }
     //No failures at this point, return true
     return true;
+
+}
+
+std::deque<exec::task> Parser::getTaskListParsed() {
+
+    return _taskListParsed;
 
 }
 

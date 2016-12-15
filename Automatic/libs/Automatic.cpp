@@ -3,11 +3,11 @@
 #define PI              3.141592653589
 #define Kland           2
 #define THRE            0.15
-#define DRATE_MIN       0.07
-#define DRATE_MAX       0.3
+#define DRATE_MIN       0.1
+#define DRATE_MAX       0.4
 #define VMAX            1
 #define TMAX            2
-#define TMIN            1
+#define TMIN            0.5
 #define PLATFORM_OFFSET 0.1
 
 Eigen::Quaterniond getQuatFromYaw(double yaw){
@@ -143,14 +143,15 @@ double calculateDescendRate(double dz,double drate_max,double drate_min, double 
 
 }
 
-void Automatic::land(MavState platPose) {
+void Automatic::land2(MavState platPose) {
 
 
     //Calculate difference
 
     double dx = - _state.getX() + platPose.getX();
     double dy = - _state.getY() + platPose.getY();
-    double dz = - _state.getZ() + platPose.getZ() + PLATFORM_OFFSET;
+    double dz =   _state.getZ() + platPose.getZ() + PLATFORM_OFFSET; //_state.z is negative due to inversion,
+                                                                    // that is why we dont use the minus sign
 
     // Be sure that we are on top of the target
 
@@ -160,9 +161,9 @@ void Automatic::land(MavState platPose) {
     //Normalize
 
     Eigen::Vector2d v(x_target_v,y_target_v);
-
-    if(fabs(v.maxCoeff()) > VMAX){
-
+    std::cout <<"befor: "<< fabs(v.maxCoeff()) << std::endl;
+    if(v.norm() > VMAX){
+    std::cout <<"after: "<< fabs(v.maxCoeff()) << std::endl;
         v.normalize();
 
         v = v * VMAX;
@@ -176,7 +177,7 @@ void Automatic::land(MavState platPose) {
     if(fabs(dx) <= THRE && fabs(dy) <= THRE){
         //Descending is safe, is it?
         double desc = calculateDescendRate(-dz, DRATE_MAX, DRATE_MIN, TMAX, TMIN);
-        std::cout << desc <<"-dz= "<<-dz<< std::endl;
+
         double z_target_v = platPose.getVz() - desc;
         //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
         _comm.setVz(z_target_v);
@@ -246,4 +247,46 @@ void Automatic::calculatePositionInterm(const double alpha, const exec::task tar
         comm.setY(state.getY() + (float)incrementVect[1]);
         comm.setZ(state.getZ() + (float)incrementVect[2]);
     }
+}
+
+void Automatic::land1(float x_target, float y_target, float h) {
+
+    //Calculate difference
+
+    double dx = - _state.getX() + x_target;
+    double dy = - _state.getY() + y_target;
+    double dz =   _state.getZ() - h; //_state.z is negative due to inversion,
+    // that is why we dont use the minus sign
+
+    // Be sure that we are on top of the target
+
+    double x_target_v = Kland * (dx);
+    double y_target_v = Kland * (dy);
+
+    //Normalize
+
+    Eigen::Vector2d v(x_target_v,y_target_v);
+
+    if(v.norm() > VMAX){
+
+        v.normalize();
+
+        v = v * VMAX;
+
+    }
+
+    _comm.setVx(v(0));
+    _comm.setVy(v(1));
+
+    //TODO: add security checks on vz
+    if(fabs(dx) <= THRE && fabs(dy) <= THRE){
+        //Descending is safe, is it?
+        double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
+
+        _comm.setVz(-desc);
+
+    }else _comm.setVz(0); //Is it correct? Don't think so
+
+    _comm.setType(MavState::type::VELOCITY);
+
 }

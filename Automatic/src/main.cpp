@@ -96,7 +96,8 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-			autom.land(platform);
+            if(autom._actualTask.params[1] == 1) autom.land2(platform);
+            else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.params[0]);
 
 		}
 		if (autom.getTask().action == actions::ROTATE){

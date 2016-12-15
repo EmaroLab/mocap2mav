@@ -13,7 +13,8 @@ class Automatic
 public:
 
     Automatic();
-    void land(MavState platPose);
+    void land2(MavState platPose);
+    void land1(float x_target, float y_target, float h);
     void takeOff();
     void move();
     void rotate();

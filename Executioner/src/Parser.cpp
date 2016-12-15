@@ -6,6 +6,7 @@
 #define PI 3.141592653589
 
 
+
 Parser::Parser() {
 
 
@@ -84,6 +85,14 @@ bool Parser::parse() {
 
 }
 
+double Parser::getValue(std::string str)  {
+    char *cstr = new char[str.length() + 1];
+    strcpy(cstr, str.c_str());
+    double value = atof(cstr);
+    delete (cstr);
+    return value;
+}
+
 bool Parser::parseAction(int pos) {
 
     //Look for the action
@@ -144,14 +153,13 @@ bool Parser::parseAction(int pos) {
         for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
 
             std::string field = _tokens[i][0];
+            std::string value_str = _tokens[i][1];
 
             if(field == "x") {
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= xFound;
@@ -167,10 +175,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "y"){
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= yFound;
@@ -187,10 +192,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "z"){
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= zFound;
@@ -206,10 +208,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "alpha"){
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= aFound;
@@ -251,14 +250,12 @@ bool Parser::parseAction(int pos) {
         for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
 
             std::string field = _tokens[i][0];
+            std::string value_str = _tokens[i][1];
 
             if(field == "x") {
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= xFound;
@@ -274,10 +271,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "y"){
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= yFound;
@@ -294,10 +288,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "yaw"){
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= yawFound;
@@ -313,10 +304,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "angle_valid"){
 
                 //atof Helper, cast string into double
-                char *cstr = new char[_tokens[i][1].length() + 1];
-                std::strcpy(cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete (cstr);
+                double value = getValue(value_str);
 
                 if (std::isfinite(value)) {
                     mask |= aFound;
@@ -367,14 +355,11 @@ bool Parser::parseAction(int pos) {
 
         for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
             std::string field = _tokens[i][0];
-
+            std::string value_str = _tokens[i][1];
             if(field == "height"){
 
                 //atof Helper, cast string into double
-                char * cstr = new char [_tokens[i][1].length()+1];
-                std::strcpy (cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete(cstr);
+                double value = getValue(value_str);
 
                 if(std::isfinite(value)){
                     hFound = true;
@@ -387,7 +372,11 @@ bool Parser::parseAction(int pos) {
                 }
 
 
-            }else{
+            }
+            else if(field == "platform"){
+                task.params[1] = 1;
+            }
+            else{
 
                 std::cout << "unrecognized field" << std::endl;
                 return false;
@@ -412,6 +401,8 @@ bool Parser::parseAction(int pos) {
     return true;
 
 }
+
+
 
 std::deque<exec::task> Parser::getTaskListParsed() {
 

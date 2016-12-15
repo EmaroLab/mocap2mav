@@ -26,7 +26,7 @@ public:
     bool parse();
     bool loadFile(std::string file);
     std::deque<exec::task> getTaskListParsed();
-
+    double getValue(std::string str);
 
 
 private:

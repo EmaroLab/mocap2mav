@@ -28,6 +28,8 @@ void Executioner::init(){
     if(_nodeList.size()>0){
 
         _can_run = true;
+        _newTask = true;
+        _publish_task = false;
     }
     else{
 
@@ -155,7 +157,7 @@ bool Executioner::CheckActions(int a)
             //TAKE_OFF
         case actions::TAKE_OFF:
 
-            return (fabs(_state.getZ() - _nodeList[_actualNode].params[0]) < 0.1 );
+            return (fabs(_state.getZ()) >= (fabs(_actualTask.params[0]) - 0.15));
 
             //ROTATE
         case actions::ROTATE:
@@ -165,10 +167,18 @@ bool Executioner::CheckActions(int a)
 
             //LAND
         case actions::LAND:
-            if(fabs(_state.getVz()) < 0.01 && (_state.getZ() - _actualTask.params[1]) >= - 0.10)
-                return true;
-            else
+
+            if(_actualTask.params[1] == 1){
+
                 return false;
+
+            }
+            else{
+
+                return ((fabs(_state.getZ()) - fabs(_actualTask.params[0])) < 0.2 );
+
+            }
+
 
         default:
             std::cout << "Unrecognized type" << std::endl;

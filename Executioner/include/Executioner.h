@@ -31,7 +31,7 @@ public:
 	exec::task _actualTask;
 	bool _can_run;
 	int _actualNode;
-	std::string name;
+
 
 
 private:

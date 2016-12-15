@@ -39,8 +39,6 @@ int main(int argc, char** argv){
 
             //AndOr
 
-
-
             //Run state machine
             e.setState(call._vision_pos);
             e.run();

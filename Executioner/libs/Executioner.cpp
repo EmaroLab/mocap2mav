@@ -6,7 +6,7 @@
 
 
 
-bool endList = false;
+
 int node = 0;
 bool skip = false;
 
@@ -64,10 +64,10 @@ bool Executioner::readyToPublish() {
 void Executioner::run(){
 
 
-    if(!_nodeList.empty()) {
+    if(_nodeList.size() > 0) {
 
         loadTask();
-        _can_run = _actualNode < _nodeList.size(); //TRUE
+        _can_run = true; //TRUE
     }
     else{
         _can_run = false;
@@ -115,7 +115,7 @@ void Executioner::run(){
     }
 
     // Check for next task
-    if(CheckActions(_actualTask.action) || skip) {
+    if((CheckActions(_actualTask.action) || skip) && _can_run) {
 
         if(_nodeList.size() > 0){
 
@@ -128,8 +128,8 @@ void Executioner::run(){
 
         }
         else{
-            std::cout<<"Empty list, send last setpoint"<<std::endl; //TODO: implement idle function
-            endList = true;
+            std::cout<<"Empty list, sending last setpoint"<<std::endl; //TODO: implement idle function
+
             _newTask = false;
         }
     }

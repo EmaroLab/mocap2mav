@@ -53,8 +53,9 @@ int main(int argc, char** argv){
 
 			handler3.handle();
 			autom.setTask(call._task);
-			//std::cout<<  "New task arrived with action: " << autom._actualTask.action;
-            printf("New task arrived with action: %c",autom._actualTask.action);
+
+			std::cout<<  "New task arrived with action: " << printAction(autom._actualTask.action) << std::endl;
+
 			newTask = true;
             waiting = false;
 
@@ -70,6 +71,10 @@ int main(int argc, char** argv){
 			platform = call._position_sp;
 
 		}
+
+		//Choose action
+
+		if (autom.getTask().action == actions::IDLE) std::cout << "Idle, is the list empty?" <<
 
 		if (autom.getTask().action == actions::MOVE){
 

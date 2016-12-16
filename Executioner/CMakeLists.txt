@@ -21,11 +21,15 @@ include_directories("libs")
 include_directories("include")
 include_directories("dir")
 
+
+
 add_executable(exec ${PROJECT_SRCS})
 
 #Set LCM
 #set ( PROJECT_LINK_LIBS liblcm.so )
 #link_directories( ~/usr/local/lib )
+
+
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(LCM REQUIRED lcm)

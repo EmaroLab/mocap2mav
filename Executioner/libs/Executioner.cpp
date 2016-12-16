@@ -15,6 +15,7 @@ using namespace common;
 Executioner::Executioner(){
 
     _actualNode = 0;
+    _idle = false;
     _can_run = false;
     _newTask = true;
     _publish_task = false;
@@ -30,6 +31,7 @@ void Executioner::init(){
         _can_run = true;
         _newTask = true;
         _publish_task = false;
+        _idle = false;
     }
     else{
 
@@ -37,6 +39,7 @@ void Executioner::init(){
         _nodeList.shrink_to_fit();
         std::cout << "WARNING, empty list"<<std::endl;
         _can_run = false;
+        _idle = true;
     }
 
 }
@@ -70,9 +73,21 @@ void Executioner::run(){
 
         loadTask();
         _can_run = true; //TRUE
+        _idle = false;
     }
     else{
         _can_run = false;
+
+        if (!_idle){
+
+            _publish_task = true;
+            _idle = true;
+            _actualTask.action = actions ::IDLE;
+
+
+        }else _publish_task = false;
+
+
     }
 
     if(_newTask) {
@@ -175,7 +190,7 @@ bool Executioner::CheckActions(int a)
             }
             else{
 
-                return ((fabs(_state.getZ()) - fabs(_actualTask.params[0])) < 0.2 );
+                return ((fabs(_state.getZ()) - fabs(_actualTask.params[0])) < 0.2 ) && (fabs(_state.getVz()) < 0.1);
 
             }
 

@@ -49,13 +49,6 @@ int main(int argc, char** argv){
                 handler.publish("actual_task", &e._actualTask);
 
             }
-            if (!e._can_run){
-
-                e.setList(p.getTaskListParsed());
-                e.init();
-                std::cout << "repeat.." << std::endl;
-
-            }
 
     }
 

@@ -284,6 +284,11 @@ void Automatic::land1(float x_target, float y_target, float h) {
         double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
 
         _comm.setVz(-desc);
+        if (fabs(dz) < 0.05){
+            _comm.setVx(0);
+            _comm.setVy(0);
+            _comm.setVz(-10);
+        }
 
     }else _comm.setVz(0); //Is it correct? Don't think so
 

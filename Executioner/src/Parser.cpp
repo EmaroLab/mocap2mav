@@ -109,14 +109,12 @@ bool Parser::parseAction(int pos) {
         for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
 
             std::string field = _tokens[i][0];
+            std::string value_str = _tokens[i][1];
 
             if(field == "z"){
 
                 //atof Helper, cast string into double
-                char * cstr = new char [_tokens[i][1].length()+1];
-                std::strcpy (cstr, _tokens[i][1].c_str());
-                double value = atof(cstr);
-                delete(cstr);
+                double value = getValue(value_str);
 
                 if(std::isfinite(value)){
                     zFound = true;
@@ -129,7 +127,15 @@ bool Parser::parseAction(int pos) {
                 }
 
 
-            }else{
+
+            }
+            else if(field == "id"){
+
+                double value = getValue(value_str);
+                task.id = (int)value;
+
+            }
+            else{
 
                 std::cout << "unrecognized field" << std::endl;
                 return false;
@@ -170,6 +176,12 @@ bool Parser::parseAction(int pos) {
                     std::cout << "value is not finite" << std::endl;
                     return false;
                 }
+
+            }
+            else if(field == "id"){
+
+                double value = getValue(value_str);
+                task.id = (int)value;
 
             }
             else if(field == "y"){
@@ -268,6 +280,8 @@ bool Parser::parseAction(int pos) {
                 }
 
             }
+
+
             else if(field == "y"){
 
                 //atof Helper, cast string into double
@@ -283,6 +297,12 @@ bool Parser::parseAction(int pos) {
                     return false;
                 }
 
+
+            }
+            else if(field == "id"){
+
+                double value = getValue(value_str);
+                task.id = (int)value;
 
             }
             else if(field == "yaw"){
@@ -366,11 +386,19 @@ bool Parser::parseAction(int pos) {
                     task.params[0] = value;
                     std::cout << "  H: " << value << std::endl;
 
-                }else{
+                }
+
+                else{
                     std::cout << "value is not finite" << std::endl;
                     return false;
                 }
 
+
+            }
+            else if(field == "id"){
+
+                double value = getValue(value_str);
+                task.id = (int)value;
 
             }
             else if(field == "platform"){

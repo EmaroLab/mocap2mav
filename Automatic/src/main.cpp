@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 
 		//Choose action
 
-		if (autom.getTask().action == actions::IDLE) std::cout << "Idle, is the list empty?" <<
+		if (autom.getTask().action == actions::IDLE) std::cout << "Idle, is the list empty?" << std::endl;
 
 		if (autom.getTask().action == actions::MOVE){
 

@@ -56,6 +56,7 @@ bool Parser::parse() {
 
         if(_tokens[i][0] == "type") type_pos.push_back(i);
 
+
     }
     for (int k = 0; k < type_pos.size(); ++k) {
         std::cout << type_pos[k] << std::endl;
@@ -65,7 +66,7 @@ bool Parser::parse() {
     if(type_pos.size() > 0) {
 
 
-        for (int j = 0; j < type_pos.size(); ++j) {
+        for (int j = 0; j < type_pos.size(); j++) {
 
             //Store the position in the token vector of the value "type"
             int pos = type_pos[j];
@@ -373,11 +374,11 @@ bool Parser::parseAction(int pos) {
         task.action = common::actions::LAND;
 
 
-        for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
+        for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; i++) {
             std::string field = _tokens[i][0];
-            std::string value_str = _tokens[i][1];
+            std::string value_str;
             if(field == "height"){
-
+                value_str = _tokens[i][1];
                 //atof Helper, cast string into double
                 double value = getValue(value_str);
 
@@ -402,7 +403,10 @@ bool Parser::parseAction(int pos) {
 
             }
             else if(field == "platform"){
+                value_str = _tokens[i][1];
+                double value = getValue(value_str);
                 task.params[1] = 1;
+                task.params[2] = value;
             }
             else{
 

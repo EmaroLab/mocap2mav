@@ -143,7 +143,7 @@ double calculateDescendRate(double dz,double drate_max,double drate_min, double 
 
 }
 
-void Automatic::land2(MavState platPose) {
+void Automatic::land2(MavState platPose, double landGain) {
 
 
     //Calculate difference
@@ -161,9 +161,9 @@ void Automatic::land2(MavState platPose) {
     //Normalize
 
     Eigen::Vector2d v(x_target_v,y_target_v);
-    std::cout <<"befor: "<< fabs(v.maxCoeff()) << std::endl;
+
     if(v.norm() > VMAX){
-    std::cout <<"after: "<< fabs(v.maxCoeff()) << std::endl;
+
         v.normalize();
 
         v = v * VMAX;
@@ -175,14 +175,25 @@ void Automatic::land2(MavState platPose) {
 
     //TODO: add security checks on vz
     if(fabs(dx) <= THRE && fabs(dy) <= THRE){
-        //Descending is safe, is it?
+        //Descending is safe, is it?<
         double desc = calculateDescendRate(-dz, DRATE_MAX, DRATE_MIN, TMAX, TMIN);
-
+        desc = 0.25;
         double z_target_v = platPose.getVz() - desc;
         //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
+
+        double err_v = z_target_v - _state.getVz();
+
+        z_target_v += landGain*(err_v); // Proportional term
+        std::cout << "Actua: " <<-_state.getVz() + platPose.getVz()<< std::endl;
+        std::cout << "Desir: " << desc << std::endl;
+        std::cout << "ErrVe: " << err_v << std::endl;
+        std::cout << "ErrDe: " << desc - (-_state.getVz() + platPose.getVz())<< std::endl;
+
+
         _comm.setVz(z_target_v);
 
-    }else _comm.setVz(0); //Is it correct? Don't think so
+    }else _comm.setVz(0); //Is it correct
+    // ? Don't think so
 
     _comm.setType(MavState::type::VELOCITY);
 
@@ -256,7 +267,7 @@ void Automatic::land1(float x_target, float y_target, float h) {
     double dx = - _state.getX() + x_target;
     double dy = - _state.getY() + y_target;
     double dz =   _state.getZ() - h; //_state.z is negative due to inversion,
-    // that is why we dont use the minus sign
+                                    // that is why we don't use the minus sign
 
     // Be sure that we are on top of the target
 

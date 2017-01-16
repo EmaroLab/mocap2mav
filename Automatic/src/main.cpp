@@ -101,7 +101,7 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-            if(autom._actualTask.params[1] == 1) autom.land2(platform);
+            if(autom._actualTask.params[1] == 1) autom.land2(platform,autom._actualTask.params[2]);
             else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.params[0]);
 
 		}

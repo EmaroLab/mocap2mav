@@ -30,16 +30,14 @@ include_directories(${Eigen_INCLUDE_DIR})
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
-
-
-
+set(MODULES_SRC_DIR ${PROJECT_SOURCE_DIR}/Modules)
 
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("${PROJECT_SRC_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
 
-#add_subdirectory(NatNetReceiver)
-#add_subdirectory(Dispatcher)
-add_subdirectory(Executioner)
-add_subdirectory(Automatic)
-#add_subdirectory(Security)
+#add_subdirectory(${MODULES_SRC_DIR}/NatNetReceiver)
+#add_subdirectory(${MODULES_SRC_DIR}/Dispatcher)
+add_subdirectory(${MODULES_SRC_DIR}/Executioner)
+add_subdirectory(${MODULES_SRC_DIR}/Automatic)
+#add_subdirectory(${MODULES_SRC_DIR}/Security)

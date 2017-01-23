@@ -1,11 +1,11 @@
 #include "Automatic.h"
 
 #define PI              3.141592653589
-#define Kland           2
+#define Kland           4
 #define THRE            0.15
 #define DRATE_MIN       0.1
 #define DRATE_MAX       0.4
-#define VMAX            1
+#define VMAX            1.5
 #define TMAX            2
 #define TMIN            0.5
 #define PLATFORM_OFFSET 0.1
@@ -143,7 +143,7 @@ double calculateDescendRate(double dz,double drate_max,double drate_min, double 
 
 }
 
-void Automatic::land2(MavState platPose, double landGain) {
+void Automatic::land2(MavState platPose, double kp, double ki, double kd) {
 
 
     //Calculate difference
@@ -177,23 +177,26 @@ void Automatic::land2(MavState platPose, double landGain) {
     if(fabs(dx) <= THRE && fabs(dy) <= THRE){
         //Descending is safe, is it?<
         double desc = calculateDescendRate(-dz, DRATE_MAX, DRATE_MIN, TMAX, TMIN);
-        desc = 0.25;
+
         double z_target_v = platPose.getVz() - desc;
         //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
 
         double err_v = z_target_v - _state.getVz();
 
-        z_target_v += landGain*(err_v); // Proportional term
+        z_target_v += ki*(err_v); // Proportional term
         std::cout << "Actua: " <<-_state.getVz() + platPose.getVz()<< std::endl;
         std::cout << "Desir: " << desc << std::endl;
         std::cout << "ErrVe: " << err_v << std::endl;
         std::cout << "ErrDe: " << desc - (-_state.getVz() + platPose.getVz())<< std::endl;
 
-
         _comm.setVz(z_target_v);
 
-    }else _comm.setVz(0); //Is it correct
-    // ? Don't think so
+    }else if(fabs(dx) <= THRE*8 && fabs(dy) <= THRE*8){
+        _comm.setVz(DRATE_MAX*1.5);
+    }else {
+        _comm.setVz(0);
+    }                           //Is it correct?
+
 
     _comm.setType(MavState::type::VELOCITY);
 
@@ -301,7 +304,9 @@ void Automatic::land1(float x_target, float y_target, float h) {
             _comm.setVz(-10);
         }
 
-    }else _comm.setVz(0); //Is it correct? Don't think so
+    }
+    else if (fabs(dx) <= THRE * 10 && fabs(dy) <= THRE * 10) _comm.setVz(DRATE_MAX); //Is it correct? Don't think so
+    else _comm.setVz(0);
 
     _comm.setType(MavState::type::VELOCITY);
 

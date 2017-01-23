@@ -44,7 +44,6 @@ bool Parser::loadFile(std::string file) {
 
     }
 
-
 }
 
 bool Parser::parse() {
@@ -127,8 +126,6 @@ bool Parser::parseAction(int pos) {
                     return false;
                 }
 
-
-
             }
             else if(field == "id"){
 
@@ -145,7 +142,6 @@ bool Parser::parseAction(int pos) {
 
         }
         if(zFound) _taskListParsed.push_back(task);
-
 
     }
     else if(a == "move"){
@@ -200,7 +196,6 @@ bool Parser::parseAction(int pos) {
                     return false;
                 }
 
-
             }
             else if(field == "z"){
 
@@ -248,7 +243,6 @@ bool Parser::parseAction(int pos) {
             return false;
         }
 
-
     }
     else if (a == "rotate") {
 
@@ -282,7 +276,6 @@ bool Parser::parseAction(int pos) {
 
             }
 
-
             else if(field == "y"){
 
                 //atof Helper, cast string into double
@@ -297,7 +290,6 @@ bool Parser::parseAction(int pos) {
                     std::cout << "value is not finite" << std::endl;
                     return false;
                 }
-
 
             }
             else if(field == "id"){
@@ -370,33 +362,15 @@ bool Parser::parseAction(int pos) {
     }
     else if (a == "land"){
         std::cout << "Land found" << std::endl;
-        bool hFound = false;
         task.action = common::actions::LAND;
-
+        task.params[0] = 0; //Assume that landing is normal, not on a platform. We'll see later
+        int c = 1;
 
         for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; i++) {
             std::string field = _tokens[i][0];
             std::string value_str;
-            if(field == "height"){
-                value_str = _tokens[i][1];
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
 
-                if(std::isfinite(value)){
-                    hFound = true;
-                    task.params[0] = value;
-                    std::cout << "  H: " << value << std::endl;
-
-                }
-
-                else{
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-
-            }
-            else if(field == "id"){
+            if(field == "id"){
 
                 double value = getValue(value_str);
                 task.id = (int)value;
@@ -405,8 +379,18 @@ bool Parser::parseAction(int pos) {
             else if(field == "platform"){
                 value_str = _tokens[i][1];
                 double value = getValue(value_str);
-                task.params[1] = 1;
-                task.params[2] = value;
+                task.params[0] = 1;
+                if (c < 4){
+
+                    task.params[c++] = value;
+                    if(c != 3) task.params[c] = 0;  // Set next gain to zero in case
+
+                }
+                else {
+                    std::cout << "Too many PLATFORM fields, they must be 3 for PID gains" << std::endl;
+                    return false;
+                }
+
             }
             else{
 
@@ -416,13 +400,7 @@ bool Parser::parseAction(int pos) {
             }
 
         }
-        if(hFound) _taskListParsed.push_back(task);
-        else{
-            task.params[0] = 0;
-            _taskListParsed.push_back(task);
-
-        }
-
+        _taskListParsed.push_back(task);
 
 
     }else {
@@ -433,8 +411,6 @@ bool Parser::parseAction(int pos) {
     return true;
 
 }
-
-
 
 std::deque<exec::task> Parser::getTaskListParsed() {
 

@@ -13,7 +13,7 @@ class Automatic
 public:
 
     Automatic();
-    void land2(MavState platPose,double landGain);
+    void land2(MavState platPose,double kp, double ki, double kd);
     void land1(float x_target, float y_target, float h);
     void takeOff();
     void move();

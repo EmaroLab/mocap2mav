@@ -3,7 +3,7 @@
 #include "Automatic.h"
 #include "common/CallbackHandler.hpp"
 #include "poll.h"
-#include "common/common.h"
+
 
 using namespace common;
 
@@ -101,7 +101,8 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-            if(autom._actualTask.params[1] == 1) autom.land2(platform,autom._actualTask.params[2]);
+            std::cout << autom._actualTask.params[0] << std::endl;
+            if(autom._actualTask.params[0] == 1) autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
             else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.params[0]);
 
 		}

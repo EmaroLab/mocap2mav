@@ -184,7 +184,7 @@ bool Executioner::CheckActions(int a)
             //LAND
         case actions::LAND:
 
-            if(_actualTask.params[1] == 1){
+            if(_actualTask.params[0] == 1){
 
                 return false;
 

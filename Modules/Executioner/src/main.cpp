@@ -23,6 +23,7 @@ int main(int argc, char** argv){
         std::cout << "Unable to parse the file" << std::endl;
 
     }
+    // Call init everytime you have a new list.
     e.init();
     lcm::LCM handler;
 

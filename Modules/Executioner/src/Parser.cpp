@@ -7,11 +7,7 @@
 
 
 
-Parser::Parser() {
-
-
-
-}
+Parser::Parser() {}
 
 bool Parser::loadFile(std::string file) {
 

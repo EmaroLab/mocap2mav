@@ -1,5 +1,4 @@
 #include "Executioner.h"
-#include <iostream>
 
 
 #define PI 3.141592653589
@@ -80,7 +79,7 @@ void Executioner::run(){
         _can_run = false;
 
         if (!_idle){
-
+            //Publishing last task, next will be idle
             _publish_task = true;
             _idle = true;
             _actualTask.action = actions ::IDLE;
@@ -91,6 +90,7 @@ void Executioner::run(){
 
     }
 
+    //Detect a new task arrived
     if(_newTask) {
 
         bool done = false;
@@ -98,13 +98,20 @@ void Executioner::run(){
         std::cout<<std::endl;
         std::cout << "***************************************"<<std::endl;
         std::cout << "Performing node: " << node++ << " with action: " << common::printAction(_actualTask.action)<<std::endl;
+#ifdef GUI
         std::cout << "Do you want to proceed? Y/N"<<std::endl;
+#endif
         std::cout << "***************************************"<<std::endl;
         std::cout<<std::endl;
 
 
         do {
+        #ifdef GUI
             std::cin  >> in;
+        #else
+            in = 'y';
+        #endif
+
             switch (in) {
 
                 case 'y':
@@ -146,7 +153,7 @@ void Executioner::run(){
 
         }
         else{
-            std::cout<<"Empty list, sending last setpoint"<<std::endl; //TODO: implement idle function
+            std::cout<<"Empty list, sending last setpoint"<<std::endl;
 
             _newTask = false;
         }
@@ -197,7 +204,7 @@ bool Executioner::CheckActions(int a)
 
 
         default:
-            std::cout << "Unrecognized type" << std::endl;
+            std::cout << "IDLE" << std::endl;
             return true;
     }
 

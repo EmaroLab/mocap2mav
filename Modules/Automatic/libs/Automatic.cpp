@@ -289,23 +289,25 @@ void Automatic::land1(float x_target, float y_target, float h) {
 
     }
 
-    _comm.setVx(v(0));
-    _comm.setVy(v(1));
+    _comm.setVx(v(0) * 2);
+    _comm.setVy(v(1) * 2);
 
     //TODO: add security checks on vz
     if(fabs(dx) <= THRE && fabs(dy) <= THRE){
         //Descending is safe, is it?
         double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
-
+        desc = 0.2;
         _comm.setVz(-desc);
+        /*
         if (fabs(dz) < 0.05){
             _comm.setVx(0);
             _comm.setVy(0);
             _comm.setVz(-10);
         }
-
+        */
     }
-    else if (fabs(dx) <= THRE * 10 && fabs(dy) <= THRE * 10) _comm.setVz(DRATE_MAX); //Is it correct? Don't think so
+
+    //else if (fabs(dx) <= THRE * 10 && fabs(dy) <= THRE * 10) _comm.setVz(DRATE_MAX); //Is it correct? Don't think so
     else _comm.setVz(0);
 
     _comm.setType(MavState::type::VELOCITY);

@@ -68,6 +68,9 @@ bool Executioner::readyToPublish() {
 
 void Executioner::run(){
 
+    std::cout <<"landed: "<< _landed << std::endl;
+    std::cout <<"armed: "<< _armed << std::endl;
+
 
     if(_nodeList.size() > 0) {
 
@@ -191,14 +194,14 @@ bool Executioner::CheckActions(int a)
             //LAND
         case actions::LAND:
 
-            if(_actualTask.params[0] == 1){
+            if(_actualTask.params[1] == 1){
 
-                return false;
+                return false;//TODO: implement stopping condition
 
             }
             else{
 
-                return ((fabs(_state.getZ()) - fabs(_actualTask.params[0])) < 0.2 ) && (fabs(_state.getVz()) < 0.1);
+                return (_landed);
 
             }
 
@@ -256,7 +259,8 @@ void Executioner::loadTask() {
 
 }
 
+void Executioner::setStatus(bool armed, bool landed) {
 
-
-
-
+    _armed = armed;
+    _landed = landed;
+}

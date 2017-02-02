@@ -9,6 +9,7 @@
 #include "lcm/lcm-cpp.hpp"
 #include "lcm_messages/geometry/pose.hpp"
 #include "lcm_messages/exec/task.hpp"
+#include "lcm_messages/exec/state.hpp"
 #include <iostream>
 class CallbackHandler {
 
@@ -18,6 +19,8 @@ public:
     MavState _position_sp;
     exec::task _task;
 
+    bool _landed;
+    bool _armed;
     bool _estimate_ready;
     bool _position_sp_ready;
 
@@ -34,6 +37,9 @@ public:
         _vision_pos.setOrientation(1,0,0,0);
         _vision_pos.setYaw(0);
         _vision_pos.setType(MavState::type::POSITION);
+
+        _armed = false;
+        _landed = true;
 
     }
 //TODO: use lcm2mavstate
@@ -98,6 +104,16 @@ public:
 
         _task.yaw = msg->yaw;
 
+
+    }
+
+    void stateCallback(const lcm::ReceiveBuffer* rbuf, const std::string& chan, const exec::state* msg){
+
+        if (msg->landed == (uint8_t)1) _landed = true;
+        else _landed = false;
+
+        if(msg->armed == 1)   _armed = true;
+        else _armed = false;
 
     }
 

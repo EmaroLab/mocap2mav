@@ -28,10 +28,12 @@ public:
 	void setState(MavState s);
     void init();
 	void setList(std::deque<exec::task> list);
+	void setStatus(bool armed, bool landed);
 	exec::task _actualTask;
 	bool _can_run;
 	int _actualNode;
 	bool _idle;
+
 
 
 
@@ -41,6 +43,9 @@ private:
 	std::deque<exec::task> _nodeList;
 	bool _newTask;
 	bool _publish_task;
+
+	bool _armed;
+	bool _landed;
 
 };
 #endif

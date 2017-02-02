@@ -375,7 +375,7 @@ bool Parser::parseAction(int pos) {
             else if(field == "platform"){
                 value_str = _tokens[i][1];
                 double value = getValue(value_str);
-                task.params[0] = 1;
+                task.params[1] = 1;
                 if (c < 4){
 
                     task.params[c++] = value;

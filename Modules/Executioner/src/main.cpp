@@ -3,6 +3,7 @@
 #include "Executioner.h"
 #include "common/CallbackHandler.hpp"
 #include "Parser.h"
+#include <poll.h>
 
 
 int main(int argc, char** argv){
@@ -25,7 +26,7 @@ int main(int argc, char** argv){
     }
     // Call init everytime you have a new list.
     e.init();
-    lcm::LCM handler;
+    lcm::LCM handler,handler2;
 
     if (!handler.good())
         return 1;
@@ -33,23 +34,37 @@ int main(int argc, char** argv){
 
 
     handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
+    handler2.subscribe("state", &CallbackHandler::stateCallback, &call);
+
+    struct pollfd fds[1];
+
+    fds[0].fd = handler2.getFileno(); // Actual task
+    fds[0].events = POLLIN;
 
     while(0==handler.handle()){
 
+        //Fetch land messages from mavros
+        int ret = poll(fds,1,0);
+
+        if(fds[0].revents & POLLIN){
+            handler2.handle();
+            e.setStatus(call._armed,call._landed);
+
+        }
 
 
-            //AndOr
+        //AndOr
 
-            //Run state machine
-            e.setState(call._vision_pos);
-            e.run();
-            //Publish next task
-            if(e.readyToPublish()) {
+        //Run state machine
+        e.setState(call._vision_pos);
+        e.run();
+        //Publish next task
+        if(e.readyToPublish()) {
 
-                std::cout << "publishing task" << std::endl;
-                handler.publish("actual_task", &e._actualTask);
+            std::cout << "publishing task" << std::endl;
+            handler.publish("actual_task", &e._actualTask);
 
-            }
+        }
 
     }
 

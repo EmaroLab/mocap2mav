@@ -18,7 +18,7 @@ int main(int argc, char** argv){
 	Automatic autom;
 
 	lcm::Subscription *sub   = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
-	lcm::Subscription *sub2  = handler2.subscribe("platform_0/pose", &CallbackHandler::positionSetpointCallback, &call);
+	lcm::Subscription *sub2  = handler2.subscribe("platform/pose", &CallbackHandler::positionSetpointCallback, &call);
 	lcm::Subscription *sub3  = handler3.subscribe("actual_task", &CallbackHandler::actualTaskCallback, &call);
 
 	sub ->setQueueCapacity(1);
@@ -35,9 +35,11 @@ int main(int argc, char** argv){
 
 	bool newTask;
     bool waiting = true;
+
 	uint64_t t = 0;
 	uint64_t t_prev = 0;
 	MavState platform;
+
 	while(0==handler.handle()){
 
 		t = time::getTimeMilliSecond();
@@ -45,7 +47,7 @@ int main(int argc, char** argv){
 		t_prev = t;
 
 		autom.setState(call._vision_pos);
-        //std::cout << autom.getState()._x << " " << autom.getState()._y << " " << autom.getState()._z << std::endl;
+
 		int ret = poll(fds,2,0);
 
 
@@ -66,7 +68,6 @@ int main(int argc, char** argv){
 
 		if(fds[1].revents & POLLIN){
 
-            //std::cout << platform.getX() << " " << platform.getY() << " " << platform.getZ() << std::endl;
 			handler2.handle();
 			platform = call._position_sp;
 
@@ -101,7 +102,7 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-            if(autom._actualTask.params[1] == 1) autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
+            if(autom._actualTask.params[0] == 1) autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
             else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.params[0]);
 
 		}

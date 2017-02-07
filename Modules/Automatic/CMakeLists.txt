@@ -30,7 +30,7 @@ pkg_search_module(LCM REQUIRED lcm)
 ##Declare a C++ library
  add_library(Automlib
          libs/Automatic.cpp
-         include/Automatic.h ${PROJECT_SRC_DIR}/MavState.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.h)
+         include/Automatic.h ${PROJECT_SRC_DIR}/MavState.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.h libs/Lander.cpp include/Lander.h)
 
 ##qt5_use_modules(exec Widgets Core Network SerialPort)
 ##qt5_use_modules(Dis Widgets Core Network SerialPort)

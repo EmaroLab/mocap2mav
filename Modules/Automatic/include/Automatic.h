@@ -4,7 +4,7 @@
 #include "lcm_messages/exec/task.hpp"
 #include "common/MavState.h"
 #include "common/common.h"
-
+#include "include/Lander/Lander.h"
 #include <iostream>
 
 class Automatic
@@ -26,6 +26,8 @@ public:
     MavState getState();
     MavState _comm;
     exec::task _actualTask;
+    Lander _lander;
+
 
 private:
    MavState _state;

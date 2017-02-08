@@ -12,7 +12,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SRC_DIR}/MavState.cpp)
+${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SRC_DIR}/MavState.cpp )
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
@@ -30,12 +30,21 @@ pkg_search_module(LCM REQUIRED lcm)
 ##Declare a C++ library
  add_library(Automlib
          libs/Automatic.cpp
-         include/Automatic.h ${PROJECT_SRC_DIR}/MavState.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.h libs/Lander.cpp include/Lander.h)
+         include/Automatic.h
+		 ${PROJECT_SRC_DIR}/MavState.cpp
+		 ${PROJECT_INCLUDE_DIR}/common/MavState.h
+		 libs/Lander.cpp
+		 include/Lander/Lander.h
+		 include/Lander/StatesClasses.hpp
+		 include/Lander/StateClasses.cpp)
+		 #${PROJECT_LIB_DIR}/StateMachine/include/Machine.h
+		 #${PROJECT_LIB_DIR}/StateMachine/include/AbstractState.h
+		 #${PROJECT_LIB_DIR}/StateMachine/src/Machine.cpp)
 
+target_link_libraries(Automlib StateMachine)
 ##qt5_use_modules(exec Widgets Core Network SerialPort)
 ##qt5_use_modules(Dis Widgets Core Network SerialPort)
 target_link_libraries( autom
-        ${PROJECT_LINK_LIBS}
 	    Automlib
 		${LCM_LIBRARIES}
 	)

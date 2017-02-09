@@ -52,14 +52,16 @@ void Lander::test() {
 
     InitState in(&m,0);
 
-    m.setStatePtr(&in);
+    m.setStatePtr( AbstractStatePtr(new InitState(&m,states::INIT)));
 
     std::cout << m.getActualNodeId() << std::endl;
     m.handle();
+
     std::cout << m.getActualNodeId() << std::endl;
+
+
     m.handle();
-    std::cout << m.getActualNodeId() << std::endl;
-    m.handle();
+
     std::cout << m.getActualNodeId() << std::endl;
     m.handle();
     std::cout << m.getActualNodeId() << std::endl;

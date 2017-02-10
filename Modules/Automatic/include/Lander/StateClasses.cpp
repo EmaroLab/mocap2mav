@@ -12,15 +12,15 @@ void InitState::handle(){
     std::cout << "INIT HANDLE" << std::endl;
    // HoldState* ho = new HoldState(this->_contextL,1);
 
-    this->_contextL->setStatePtr(AbstractStatePtr(new HoldState(this->_contextL,states::HOLD)));
+    this->_contextL->setStatePtr(_nextState);
 
 }
 
 void HoldState::handle(){
     std::cout << "HOLD HANDLE" << std::endl;
-    this->_contextL->setStatePtr(AbstractStatePtr(new InitState(this->_contextL,states::INIT)));
+    this->_contextL->setStatePtr(_nextState);
     /*
-    if ((*_NHold >= *_tauHold) && (_horizontaErr <= _tauErr) ){
+    if ((*_NHold >= *_tauHold) && (*_horizontaErr <= *_tauErr) ){
         _context->setStatePtr(new DescState(_context,states::DESC));
     }
      */

@@ -26,8 +26,17 @@ public:
 class AbstractLandState : public AbstractState {
 
 public:
+    AbstractState* _nextState;
+    enum states{
 
-    AbstractLandState(LandMachine *context, const int _id) : AbstractState(context, _id){
+        INIT,
+        HOLD,
+        DESC,
+        ASCE
+
+    };
+
+    AbstractLandState(LandMachine *context) : AbstractState(context){
         _contextL = context;
         init(_contextL->_horizontaErr,_contextL->_tauHold,_contextL->_tauLost,_contextL->_tauErr,
              _contextL->_NHold,_contextL->_NLost,_contextL->_state);
@@ -47,12 +56,12 @@ protected:
     void init(double* hErr, double* tHold, double* tLost, double* tErr, int* nHold, int* nLost, MavState* state){
 
             //Attach external signals
-           // _horizontaErr = hErr;
+            // _horizontaErr = hErr;
             //_tauHold      = tHold;
             //_tauLost      = tLost;
             //_tauErr       = tErr;
             //_NHold        = nHold;
-            _NLost        = nLost;
+            _NLost          = nLost;
             //_state        = state;
 
     }
@@ -60,36 +69,61 @@ protected:
 
 };
 
-enum states{
-
-    INIT,
-    HOLD,
-    DESC,
-    ASCE
-
-};
-
 class InitState : public AbstractLandState {
 public:
-    InitState(LandMachine *context, const int _id) : AbstractLandState(context, _id) {}
-    void handle();
-};
-class HoldState : public AbstractLandState {
-public:
-    HoldState(LandMachine *context, const int _id) : AbstractLandState(context, _id) {}
-    void handle();
-};
-class DescState : public AbstractLandState {
-public:
-    DescState(LandMachine *context, const int _id) : AbstractLandState(context, _id) {}
-    void handle();
-};
-class AsceState : public AbstractLandState {
-public:
-    AsceState(LandMachine *context, const int _id) : AbstractLandState(context, _id) {}
+    InitState(LandMachine *context) :  AbstractLandState(context){
+        setId();
+    }
+    void setId() override {
+
+        _id = INIT;
+
+    }
     void handle();
 };
 
+class HoldState : public AbstractLandState {
+public:
+    AbstractLandState* _nextAscState;
+    AbstractLandState* _nextDesState;
+
+    HoldState(LandMachine *context) : AbstractLandState(context) {
+        setId();
+    }
+    void setId() override {
+
+        _id = HOLD;
+
+    }
+    void handle();
+};
+
+class DescState : public AbstractLandState {
+public:
+    DescState(LandMachine *context) : AbstractLandState(context) {
+        setId();
+    }
+    void setId() override {
+
+        _id = DESC;
+
+    }
+    void handle();
+};
+
+class AsceState : public AbstractLandState {
+public:
+    AsceState(LandMachine *context) : AbstractLandState(context) {
+        setId();
+    }
+
+    void setId() override {
+
+        _id = ASCE;
+
+    }
+    void handle();
+};
 
 
 #endif //MOCAP2MAV_STATESCLASSES_HPP

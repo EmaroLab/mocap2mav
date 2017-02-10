@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <include/Lander/StatesClasses.hpp>
 #include "Lander/Lander.h"
 
 Lander::Lander()  {
@@ -47,12 +48,21 @@ void Lander::test() {
 
     int a = 3;
 
-  //  _machine._NLost = &a;
+
     LandMachine m;
+    //Create states
+    InitState init(&m);
+    HoldState hold(&m);
+    HoldState asce(&m);
+    HoldState desc(&m);
 
-    InitState in(&m,0);
+    //Link states
+    init._nextState    = &hold;
+    hold._nextAscState = &asce;
+    hold._nextDesState = &desc;
 
-    m.setStatePtr( AbstractStatePtr(new InitState(&m,states::INIT)));
+
+    m.setStatePtr(&init);
 
     std::cout << m.getActualNodeId() << std::endl;
     m.handle();

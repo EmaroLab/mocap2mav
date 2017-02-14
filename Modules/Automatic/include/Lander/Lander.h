@@ -16,13 +16,19 @@
 class Lander {
 
 private:
-    //LandMachine  _machine;
+    LandMachine  _machine;
     MavState _state;
     MavState _setPoint;
 
-
+    double _horizontaErr;
+    double _tauHold;
+    double _tauLost;
+    double _tauErr;
+    int _NHold;
+    int _NLost;
 
 public:
+
     Lander();
     void test();
 
@@ -30,10 +36,7 @@ public:
     MavState getState();
     MavState getCommand();
 
-    void init();
-    void hold();
-    void desc();
-    void asce();
+
 
 };
 

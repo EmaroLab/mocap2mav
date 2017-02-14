@@ -68,6 +68,17 @@ inline double yawFromQuaternion(const Eigen::Quaterniond& q) {
                  1.0 - 2.0 * (q.y() * q.y() + q.z() * q.z()));
 }
 
+inline Eigen::Quaterniond yawToQuaternion(const double yaw) {
+    Eigen::Quaterniond quaterniond;
+
+    quaterniond.w() = cos(yaw/2);
+    quaterniond.x() = 0;
+    quaterniond.y() = 0;
+    quaterniond.z() = sin(yaw/2);
+
+    return quaterniond;
+}
+
 
 inline static void mul(float q1[4],float q2[4],float res[4]) {
     res[1] =  q1[1] * q2[0] + q1[2] * q2[3] - q1[3] * q2[2] + q1[0] * q2[1];

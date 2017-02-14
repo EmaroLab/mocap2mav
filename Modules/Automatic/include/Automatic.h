@@ -4,6 +4,7 @@
 #include "lcm_messages/exec/task.hpp"
 #include "common/MavState.h"
 #include "common/common.h"
+#include "common/conversions.h"
 #include "include/Lander/Lander.h"
 #include <iostream>
 

@@ -23,10 +23,7 @@ Eigen::Quaterniond getQuatFromYaw(double yaw){
 
 }
 
-Automatic::Automatic()
-{
-
-}
+Automatic::Automatic()  {}
 
 MavState Automatic::getState()
 {
@@ -80,13 +77,11 @@ void Automatic::rotate() {
 
     _comm.setYaw(yawComm);
 
-    Eigen::Quaterniond q_interm = getQuatFromYaw(yawComm);
+    Eigen::Quaterniond q_interm = yawToQuaternion(yawComm);
 
     _comm.setOrientation(q_interm);
 
 }
-
-//QUA
 
 void Automatic::calculateYawInterm(float heading, double yawTarget, double &yawComm){
 

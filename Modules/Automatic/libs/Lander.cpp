@@ -6,13 +6,9 @@
 #include <include/Lander/StatesClasses.hpp>
 #include "Lander/Lander.h"
 
-Lander::Lander()  {
-
-
-   // std::cout << *_machine._NLost << std::endl;
-    //InitState init(&_machine,states::INIT);
-    //_machine.setStatePtr(new InitState(&_machine,states::INIT));
-}
+Lander::Lander()
+        : _horizontaErr((double)0), _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
+          _NLost(0) {}
 
 void Lander::setState(MavState pose) {
 
@@ -48,7 +44,6 @@ void Lander::test() {
 
     int a = 3;
 
-
     LandMachine m;
     //Create states
     InitState init(&m);
@@ -60,18 +55,15 @@ void Lander::test() {
     init._nextState    = &hold;
     hold._nextAscState = &asce;
     hold._nextDesState = &desc;
-
+    asce._nextState    = &hold;
+    desc._nextState    = &hold;
 
     m.setStatePtr(&init);
 
     std::cout << m.getActualNodeId() << std::endl;
     m.handle();
-
     std::cout << m.getActualNodeId() << std::endl;
-
-
     m.handle();
-
     std::cout << m.getActualNodeId() << std::endl;
     m.handle();
     std::cout << m.getActualNodeId() << std::endl;

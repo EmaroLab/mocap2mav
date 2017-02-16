@@ -29,7 +29,6 @@ public:
     exec::task _actualTask;
     Lander _lander;
 
-
 private:
    MavState _state;
 

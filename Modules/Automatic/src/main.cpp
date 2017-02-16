@@ -16,7 +16,6 @@ int main(int argc, char** argv){
 
 	CallbackHandler call;
 	Automatic autom;
-	autom._lander.test();
 
 	lcm::Subscription *sub   = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
 	lcm::Subscription *sub2  = handler2.subscribe("platform/pose", &CallbackHandler::positionSetpointCallback, &call);

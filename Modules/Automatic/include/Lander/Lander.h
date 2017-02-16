@@ -11,14 +11,29 @@
 
 //Define states
 
-
-
 class Lander {
 
+public:
+    Lander();
+    void setPlatformState(const MavState platformState);
+    void initStateMachine();
+    void setState(MavState pose);
+    void updateSignals();
+    MavState getState();
+    MavState getCommand();
+
 private:
+
     LandMachine  _machine;
     MavState _state;
     MavState _setPoint;
+    MavState _platformState;
+
+    //Create states
+    InitState _initS;
+    HoldState _holdS;
+    AsceState _asceS;
+    DescState _descS;
 
     double _horizontaErr;
     double _tauHold;
@@ -26,17 +41,6 @@ private:
     double _tauErr;
     int _NHold;
     int _NLost;
-
-public:
-
-    Lander();
-    void test();
-
-    void setState(MavState pose);
-    MavState getState();
-    MavState getCommand();
-
-
 
 };
 

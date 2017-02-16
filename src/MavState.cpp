@@ -111,7 +111,7 @@ void MavState::setType(MavState::type t) {
 
 }
 
-MavState::type MavState::getType() {
+MavState::type MavState::getType() const{
     return _type;
 }
 

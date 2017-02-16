@@ -61,12 +61,12 @@ public:
 
     void setType(type t);
 
-    type getType();
+    type getType() const;
 
 
     // OPERATORS
 
-    void operator=(MavState &m){
+    void operator=(const MavState &m){
 
         this->setPosition(m.getX(),m.getY(),m.getZ());
 
@@ -83,7 +83,6 @@ public:
 
 private:
     // MOCAP
-    //"Latency" from motion capture server
     double _x;
     double _y;
     double _z;

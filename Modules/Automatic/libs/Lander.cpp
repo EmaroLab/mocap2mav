@@ -75,9 +75,9 @@ void Lander::updateSignals() {
 
     _horizontaErr = err.norm();
 
-    if(state == AbstractLandState::states::HOLD ||
-       state == AbstractLandState::states::ASCE ||
-       state == AbstractLandState::states::DESC){
+    if( state == AbstractLandState::states::HOLD ||
+        state == AbstractLandState::states::ASCE ||
+        state == AbstractLandState::states::DESC){
 
         //Increment N if needed
         if (_horizontaErr < _tauHold) {
@@ -86,9 +86,14 @@ void Lander::updateSignals() {
         }
         else if (_horizontaErr > _tauLost) {
             _NHold = 0;
-            _NHold++;
+            _NLost++;
         }
     }
+
+}
+
+void Lander::handleMachine() {
+    _machine.handle();
 
 }
 

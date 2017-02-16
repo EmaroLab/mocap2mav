@@ -19,6 +19,7 @@ public:
     void initStateMachine();
     void setState(MavState pose);
     void updateSignals();
+    void handleMachine();
     MavState getState();
     MavState getCommand();
 

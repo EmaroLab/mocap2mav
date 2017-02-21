@@ -3,16 +3,12 @@
 //
 
 #include <iostream>
-#include <include/Lander/StatesClasses.hpp>
+#include "include/Lander/StatesClasses.hpp"
 #include "Lander/Lander.h"
-
-#define PLATFORM_LENGHT 1.0;
-#define TAU_N           100;
-#define TAU_HOLD        100;
-
+#include "parameters.h"
 
 Lander::Lander()
-        : _horizontaErr((double)0), _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
+        : _horizontaErr((double)6.56), _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
           _NLost(0), _initS(&_machine), _holdS(&_machine), _asceS(&_machine),_descS(&_machine){
 
     initStateMachine();
@@ -40,6 +36,8 @@ void Lander::initStateMachine() {
     _machine._tauLost      =  &_tauLost;
     _machine._NLost        =  &_NLost;
     _machine._NHold        =  &_NHold;
+    _machine._state        =  &_state;
+    _machine._setPoint     =  &_setPoint;
 
     //Link states
     _initS._nextState    = &_holdS;
@@ -50,8 +48,8 @@ void Lander::initStateMachine() {
 
     _machine.setStatePtr(&_initS);
 
-    _tauHold = 0.5*PLATFORM_LENGHT;
-    _tauLost = PLATFORM_LENGHT;
+    _tauHold = 0.5 * params_automatic::platformLenght;
+    _tauLost = params_automatic::platformLenght;
 
 }
 
@@ -90,11 +88,15 @@ void Lander::updateSignals() {
         }
     }
 
+
 }
 
 void Lander::handleMachine() {
     _machine.handle();
+}
 
+int Lander::getActualMachineState() {
+    return _machine.getActualNodeId();
 }
 
 

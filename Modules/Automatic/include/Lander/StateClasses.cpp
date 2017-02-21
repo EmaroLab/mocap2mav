@@ -3,28 +3,34 @@
 //
 
 #include "StatesClasses.hpp"
-
+#include "parameters.h"
 //Define actual states
 
 void InitState::handle(){
 
     //Got everything (assume it)
-    std::cout << "INIT HANDLE" << std::endl;
-   // HoldState* ho = new HoldState(this->_contextL,1);
-
+    getSignals();
     this->_contextL->setStatePtr(_nextState);
 
 }
 
 void HoldState::handle(){
-    std::cout << "HOLD HANDLE" << std::endl;
-    this->_contextL->setStatePtr(_nextState);
-    /*
-    if ((*_NHold >= *_tauHold) && (*_horizontaErr <= *_tauErr) ){
-        _context->setStatePtr(new DescState(_context,states::DESC));
+    getSignals();
+    if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold)){
+        this->_contextL->setStatePtr(_nextDesState);
+        return;
     }
-     */
+    if ((_NLost > params_automatic::NFramesLost) && (_setPoint.getZ() < params_automatic::zMax) && (_horizontaErr > _tauLost)){
+        this->_contextL->setStatePtr(_nextAscState);
+        return;
+    }
 
 }
-void DescState::handle() {}
-void AsceState::handle() {}
+void DescState::handle() {
+    getSignals();
+    this->_contextL->setStatePtr(_nextState);
+}
+void AsceState::handle() {
+    getSignals();
+    this->_contextL->setStatePtr(_nextState);
+}

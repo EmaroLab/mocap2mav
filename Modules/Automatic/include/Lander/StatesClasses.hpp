@@ -20,6 +20,7 @@ public:
     int *_NHold;
     int *_NLost;
     MavState *_state;
+    MavState *_setPoint;
 
 };
 
@@ -38,35 +39,32 @@ public:
 
     AbstractLandState(LandMachine *context) : AbstractState(context){
         _contextL = context;
-        init(_contextL->_horizontaErr,_contextL->_tauHold,_contextL->_tauLost,_contextL->_tauErr,
-             _contextL->_NHold,_contextL->_NLost,_contextL->_state);
-
     }
 
-    double*  _horizontaErr;
-    double*  _tauHold;
-    double*  _tauLost;
-    double*  _tauErr;
-    int*     _NHold;
-    int*     _NLost;
-    MavState* _state;
+    void getSignals(){
+
+         _horizontaErr = *(_contextL->_horizontaErr);
+         _tauHold      = *(_contextL->_tauHold);
+         _tauLost      = *(_contextL->_tauLost);
+         _tauErr       = *(_contextL->_tauErr);
+         _NHold        = *(_contextL->_NHold);
+         _NLost        = *(_contextL->_NLost);
+         _state        = *(_contextL->_state);
+         _setPoint     = *(_contextL->_setPoint);
+
+    }
 
 protected:
+
+    double   _horizontaErr;
+    double   _tauHold;
+    double   _tauLost;
+    double   _tauErr;
+    int      _NHold;
+    int      _NLost;
+    MavState _state;
+    MavState _setPoint;
     LandMachine* _contextL;
-    void init(double* hErr, double* tHold, double* tLost, double* tErr, int* nHold, int* nLost, MavState* state){
-
-            //Attach external signals
-            // _horizontaErr = hErr;
-            //_tauHold      = tHold;
-            //_tauLost      = tLost;
-            //_tauErr       = tErr;
-            //_NHold        = nHold;
-            _NLost          = nLost;
-            //_state        = state;
-
-    }
-
-
 };
 
 class InitState : public AbstractLandState {

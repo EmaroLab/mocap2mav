@@ -10,8 +10,12 @@ void InitState::handle(){
 
     //Got everything (assume it)
     getSignals();
-    this->_contextL->setStatePtr(_nextState);
+    static int wait = 0;
 
+    //Wait 200 iterations
+    if(wait++ > 200) {
+        this->_contextL->setStatePtr(_nextState);
+    }
 }
 void HoldState::handle(){
     getSignals();

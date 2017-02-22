@@ -36,7 +36,7 @@ pkg_search_module(LCM REQUIRED lcm)
 		 libs/Lander.cpp
 		 include/Lander/Lander.h
 		 include/Lander/StatesClasses.hpp
-		 include/Lander/StateClasses.cpp)
+		 libs/StateClasses.cpp)
 		 #${PROJECT_LIB_DIR}/StateMachine/include/Machine.h
 		 #${PROJECT_LIB_DIR}/StateMachine/include/AbstractState.h
 		 #${PROJECT_LIB_DIR}/StateMachine/src/Machine.cpp)

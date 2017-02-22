@@ -2,7 +2,7 @@
 // Created by andreanistico on 08/02/17.
 //
 
-#include "StatesClasses.hpp"
+#include "include/Lander/StatesClasses.hpp"
 #include "parameters.h"
 //Define actual states
 
@@ -13,7 +13,6 @@ void InitState::handle(){
     this->_contextL->setStatePtr(_nextState);
 
 }
-
 void HoldState::handle(){
     getSignals();
     if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold)){

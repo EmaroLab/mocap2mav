@@ -39,6 +39,7 @@ void Lander::initStateMachine() {
     _machine._state        =  &_state;
     _machine._setPoint     =  &_setPoint;
 
+
     //Link states
     _initS._nextState    = &_holdS;
     _holdS._nextAscState = &_asceS;
@@ -97,6 +98,40 @@ void Lander::handleMachine() {
 
 int Lander::getActualMachineState() {
     return _machine.getActualNodeId();
+}
+
+void Lander::resetSetPoint() {
+
+    _setPoint = _state;
+    _setPoint.setType(MavState::type::POSITION);
+
+}
+
+void Lander::hold() {
+
+    //This function is purely tracking, nothing more
+
+    /* The tracking is performed by POSITION control, issuing the position setpoint
+     * in order to achieve the desired velocity calculated by:
+     *
+     * Vdes = K * ep + Vplat
+     * or
+     * Psp = Pplat + K * Vplat
+     *
+     * where:
+     *
+     * Vdes = desired velocity, K = proportional gain, ep = position error, Vplat = paltform velocity
+     */
+
+    //Cache values
+    MavState platPos = _platformState;
+    MavState state   = _state;
+
+
+
+
+
+
 }
 
 

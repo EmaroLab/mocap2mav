@@ -23,6 +23,7 @@ public:
     int getActualMachineState();
     MavState getState();
     MavState getCommand();
+    void resetSetPoint();
 
 private:
 
@@ -43,6 +44,9 @@ private:
     double _tauErr;
     int _NHold;
     int _NLost;
+
+    //Tracking logic defined here
+    void hold();
 
 };
 

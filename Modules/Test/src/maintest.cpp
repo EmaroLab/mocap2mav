@@ -39,19 +39,18 @@ int main(int argc, char** argv){
     fds[0].fd = handler2.getFileno(); // Square pose
     fds[0].events = POLLIN;
 
-    while(0==handler.handle()){
+    while(0==handler.handle()) {
 
         lander.setState(call._vision_pos);
 
-        int ret = poll(fds,1,0);
+        int ret = poll(fds, 1, 0);
 
 
-        if(fds[0].revents & POLLIN){
+        if (fds[0].revents & POLLIN) {
 
             handler2.handle();
             //Platform pose passed from the position setpoint channel, just a lazy workaround
             lander.setPlatformState(call._position_sp);
-            
 
         }
 
@@ -60,7 +59,6 @@ int main(int argc, char** argv){
         lander.handleMachine();
 
         std::cout << lander.getActualMachineState() << std::endl;
-        //std::cout << lander.getActualMachineState() << std::endl;
     }
 
     return 0;

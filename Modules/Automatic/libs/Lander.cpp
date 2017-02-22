@@ -111,7 +111,8 @@ void Lander::hold() {
 
     //This function is purely tracking, nothing more
 
-    /* The tracking is performed by POSITION control, issuing the position setpoint
+    /*
+     * The tracking is performed by POSITION control, issuing the position setpoint
      * in order to achieve the desired velocity calculated by:
      *
      * Vdes = K * ep + Vplat
@@ -127,10 +128,27 @@ void Lander::hold() {
     MavState platPos = _platformState;
     MavState state   = _state;
 
+    Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
+    Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
+
+    //PosSP = PlatPos + K * Vplat
+    tempSetPoint += params_automatic::KpHold * tempVel;
+
+    //Fill right fields
+    _setPoint.setPosition(tempSetPoint(0),tempSetPoint(1),_setPoint.getZ());
+    _setPoint.setType(MavState::POSITION);
+
+}
+
+void Lander::init() {
 
 
+    //Set point to my position
+    resetSetPoint();
 
-
+    //TODO: improve height logic(we assume that we are safely flying)
+    //Go to max tracking height
+    _setPoint.setZ(params_automatic::zMax);
 
 }
 

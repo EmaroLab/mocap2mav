@@ -47,6 +47,8 @@ private:
 
     //Tracking logic defined here
     void hold();
+    //Initialize stuff here
+    void init();
 
 };
 

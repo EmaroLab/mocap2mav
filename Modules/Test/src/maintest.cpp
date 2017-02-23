@@ -39,6 +39,12 @@ int main(int argc, char** argv){
     fds[0].fd = handler2.getFileno(); // Square pose
     fds[0].events = POLLIN;
 
+    std::cout << "waiting..." << std::endl;
+    char a;
+    std::cin >> a;
+    std::cout << "...starting" << std::endl;
+
+    int* actState(0);
     while(0==handler.handle()) {
 
         lander.setState(call._vision_pos);
@@ -55,10 +61,10 @@ int main(int argc, char** argv){
         }
 
         lander.updateSignals();
-
         lander.handleMachine();
 
-        std::cout << lander.getActualMachineState() << std::endl;
+        *actState = lander.getActualMachineState();
+        std::cout << *actState << std::endl;
     }
 
     return 0;

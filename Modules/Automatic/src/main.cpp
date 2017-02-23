@@ -16,7 +16,7 @@ int main(int argc, char** argv){
 
 	CallbackHandler call;
 	Automatic autom;
-
+	Lander lander;
 	lcm::Subscription *sub   = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
 	lcm::Subscription *sub2  = handler2.subscribe("platform/pose", &CallbackHandler::positionSetpointCallback, &call);
 	lcm::Subscription *sub3  = handler3.subscribe("actual_task", &CallbackHandler::actualTaskCallback, &call);
@@ -40,6 +40,8 @@ int main(int argc, char** argv){
 	uint64_t t_prev = 0;
 	MavState platform;
 
+	lander.handleMachine();
+
 	while(0==handler.handle()){
 
 		t = time::getTimeMilliSecond();
@@ -47,6 +49,7 @@ int main(int argc, char** argv){
 		t_prev = t;
 
 		autom.setState(call._vision_pos);
+        lander.setState(call._vision_pos);
 
 		int ret = poll(fds,2,0);
 
@@ -70,6 +73,7 @@ int main(int argc, char** argv){
 
 			handler2.handle();
 			platform = call._position_sp;
+            lander.setPlatformState(platform);
 
 		}
 
@@ -102,7 +106,14 @@ int main(int argc, char** argv){
 				autom._actualTask.y = autom._comm.getY();
 			}
 
-            if(autom._actualTask.params[0] == 1) autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
+            if(autom._actualTask.params[0] == 1){
+                //autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
+                lander.updateSignals();
+                lander.handleMachine();
+                lander.run();
+                autom._comm = lander.getCommand();
+
+            }
             else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.params[0]);
 
 		}

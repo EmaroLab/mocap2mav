@@ -68,10 +68,6 @@ bool Executioner::readyToPublish() {
 
 void Executioner::run(){
 
-    std::cout <<"landed: "<< _landed << std::endl;
-    std::cout <<"armed: "<< _armed << std::endl;
-
-
     if(_nodeList.size() > 0) {
 
         loadTask();

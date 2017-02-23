@@ -24,6 +24,7 @@ public:
     MavState getState();
     MavState getCommand();
     void resetSetPoint();
+    void run();
 
 private:
 

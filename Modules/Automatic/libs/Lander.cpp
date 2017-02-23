@@ -142,13 +142,39 @@ void Lander::hold() {
 
 void Lander::init() {
 
-
     //Set point to my position
     resetSetPoint();
 
     //TODO: improve height logic(we assume that we are safely flying)
     //Go to max tracking height
-    _setPoint.setZ(params_automatic::zMax);
+    //_setPoint.setZ(-params_automatic::zMax);
+
+}
+
+void Lander::run() {
+
+    int state = getActualMachineState();
+    static bool initDone = false;
+    switch (state){
+
+        case (AbstractLandState::states::INIT):
+            if(!initDone){
+                init();
+                initDone = true;
+            }
+
+            break;
+        case (AbstractLandState::states::HOLD):
+
+            hold();
+            break;
+
+        default:
+            hold();
+            break;
+
+    }
+    std::cout << state << std::endl;
 
 }
 

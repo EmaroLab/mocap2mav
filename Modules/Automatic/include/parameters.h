@@ -12,7 +12,8 @@ namespace params_automatic {
     const double platformLenght  = 2;
     const double zMax            = 10;
 
-    const double KpHold          = 1;
+    const double KpHold          = 1.2;
+    const double KiHold          = 0.06;
 
 }
 

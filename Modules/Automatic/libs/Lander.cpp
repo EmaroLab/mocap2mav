@@ -9,7 +9,9 @@
 
 Lander::Lander()
         : _horizontaErr((double)6.56), _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
-          _NLost(0), _initS(&_machine), _holdS(&_machine), _asceS(&_machine),_descS(&_machine){
+          _NLost(0), _initS(&_machine), _holdS(&_machine), _asceS(&_machine),_descS(&_machine),_err(0,0), _err_int(0,0), _err_diff(0,0),
+          _dt(0), _prevTime(0), _actualTime(0)
+{
 
     initStateMachine();
 
@@ -70,9 +72,10 @@ void Lander::updateSignals() {
     double dx = xPlatTemp - xTemp;
     double dy = yPlatTemp - yTemp;
 
-    Eigen::Vector2d err(dx,dy);
+    _err[0] = dx;
+    _err[1] = dy;
 
-    _horizontaErr = err.norm();
+    _horizontaErr = _err.norm();
 
     if( state == AbstractLandState::states::HOLD ||
         state == AbstractLandState::states::ASCE ||
@@ -131,8 +134,9 @@ void Lander::hold() {
     Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
     Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
 
+    updateIntegrals();
     //PosSP = PlatPos + K * Vplat
-    tempSetPoint += params_automatic::KpHold * tempVel;
+    tempSetPoint += params_automatic::KpHold * tempVel + params_automatic::KiHold * _err_int;
 
     //Fill right fields
     _setPoint.setPosition(tempSetPoint(0),tempSetPoint(1),_setPoint.getZ());
@@ -153,6 +157,7 @@ void Lander::init() {
 
 void Lander::run() {
 
+    managetime();
     int state = getActualMachineState();
     static bool initDone = false;
     switch (state){
@@ -175,6 +180,29 @@ void Lander::run() {
 
     }
     std::cout << state << std::endl;
+
+}
+
+void Lander::updateIntegrals() {
+
+    _err_int[0] +=  _dt * _err[0];
+    _err_int[1] +=  _dt * _err[1];
+
+}
+
+void Lander::managetime() {
+
+    _actualTime = common::time::getTimeMilliSecond();
+    double dt = _prevTime != 0 ? (_actualTime - _prevTime) * (double)MILLI2SECS : 0.0;
+    _prevTime = _actualTime;
+    _dt = dt;
+
+}
+
+void Lander::resetIntegrals() {
+
+    _err_int[0] = 0;
+    _err_int[1] = 1;
 
 }
 

@@ -13,17 +13,17 @@ void InitState::handle(){
     static int wait = 0;
 
     //Wait 200 iterations
-    if(wait++ > 200) {
+    if(wait++ > 100) {
         this->_contextL->setStatePtr(_nextState);
     }
 }
 void HoldState::handle(){
     getSignals();
-    if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold)){
+    if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold) && (_setPoint.getZ() < -params_automatic::zMin - 0.1)){
         this->_contextL->setStatePtr(_nextDesState);
         return;
     }
-    if ((_NLost > params_automatic::NFramesLost) && (_setPoint.getZ() < params_automatic::zMax) && (_horizontaErr > _tauLost)){
+    if ((_NLost > params_automatic::NFramesLost) && (_setPoint.getZ() > -params_automatic::zMax) && (_horizontaErr > _tauLost)){
         this->_contextL->setStatePtr(_nextAscState);
         return;
     }

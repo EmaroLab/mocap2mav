@@ -65,6 +65,10 @@ private:
     void hold();
     //Initialize stuff here
     void init();
+    //Go up in case we miss, shall we reset integrals too ?
+    void asce();
+    //Get closer to the target
+    void desc();
 
 };
 

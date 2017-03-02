@@ -7,13 +7,14 @@
 
 namespace params_automatic {
 
-    const int    NFramesHold     = 300;
-    const int    NFramesLost     = 200;
-    const double platformLenght  = 2;
-    const double zMax            = 10;
+    static const int    NFramesHold     = 300;
+    static const int    NFramesLost     = 100;
+    static const double platformLenght  = 2;
+    static const double zMax            = 10;
+    static double       zMin            = 3;
 
-    const double KpHold          = 1.2;
-    const double KiHold          = 0.06;
+    static const double KpHold          = 1;
+    static const double KiHold          = 0.037;
 
 }
 

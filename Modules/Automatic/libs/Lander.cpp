@@ -8,9 +8,9 @@
 #include "parameters.h"
 
 Lander::Lander()
-        : _horizontaErr((double)0), _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
-          _NLost(0), _initS(&_machine), _holdS(&_machine), _asceS(&_machine),_descS(&_machine),_err(0,0), _err_int(0,0), _err_diff(0,0),
-          _dt(0), _prevTime(0), _actualTime(0)
+        : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
+          _NLost(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine) ,_err(0,0),
+          _err_int(0,0), _err_diff(0,0), _dt(0), _prevTime(0), _actualTime(0)
 {
 
     initStateMachine();
@@ -38,9 +38,9 @@ void Lander::initStateMachine() {
     _machine._tauLost      =  &_tauLost;
     _machine._NLost        =  &_NLost;
     _machine._NHold        =  &_NHold;
+    _machine._NComp        =  &_NComp;
     _machine._state        =  &_state;
     _machine._setPoint     =  &_setPoint;
-
 
     //Link states
     _initS._nextState    = &_holdS;
@@ -54,6 +54,10 @@ void Lander::initStateMachine() {
     _tauHold = 0.5 * params_automatic::platformLenght;
     _tauLost = params_automatic::platformLenght;
 
+#ifdef DEBUG
+    //Print actual state
+    std::cout << "Actual state: " << _machine.getActualNodeId() << std::endl;
+#endif
 }
 
 void Lander::setPlatformState(const MavState platformState) {
@@ -92,9 +96,11 @@ void Lander::updateSignals() {
         }
     }
 
+#ifdef DEBUG
     std::cout << "HERRO: " << _horizontaErr<< std::endl;
     std::cout << "NHOLD: " << _NHold<< std::endl;
     std::cout << "NLOST: " << _NLost<< std::endl;
+#endif
 
 }
 
@@ -151,10 +157,10 @@ void Lander::init() {
 
     //Set point to my position
     resetSetPoint();
-    _setPoint.setZ(-params_automatic::zMax);
+
     //TODO: improve height logic(we assume that we are safely flying)
     //Go to max tracking height
-    //_setPoint.setZ(-params_automatic::zMax);
+    _setPoint.setZ(-params_automatic::zMax);
 
 }
 
@@ -180,13 +186,16 @@ void Lander::run() {
 
             desc();
             break;
+        case (AbstractLandState::states::ASCE):
+
+            asce();
+            break;
 
         default:
             hold();
             break;
 
     }
-    std::cout << state << std::endl;
 
 }
 
@@ -215,6 +224,7 @@ void Lander::resetIntegrals() {
 
 void Lander::asce() {
 
+    resetIntegrals();
     _setPoint.setZ(_setPoint.getZ() - 0.1);
 
 }
@@ -224,6 +234,11 @@ void Lander::desc() {
     //Add step because z is negative up
     _setPoint.setZ(_setPoint.getZ() + 0.1);
 }
+
+void Lander::comp() {
+
+}
+
 
 
 

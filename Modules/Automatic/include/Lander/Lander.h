@@ -5,6 +5,8 @@
 #ifndef MOCAP2MAV_LANDER_H
 #define MOCAP2MAV_LANDER_H
 
+#define DEBUG
+
 #include "StateMachine/include/Machine.h"
 #include "common/MavState.h"
 #include "StatesClasses.hpp"
@@ -52,6 +54,7 @@ private:
     double _tauErr;
     int _NHold;
     int _NLost;
+    int _NComp;
 
     Eigen::Vector2d _err_int;
     Eigen::Vector2d _err;
@@ -69,6 +72,8 @@ private:
     void asce();
     //Get closer to the target
     void desc();
+    //Compensate altitude oscillation befor landing
+    void comp();
 
 };
 

@@ -27,6 +27,12 @@ void HoldState::handle(){
     }
     if ((_NLost > params_automatic::NFramesLost) && (_setPoint.getZ() > -params_automatic::zMax) && (_horizontaErr > _tauLost)){
         this->_contextL->setStatePtr(_nextAscState);
+        printStateTransition();
+        return;
+    }
+    if((fabs(_state.getZ() - (-params_automatic::zMin)) < 0.1) && _horizontaErr < _tauHold){
+        this->_contextL->setStatePtr(_nextComState);
+        printStateTransition();
         return;
     }
 
@@ -43,9 +49,10 @@ void AsceState::handle() {
 }
 
 void CompState::handle() {
-
+    getSignals();
     if ((_horizontaErr > _tauHold)){
         this->_contextL->setStatePtr(_nextState);
+        printStateTransition();
         return;
     }
 }

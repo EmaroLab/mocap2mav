@@ -9,8 +9,8 @@
 
 Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
-          _NLost(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine) ,_err(0,0),
-          _err_int(0,0), _err_diff(0,0), _dt(0), _prevTime(0), _actualTime(0)
+          _NLost(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
+          _err(0,0), _err_int(0,0), _err_diff(0,0), _dt(0), _prevTime(0), _actualTime(0)
 {
 
     initStateMachine();
@@ -46,18 +46,19 @@ void Lander::initStateMachine() {
     _initS._nextState    = &_holdS;
     _holdS._nextAscState = &_asceS;
     _holdS._nextDesState = &_descS;
+    _holdS._nextComState = &_compS;
     _asceS._nextState    = &_holdS;
     _descS._nextState    = &_holdS;
+    _compS._nextState    = &_asceS;
 
     _machine.setStatePtr(&_initS);
 
     _tauHold = 0.5 * params_automatic::platformLenght;
     _tauLost = params_automatic::platformLenght;
 
-#ifdef DEBUG
     //Print actual state
     std::cout << "Actual state: " << _machine.getActualNodeId() << std::endl;
-#endif
+
 }
 
 void Lander::setPlatformState(const MavState platformState) {
@@ -83,7 +84,8 @@ void Lander::updateSignals() {
 
     if( state == AbstractLandState::states::HOLD ||
         state == AbstractLandState::states::ASCE ||
-        state == AbstractLandState::states::DESC){
+        state == AbstractLandState::states::DESC ||
+        state == AbstractLandState::states::COMP){
 
         //Increment N if needed
         if (_horizontaErr < _tauHold) {
@@ -92,8 +94,30 @@ void Lander::updateSignals() {
         }
         else if (_horizontaErr > _tauLost) {
             _NHold = 0;
+            _NComp = 0;
             _NLost++;
         }
+/*
+        if(state == AbstractLandState::states::HOLD) {
+
+            if ((fabs(_state.getZ() - (-params_automatic::zMin)) < 0.1) && _horizontaErr < _tauHold) {
+                _NComp++;
+            } else{
+                _NComp = 0;
+            }
+        }
+*/
+        if(state == AbstractLandState::states::COMP)  {
+
+            //Check whether we are on place to land
+            if (_horizontaErr < _tauHold) {
+                _NComp++;
+            } else{
+                _NComp = 0;
+            }
+
+        }
+
     }
 
 #ifdef DEBUG
@@ -180,6 +204,7 @@ void Lander::run() {
 
         case (AbstractLandState::states::HOLD):
             initDone = false;
+            clampZSP();
             hold();
             break;
         case (AbstractLandState::states::DESC):
@@ -189,6 +214,10 @@ void Lander::run() {
         case (AbstractLandState::states::ASCE):
 
             asce();
+            break;
+        case (AbstractLandState::states::COMP):
+
+            comp();
             break;
 
         default:
@@ -237,6 +266,31 @@ void Lander::desc() {
 
 void Lander::comp() {
 
+
+    hold();
+
+    MavState tempState = _state;
+    //Calculate desired vertical velocity in order to compensate oscillations
+    double desc = 0.0;
+    double z_target_v = _platformState.getVz() - desc;
+
+    double err_v = z_target_v - tempState.getVz();
+
+    //z_target_v += params_automatic::KPComp * (err_v);
+
+    //Now we need to transform this velocity in a position setpoint since in Firmware:
+    // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos
+    std::cout << z_target_v << std::endl;
+    _setPoint.setZ((-z_target_v) + tempState.getZ());
+
+}
+
+void Lander::clampZSP() {
+
+    double temp;
+    temp = common::clamp(fabs(_setPoint.getZ()),params_automatic::zMin,params_automatic::zMax);
+
+    _setPoint.setZ(-temp);
 }
 
 

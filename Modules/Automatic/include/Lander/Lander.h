@@ -5,7 +5,7 @@
 #ifndef MOCAP2MAV_LANDER_H
 #define MOCAP2MAV_LANDER_H
 
-#define DEBUG
+//#define DEBUG
 
 #include "StateMachine/include/Machine.h"
 #include "common/MavState.h"
@@ -41,12 +41,12 @@ private:
     HoldState _holdS;
     AsceState _asceS;
     DescState _descS;
+    CompState _compS;
 
     //Time helpers
     double _dt;
     uint64_t _actualTime;
     uint64_t _prevTime;
-
 
     double _horizontaErr;
     double _tauHold;
@@ -64,6 +64,9 @@ private:
     void resetIntegrals();
     void managetime();
 
+    //Clap z SP
+    void clampZSP();
+
     //Tracking logic defined here
     void hold();
     //Initialize stuff here
@@ -72,7 +75,7 @@ private:
     void asce();
     //Get closer to the target
     void desc();
-    //Compensate altitude oscillation befor landing
+    //Compensate altitude oscillation before landing
     void comp();
 
 };

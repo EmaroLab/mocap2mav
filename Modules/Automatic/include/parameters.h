@@ -16,6 +16,8 @@ namespace params_automatic {
     static const double KpHold          = 1;
     static const double KiHold          = 0.037;
 
+    static const double KPComp          = 1;
+
 }
 
 #endif //MOCAP2MAV_PARAMETERS_H

@@ -90,6 +90,7 @@ class HoldState : public AbstractLandState {
 public:
     AbstractLandState* _nextAscState;
     AbstractLandState* _nextDesState;
+    AbstractLandState* _nextComState;
 
     HoldState(LandMachine *context) : AbstractLandState(context) {
         setId();

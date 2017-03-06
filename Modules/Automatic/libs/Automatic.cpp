@@ -135,7 +135,6 @@ double calculateDescendRate(double dz,double drate_max,double drate_min, double 
         return m * dz + q;
 
     }
-
 }
 
 void Automatic::land2(MavState platPose, double kp, double ki, double kd) {

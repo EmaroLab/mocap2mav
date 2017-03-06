@@ -57,8 +57,28 @@ namespace common {
 
     }
 
+    static double interpolate(double t,double y_max,double y_min, double tmax, double tmin){
 
+        //Calculate the descend rate profile (linear) through y = mx + q
+        //where x is vertical distance between robot and platform
+        if(t > tmax)      return y_max;
+        else if(t < tmin) return y_min;
+        else{
 
+            double m = (y_max - y_min) / (tmax - tmin);
+            double q = y_min - m * tmin;
+            return m * t + q;
+
+        }
+    }
+    static double clamp(double value, double min,double max){
+
+        if (value < min) return min;
+        if (value > max) return max;
+
+        return  value;
+
+    }
 
 
 

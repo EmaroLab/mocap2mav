@@ -19,6 +19,7 @@ public:
     double *_tauErr;
     int *_NHold;
     int *_NLost;
+    int      *_NComp;
     MavState *_state;
     MavState *_setPoint;
 
@@ -33,7 +34,8 @@ public:
         INIT,
         HOLD,
         DESC,
-        ASCE
+        ASCE,
+        COMP
 
     };
 
@@ -53,6 +55,9 @@ public:
          _setPoint     = *(_contextL->_setPoint);
 
     }
+    void printStateTransition(){
+        std::cout << "Actual state: " << _contextL->getActualNodeId() << std::endl;
+    }
 
 protected:
 
@@ -62,6 +67,7 @@ protected:
     double   _tauErr;
     int      _NHold;
     int      _NLost;
+    int      _NComp;
     MavState _state;
     MavState _setPoint;
     LandMachine* _contextL;
@@ -122,6 +128,20 @@ public:
     }
     void handle();
 };
+class CompState : public AbstractLandState {
+public:
+    CompState(LandMachine *context) : AbstractLandState(context) {
+        setId();
+    }
+
+    void setId() override {
+
+        _id = COMP;
+
+    }
+    void handle();
+};
+
 
 
 #endif //MOCAP2MAV_STATESCLASSES_HPP

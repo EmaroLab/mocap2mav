@@ -15,12 +15,14 @@ void InitState::handle(){
     //Wait 200 iterations
     if(wait++ > 100) {
         this->_contextL->setStatePtr(_nextState);
+        printStateTransition();
     }
 }
 void HoldState::handle(){
     getSignals();
     if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold) && (_setPoint.getZ() < -params_automatic::zMin - 0.1)){
         this->_contextL->setStatePtr(_nextDesState);
+        printStateTransition();
         return;
     }
     if ((_NLost > params_automatic::NFramesLost) && (_setPoint.getZ() > -params_automatic::zMax) && (_horizontaErr > _tauLost)){
@@ -32,8 +34,18 @@ void HoldState::handle(){
 void DescState::handle() {
     getSignals();
     this->_contextL->setStatePtr(_nextState);
+    printStateTransition();
 }
 void AsceState::handle() {
     getSignals();
     this->_contextL->setStatePtr(_nextState);
+    printStateTransition();
+}
+
+void CompState::handle() {
+
+    if ((_horizontaErr > _tauHold)){
+        this->_contextL->setStatePtr(_nextState);
+        return;
+    }
 }

@@ -233,6 +233,14 @@ void Lander::updateIntegrals() {
     _err_int[0] +=  _dt * _err[0];
     _err_int[1] +=  _dt * _err[1];
 
+    double tempx,tempy;
+
+    tempx = common::clamp(_err_int[0],params_automatic::minIntValue,params_automatic::maxIntValue);
+    tempy = common::clamp(_err_int[1],params_automatic::minIntValue,params_automatic::maxIntValue);
+
+    _err_int[0] =  tempx;
+    _err_int[1] =  tempy;
+
 }
 
 void Lander::managetime() {
@@ -271,18 +279,23 @@ void Lander::comp() {
 
     MavState tempState = _state;
     //Calculate desired vertical velocity in order to compensate oscillations
-    double desc = 0.0;
+    double desc = 0.07;
     double z_target_v = _platformState.getVz() - desc;
 
     double err_v = z_target_v - tempState.getVz();
 
-    //z_target_v += params_automatic::KPComp * (err_v);
+    double corr = 1;
+
+    if(_platformState.getVz() > 0) corr = 1.1;
+
+    z_target_v += corr * params_automatic::KPComp * (err_v);
 
     //Now we need to transform this velocity in a position setpoint since in Firmware:
     // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos
-    std::cout << z_target_v << std::endl;
+
     _setPoint.setZ((-z_target_v) + tempState.getZ());
 
+    //_setPoint.setZ(-_platformState.getZ() - 0.6);
 }
 
 void Lander::clampZSP() {

@@ -5,7 +5,7 @@
 #ifndef MOCAP2MAV_LANDER_H
 #define MOCAP2MAV_LANDER_H
 
-//#define DEBUG
+#define DEBUG
 
 #include "StateMachine/include/Machine.h"
 #include "common/MavState.h"

@@ -124,6 +124,9 @@ void Lander::updateSignals() {
     std::cout << "HERRO: " << _horizontaErr<< std::endl;
     std::cout << "NHOLD: " << _NHold<< std::endl;
     std::cout << "NLOST: " << _NLost<< std::endl;
+
+    std::cout << "INTEX: " << _err_int[0] << std::endl;
+    std::cout << "INTEY: " << _err_int[1] << std::endl;
 #endif
 
 }
@@ -210,10 +213,12 @@ void Lander::run() {
         case (AbstractLandState::states::DESC):
 
             desc();
+            clampZSP();
             break;
         case (AbstractLandState::states::ASCE):
 
             asce();
+            clampZSP();
             break;
         case (AbstractLandState::states::COMP):
 

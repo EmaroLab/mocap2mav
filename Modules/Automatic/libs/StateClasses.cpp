@@ -30,7 +30,7 @@ void HoldState::handle(){
         printStateTransition();
         return;
     }
-    if((fabs(_state.getZ() - (-params_automatic::zMin)) < 0.1) && (_horizontaErr < _tauHold * 0.5)){
+    if((fabs(_state.getZ() - (-params_automatic::zMin)) < 0.1) && (_horizontaErr < _tauHold * 0.5) && (_NHold > params_automatic::NFramesHold)){
         this->_contextL->setStatePtr(_nextComState);
         printStateTransition();
         return;

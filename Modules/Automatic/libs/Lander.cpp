@@ -115,9 +115,7 @@ void Lander::updateSignals() {
             } else{
                 _NComp = 0;
             }
-
         }
-
     }
 
 #ifdef DEBUG

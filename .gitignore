@@ -49,8 +49,8 @@ Thumbs.db
 
 # Distribution / packaging
 .Python
-
-build/*
+cmake-build-debug/
+build/
 lib/
 lib64/
 parts/
@@ -75,5 +75,8 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#Project related
+lists/list.txt
 
 

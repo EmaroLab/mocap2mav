@@ -1,0 +1,6 @@
+package exec;
+struct state
+{
+    int8_t armed;
+    int8_t landed;
+}

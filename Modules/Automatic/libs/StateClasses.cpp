@@ -20,7 +20,7 @@ void InitState::handle(){
 }
 void HoldState::handle(){
     getSignals();
-    if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold) && (_setPoint.getZ() < -params_automatic::zMin - 0.1)){
+    if((_NHold > params_automatic::NFramesHold) && (_horizontaErr < _tauHold) && (_setPoint.getZ() > params_automatic::zMin + 0.1)){
         this->_contextL->setStatePtr(_nextDesState);
         printStateTransition();
         return;
@@ -30,7 +30,7 @@ void HoldState::handle(){
         printStateTransition();
         return;
     }
-    if((fabs(_state.getZ() - (-params_automatic::zMin)) < 0.1) && (_horizontaErr < _tauHold * 0.5) && (_NHold > params_automatic::NFramesHold)){
+    if((fabs(_state.getZ() - (params_automatic::zMin)) < 0.1) && (_horizontaErr < _tauHold * 0.5) && (_NHold > params_automatic::NFramesHold)){
         this->_contextL->setStatePtr(_nextComState);
         printStateTransition();
         return;

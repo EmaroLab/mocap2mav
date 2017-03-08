@@ -1,7 +1,7 @@
 #include "Automatic.h"
 
 #define PI              3.141592653589
-#define Kland           4
+#define Kland           1
 #define THRE            0.15
 #define DRATE_MIN       0.1
 #define DRATE_MAX       0.4
@@ -234,7 +234,7 @@ void Automatic::land1(float x_target, float y_target, float h) {
         //Descending is safe, is it?
         double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
         desc = 0.2;
-        _comm.setVz(desc);
+        _comm.setVz(-desc);
         /*
         if (fabs(dz) < 0.05){
             _comm.setVx(0);

@@ -71,7 +71,7 @@ void Executioner::run(){
     if(_nodeList.size() > 0) {
 
         loadTask();
-        _can_run = true; //TRUE
+        _can_run = true;
         _idle = false;
     }
     else{

@@ -52,9 +52,9 @@ private:
     double _tauHold;
     double _tauLost;
     double _tauErr;
-    int _NHold;
-    int _NLost;
-    int _NComp;
+    int    _NHold;
+    int    _NLost;
+    int    _NComp;
 
     Eigen::Vector2d _err_int;
     Eigen::Vector2d _err;
@@ -64,7 +64,7 @@ private:
     void resetIntegrals();
     void managetime();
 
-    //Clap z SP
+    //Clamp z SP
     void clampZSP();
 
     //Tracking logic defined here

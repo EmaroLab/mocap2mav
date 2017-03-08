@@ -10,6 +10,7 @@ namespace params_automatic {
     static const int    NFramesHold     = 200;
     static const int    NFramesLost     = 100;
     static const int    NFramesComp     = 50;
+
     static const double platformLenght  = 2;
     static const double zMax            = 10;
     static double       zMin            = 3;

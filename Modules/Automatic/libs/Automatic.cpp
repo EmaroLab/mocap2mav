@@ -137,64 +137,7 @@ double calculateDescendRate(double dz,double drate_max,double drate_min, double 
     }
 }
 
-void Automatic::land2(MavState platPose, double kp, double ki, double kd) {
 
-
-    //Calculate difference
-
-    double dx = - _state.getX() + platPose.getX();
-    double dy = - _state.getY() + platPose.getY();
-    double dz =   _state.getZ() + platPose.getZ() + PLATFORM_OFFSET; //_state.z is negative due to inversion,
-                                                                    // that is why we dont use the minus sign
-
-    // Be sure that we are on top of the target
-
-    double x_target_v = Kland * (dx);
-    double y_target_v = Kland * (dy);
-
-    //Normalize
-
-    Eigen::Vector2d v(x_target_v,y_target_v);
-
-    if(v.norm() > VMAX){
-
-        v.normalize();
-
-        v = v * VMAX;
-
-    }
-
-    _comm.setVx(v(0));
-    _comm.setVy(v(1));
-
-    //TODO: add security checks on vz
-    if(fabs(dx) <= THRE && fabs(dy) <= THRE){
-        //Descending is safe, is it?<
-        double desc = calculateDescendRate(-dz, DRATE_MAX, DRATE_MIN, TMAX, TMIN);
-
-        double z_target_v = platPose.getVz() - desc;
-        //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
-
-        double err_v = z_target_v - _state.getVz();
-
-        z_target_v += ki*(err_v); // Proportional term
-        std::cout << "Actua: " <<-_state.getVz() + platPose.getVz()<< std::endl;
-        std::cout << "Desir: " << desc << std::endl;
-        std::cout << "ErrVe: " << err_v << std::endl;
-        std::cout << "ErrDe: " << desc - (-_state.getVz() + platPose.getVz())<< std::endl;
-
-        _comm.setVz(z_target_v);
-
-    }else if(fabs(dx) <= THRE*8 && fabs(dy) <= THRE*8){
-        _comm.setVz(DRATE_MAX*1.5);
-    }else {
-        _comm.setVz(0);
-    }                           //Is it correct?
-
-
-    _comm.setType(MavState::type::VELOCITY);
-
-}
 
 
 
@@ -263,7 +206,7 @@ void Automatic::land1(float x_target, float y_target, float h) {
 
     double dx = - _state.getX() + x_target;
     double dy = - _state.getY() + y_target;
-    double dz =   _state.getZ() - h; //_state.z is negative due to inversion,
+    double dz = - _state.getZ() + h; //_state.z is negative due to inversion,
                                     // that is why we don't use the minus sign
 
     // Be sure that we are on top of the target
@@ -291,7 +234,7 @@ void Automatic::land1(float x_target, float y_target, float h) {
         //Descending is safe, is it?
         double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
         desc = 0.2;
-        _comm.setVz(-desc);
+        _comm.setVz(desc);
         /*
         if (fabs(dz) < 0.05){
             _comm.setVx(0);
@@ -303,6 +246,64 @@ void Automatic::land1(float x_target, float y_target, float h) {
 
     //else if (fabs(dx) <= THRE * 10 && fabs(dy) <= THRE * 10) _comm.setVz(DRATE_MAX); //Is it correct? Don't think so
     else _comm.setVz(0);
+
+    _comm.setType(MavState::type::VELOCITY);
+
+}
+
+void Automatic::land2(MavState platPose, double kp, double ki, double kd) {
+
+
+    //Calculate difference
+
+    double dx = - _state.getX() + platPose.getX();
+    double dy = - _state.getY() + platPose.getY();
+    double dz = - _state.getZ() + platPose.getZ() + PLATFORM_OFFSET;
+
+    // Be sure that we are on top of the target
+
+    double x_target_v = Kland * (dx);
+    double y_target_v = Kland * (dy);
+
+    //Normalize
+
+    Eigen::Vector2d v(x_target_v,y_target_v);
+
+    if(v.norm() > VMAX){
+
+        v.normalize();
+
+        v = v * VMAX;
+
+    }
+
+    _comm.setVx(v(0));
+    _comm.setVy(v(1));
+
+    //TODO: add security checks on vz
+    if(fabs(dx) <= THRE && fabs(dy) <= THRE){
+        //Descending is safe, is it?<
+        double desc = calculateDescendRate(dz, DRATE_MAX, DRATE_MIN, TMAX, TMIN);
+
+        double z_target_v = platPose.getVz() - desc;
+        //if(z_target_v <= -DRATE) z_target_v = -DRATE; //could be useful
+
+        double err_v = z_target_v - _state.getVz();
+
+        z_target_v += ki*(err_v); // Proportional term
+
+        std::cout << "Actua: " <<-_state.getVz() + platPose.getVz()<< std::endl;
+        std::cout << "Desir: " << desc << std::endl;
+        std::cout << "ErrVe: " << err_v << std::endl;
+        std::cout << "ErrDe: " << desc - (-_state.getVz() + platPose.getVz())<< std::endl;
+
+        _comm.setVz(z_target_v);
+
+    }else if(fabs(dx) <= THRE*8 && fabs(dy) <= THRE*8){
+        _comm.setVz(DRATE_MAX*1.5);
+    }else {
+        _comm.setVz(0);
+    }                           //Is it correct?
 
     _comm.setType(MavState::type::VELOCITY);
 

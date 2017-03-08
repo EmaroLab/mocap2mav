@@ -359,7 +359,7 @@ bool Parser::parseAction(int pos) {
     else if (a == "land"){
         std::cout << "Land found" << std::endl;
         task.action = common::actions::LAND;
-        task.params[0] = 0; //Assume that landing is normal, not on a platform. We'll see later
+        task.z = 0; //Assume that landing is normal, not on a platform. We'll see later
         int c = 1;
 
         for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; i++) {
@@ -397,7 +397,6 @@ bool Parser::parseAction(int pos) {
 
         }
         _taskListParsed.push_back(task);
-
 
     }else {
         std::cout << "Unrecognised type at position: "<< pos << std::endl;

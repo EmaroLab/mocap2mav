@@ -288,7 +288,7 @@ void Automatic::land2(MavState platPose, double kp, double ki, double kd) {
 
         double err_v = z_target_v - _state.getVz();
 
-        z_target_v += ki*(err_v); // Proportional term
+        z_target_v += kp*(err_v); // Proportional term
 
         std::cout << "Actua: " <<-_state.getVz() + platPose.getVz()<< std::endl;
         std::cout << "Desir: " << desc << std::endl;

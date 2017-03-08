@@ -114,7 +114,7 @@ int main(int argc, char** argv){
                 autom._comm = lander.getCommand();
 
             }
-            else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.params[0]);
+            else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.z);
 
 		}
 		if (autom.getTask().action == actions::ROTATE){

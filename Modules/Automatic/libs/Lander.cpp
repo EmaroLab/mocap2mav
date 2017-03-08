@@ -187,7 +187,7 @@ void Lander::init() {
 
     //TODO: improve height logic(we assume that we are safely flying)
     //Go to max tracking height
-    _setPoint.setZ(-params_automatic::zMax);
+    _setPoint.setZ(params_automatic::zMax);
 
 }
 

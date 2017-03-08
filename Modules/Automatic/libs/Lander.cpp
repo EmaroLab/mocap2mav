@@ -267,14 +267,14 @@ void Lander::resetIntegrals() {
 void Lander::asce() {
 
     resetIntegrals();
-    _setPoint.setZ(_setPoint.getZ() - 0.1);
+    _setPoint.setZ(_setPoint.getZ() + 0.1);
 
 }
 
 void Lander::desc() {
 
     //Add step because z is negative up
-    _setPoint.setZ(_setPoint.getZ() + 0.1);
+    _setPoint.setZ(_setPoint.getZ() - 0.1);
 }
 
 void Lander::comp() {
@@ -297,7 +297,7 @@ void Lander::comp() {
     //Now we need to transform this velocity in a position setpoint since in Firmware:
     // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos
 
-    _setPoint.setZ((-z_target_v) + tempState.getZ());
+    _setPoint.setZ((z_target_v) + tempState.getZ());
 
     //_setPoint.setZ(-_platformState.getZ() - 0.6);
 }

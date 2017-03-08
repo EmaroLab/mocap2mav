@@ -279,7 +279,6 @@ void Lander::desc() {
 
 void Lander::comp() {
 
-
     hold();
 
     MavState tempState = _state;

@@ -129,7 +129,7 @@ int main(int argc, char** argv){
             handler.publish("local_position_sp", &command);
 
 			//For gazebo visualization with the marker plugin
-            command.position[2] = -command.position[2];
+            command.position[2] = command.position[2];
 			handler.publish("Marker/pose_cmd", &command);
         }
 	}

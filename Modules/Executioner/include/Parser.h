@@ -26,13 +26,18 @@ public:
     bool parse();
     bool loadFile(std::string file);
     std::deque<exec::task> getTaskListParsed();
-    double getValue(std::string str);
 
 
 private:
+    double getValue(std::string str);
     bool parseAction(int pos);
     std::vector<std::vector<std::string>> _tokens;
     std::deque<exec::task> _taskListParsed;
+
+    bool parseTakeOff(exec::task& task,int pos);
+    bool parseMove(exec::task& task,int pos);
+    bool parseRotate(exec::task& task,int pos);
+    bool parseLand(exec::task& task,int pos);
 
 };
 

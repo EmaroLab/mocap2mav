@@ -12,7 +12,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp ${PROJECT_SRC_DIR}/MavState.cpp)
+${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SOURCE_DIR}/Parser.cpp include/Parser.h ${PROJECT_SRC_DIR}/MavState.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")

@@ -97,319 +97,30 @@ bool Parser::parseAction(int pos) {
     exec::task task;
 
     //Select the right action and parse it
+    bool res = false;
     if(a == "takeoff"){
-        std::cout << "Takeoff found" << std::endl;
-        bool zFound = false;
-        task.action = common::actions::TAKE_OFF;
 
-        for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
-
-            std::string field = _tokens[i][0];
-            std::string value_str = _tokens[i][1];
-
-            if(field == "z"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if(std::isfinite(value)){
-                    zFound = true;
-                    task.params[0] = value;
-                    std::cout << "  Z: " << value << std::endl;
-
-                }else{
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-            else if(field == "id"){
-
-                double value = getValue(value_str);
-                task.id = (int)value;
-
-            }
-            else{
-
-                std::cout << "unrecognized field" << std::endl;
-                return false;
-
-            }
-
-        }
-        if(zFound) _taskListParsed.push_back(task);
-
+        res = parseTakeOff(task,pos);
+        return  res;
     }
     else if(a == "move"){
-        std::cout << "Move found" << std::endl;
-        const unsigned char xFound = 0b0001; //
-        const unsigned char yFound = 0b0010; //
-        const unsigned char zFound = 0b0100; //
-        const unsigned char aFound = 0b1000; //
-        unsigned char mask = 0b0000;
-        task.action = common::actions::MOVE;
 
-        for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
-
-            std::string field = _tokens[i][0];
-            std::string value_str = _tokens[i][1];
-
-            if(field == "x") {
-
-                //atof Helper, cast string into double
-
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= xFound;
-                    task.x = value;
-                    std::cout << "  X: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-            else if(field == "id"){
-
-                double value = getValue(value_str);
-                task.id = (int)value;
-
-            }
-            else if(field == "y"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= yFound;
-                    task.y = value;
-                    std::cout << "  Y: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-            else if(field == "z"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= zFound;
-                    task.z = value;
-                    std::cout << "  Z: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-            else if(field == "alpha"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= aFound;
-                    task.params[0] = value;
-                    std::cout << "  Alpha: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-
-            else{
-
-                std::cout << "unrecognized field" << std::endl;
-
-            }
-
-        }
-        if((mask & (xFound | yFound | zFound | aFound)) == (xFound | yFound | zFound | aFound)) _taskListParsed.push_back(task);
-        else {
-            std::cout << "field missing in action: " << pos << std::endl;
-            return false;
-        }
-
+        res = parseMove(task,pos);
+        return  res;
     }
     else if (a == "rotate") {
 
-        std::cout << "Rotate found" << std::endl;
-        const unsigned char xFound = 0b0001; // hex for 0000 0001
-        const unsigned char yFound = 0b0010; // hex for 0000 0010
-        const unsigned char aFound = 0b0100; // hex for 0000 0100
-        const unsigned char yawFound = 0b1000; // hex for 0000 0100
-        unsigned char mask = 0b0000;
-        task.action = common::actions::ROTATE;
-
-        for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
-
-            std::string field = _tokens[i][0];
-            std::string value_str = _tokens[i][1];
-
-            if(field == "x") {
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= xFound;
-                    task.x = value;
-                    std::cout << "X: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-
-            else if(field == "y"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= yFound;
-                    task.y = value;
-                    std::cout << "Y: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-            else if(field == "id"){
-
-                double value = getValue(value_str);
-                task.id = (int)value;
-
-            }
-            else if(field == "yaw"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= yawFound;
-                    task.yaw = value * PI/180;
-                    std::cout << "Yaw: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-            else if(field == "angle_valid"){
-
-                //atof Helper, cast string into double
-                double value = getValue(value_str);
-
-                if (std::isfinite(value)) {
-                    mask |= aFound;
-                    task.params[0] = value;
-                    std::cout << "Angle valid: " <<value<< " found for action: " << pos << std::endl;
-
-                } else {
-                    std::cout << "value is not finite" << std::endl;
-                    return false;
-                }
-
-            }
-
-            else{
-
-                std::cout << "unrecognized field" << std::endl;
-
-            }
-
-        }
-        if((mask & yawFound ) == (yawFound)) {
-
-            //Setting yaw valid which has the highest priority
-            task.params[0] = 1;
-
-            _taskListParsed.push_back(task);
-
-
-        }
-        else if((mask & (xFound | yFound)) == (xFound | yFound) ){
-
-            //Yaw not found, look for x and y
-            task.params[0] = 0;
-            _taskListParsed.push_back(task);
-
-        }
-        else {
-            std::cout << "field missing in action: " << pos << std::endl;
-            return false;
-        }
-
+        res = parseRotate(task,pos);
+        return res;
     }
     else if (a == "land"){
-        std::cout << "Land found" << std::endl;
-        task.action = common::actions::LAND;
-        task.z = 0; //Assume that landing is normal, not on a platform. We'll see later
-        int c = 1;
 
-        for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; i++) {
-            std::string field = _tokens[i][0];
-            std::string value_str;
-
-            if(field == "id"){
-                value_str = _tokens[i][1];
-                double value = getValue(value_str);
-                task.id = (int)value;
-
-            }
-            if(field == "z"){
-                value_str = _tokens[i][1];
-                double value = getValue(value_str);
-                task.z = value;
-
-            }
-            else if(field == "platform"){
-                value_str = _tokens[i][1];
-                double value = getValue(value_str);
-                task.params[0] = 1;
-                if (c < 4){
-
-                    task.params[c++] = value;
-                    if(c != 3) task.params[c] = 0;  // Set next gain to zero in case
-
-                }
-                else {
-                    std::cout << "Too many PLATFORM fields, they must be 3 for PID gains" << std::endl;
-                    return false;
-                }
-
-            }
-            else{
-
-                std::cout << "unrecognized field" << std::endl;
-                return false;
-
-            }
-
-        }
-        _taskListParsed.push_back(task);
-
+        res = parseLand(task,pos);
+        return res;
     }else {
         std::cout << "Unrecognised type at position: "<< pos << std::endl;
         return false;
     }
-    //No failures at this point, return true
-    return true;
 
 }
 
@@ -417,5 +128,273 @@ std::deque<exec::task> Parser::getTaskListParsed() {
 
     return _taskListParsed;
 
+}
+
+bool Parser::parseTakeOff(exec::task& task,int pos) {
+
+    std::cout << "Takeoff found" << std::endl;
+    bool zFound = false;
+    task.action = common::actions::TAKE_OFF;
+
+    for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
+
+        std::string field = _tokens[i][0];
+        std::string value_str = _tokens[i][1];
+
+        if(field == "z"){
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if(std::isfinite(value)){
+                zFound = true;
+                task.params[0] = value;
+                std::cout << "  Z: " << value << std::endl;
+
+            }else{
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        }
+        else if(field == "id"){
+
+            double value = getValue(value_str);
+            task.id = (int)value;
+
+        }
+        else{
+
+            std::cout << "unrecognized field" << std::endl;
+            return false;
+
+        }
+
+    }
+    if(zFound) _taskListParsed.push_back(task);
+    return true;
+}
+
+bool Parser::parseMove(exec::task& task,int pos) {
+    std::cout << "Move found" << std::endl;
+    const unsigned char xFound = 0b0001; //
+    const unsigned char yFound = 0b0010; //
+    const unsigned char zFound = 0b0100; //
+    const unsigned char aFound = 0b1000; //
+    unsigned char mask = 0b0000;
+    task.action = common::actions::MOVE;
+
+    for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
+
+        std::string field = _tokens[i][0];
+        std::string value_str = _tokens[i][1];
+
+        if(field == "x") {
+
+            //atof Helper, cast string into double
+
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= xFound;
+                task.x = value;
+                std::cout << "  X: " <<value<< " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        }
+        else if(field == "id"){
+
+            double value = getValue(value_str);
+            task.id = (int)value;
+
+        }
+        else if(field == "y"){
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= yFound;
+                task.y = value;
+                std::cout << "  Y: " <<value<< " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        }
+        else if(field == "z"){
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= zFound;
+                task.z = value;
+                std::cout << "  Z: " <<value<< " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        }
+        else if(field == "alpha"){
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= aFound;
+                task.params[0] = value;
+                std::cout << "  Alpha: " <<value<< " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        }
+
+        else{
+
+            std::cout << "unrecognized field" << std::endl;
+
+        }
+
+    }
+    if((mask & (xFound | yFound | zFound | aFound)) == (xFound | yFound | zFound | aFound)) _taskListParsed.push_back(task);
+    else {
+        std::cout << "field missing in action: " << pos << std::endl;
+        return false;
+    }
+    return true;
+}
+
+bool Parser::parseRotate(exec::task& task, int pos) {
+
+    std::cout << "Rotate found" << std::endl;
+    const unsigned char xFound = 0b0001; // hex for 0000 0001
+    const unsigned char yFound = 0b0010; // hex for 0000 0010
+    const unsigned char aFound = 0b0100; // hex for 0000 0100
+    const unsigned char yawFound = 0b1000; // hex for 0000 0100
+    unsigned char mask = 0b0000;
+    task.action = common::actions::ROTATE;
+
+    for (int i = pos+1; i < _tokens.size() && _tokens[i][0] != "type" ; ++i) {
+
+        std::string field = _tokens[i][0];
+        std::string value_str = _tokens[i][1];
+
+        if (field == "x") {
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= xFound;
+                task.x = value;
+                std::cout << "X: " << value << " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        } else if (field == "y") {
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= yFound;
+                task.y = value;
+                std::cout << "Y: " << value << " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        } else if (field == "id") {
+
+            double value = getValue(value_str);
+            task.id = (int) value;
+
+        } else if (field == "yaw") {
+
+            //atof Helper, cast string into double
+            double value = getValue(value_str);
+
+            if (std::isfinite(value)) {
+                mask |= yawFound;
+                task.yaw = value * PI / 180;
+                std::cout << "Yaw: " << value << " found for action: " << pos << std::endl;
+
+            } else {
+                std::cout << "value is not finite" << std::endl;
+                return false;
+            }
+
+        }
+
+    }
+    _taskListParsed.push_back(task);
+    return true;
+}
+
+bool Parser::parseLand(exec::task& task, int pos) {
+    std::cout << "Land found" << std::endl;
+    task.action = common::actions::LAND;
+    task.z = 0; //Assume that landing is normal, not on a platform. We'll see later
+    int c = 1;
+
+    for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; i++) {
+        std::string field = _tokens[i][0];
+        std::string value_str;
+
+        if(field == "id"){
+            value_str = _tokens[i][1];
+            double value = getValue(value_str);
+            task.id = (int)value;
+
+        }
+        if(field == "z"){
+            value_str = _tokens[i][1];
+            double value = getValue(value_str);
+            task.z = value;
+
+        }
+        else if(field == "platform"){
+            value_str = _tokens[i][1];
+            double value = getValue(value_str);
+            task.params[0] = 1;
+            if (c < 4){
+
+                task.params[c++] = value;
+                if(c != 3) task.params[c] = 0;  // Set next gain to zero in case
+
+            }
+            else {
+                std::cout << "Too many PLATFORM fields, they must be 3 for PID gains" << std::endl;
+                return false;
+            }
+
+        }
+        else{
+
+            std::cout << "unrecognized field" << std::endl;
+            return false;
+
+        }
+
+    }
+    _taskListParsed.push_back(task);
+    return true;
 }
 

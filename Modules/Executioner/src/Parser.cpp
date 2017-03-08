@@ -367,9 +367,15 @@ bool Parser::parseAction(int pos) {
             std::string value_str;
 
             if(field == "id"){
-
+                value_str = _tokens[i][1];
                 double value = getValue(value_str);
                 task.id = (int)value;
+
+            }
+            if(field == "z"){
+                value_str = _tokens[i][1];
+                double value = getValue(value_str);
+                task.z = value;
 
             }
             else if(field == "platform"){

@@ -5,14 +5,21 @@
 #ifndef MOCAP2MAV_LANDER_H
 #define MOCAP2MAV_LANDER_H
 
-#define DEBUG
-
 #include "StateMachine/include/Machine.h"
 #include "common/MavState.h"
 #include "StatesClasses.hpp"
 #include "common/common.h"
 
-//Define states
+#define DEBUG
+#define PI              3.141592653589
+#define Kland           1
+#define THRE            0.15
+#define DRATE_MIN       0.1
+#define DRATE_MAX       0.4
+#define VMAX            1.5
+#define TMAX            2
+#define TMIN            0.5
+#define PLATFORM_OFFSET 0.1
 
 class Lander {
 

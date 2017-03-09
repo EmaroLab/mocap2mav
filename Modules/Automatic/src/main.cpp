@@ -108,7 +108,7 @@ int main(int argc, char** argv){
 
             if(autom._actualTask.params[0] == 1){
                 //autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
-                lander.updateSignals();
+
                 lander.handleMachine();
                 lander.run();
                 autom._comm = lander.getCommand();

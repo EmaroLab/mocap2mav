@@ -115,9 +115,7 @@ void Lander::updateSignals() {
             } else{
                 _NComp = 0;
             }
-
         }
-
     }
 
 #ifdef DEBUG
@@ -139,61 +137,10 @@ int Lander::getActualMachineState() {
     return _machine.getActualNodeId();
 }
 
-void Lander::resetSetPoint() {
-
-    _setPoint = _state;
-    _setPoint.setType(MavState::type::POSITION);
-
-}
-
-void Lander::hold() {
-
-    //This function is purely tracking, nothing more
-
-    /*
-     * The tracking is performed by POSITION control, issuing the position setpoint
-     * in order to achieve the desired velocity calculated by:
-     *
-     * Vdes = K * ep + Vplat
-     * or
-     * Psp = Pplat + K * Vplat
-     *
-     * where:
-     *
-     * Vdes = desired velocity, K = proportional gain, ep = position error, Vplat = paltform velocity
-     */
-
-    //Cache values
-    MavState platPos = _platformState;
-    MavState state   = _state;
-
-    Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
-    Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
-
-    updateIntegrals();
-    //PosSP = PlatPos + K * Vplat
-    tempSetPoint += params_automatic::KpHold * tempVel + params_automatic::KiHold * _err_int;
-
-    //Fill right fields
-    _setPoint.setPosition(tempSetPoint(0),tempSetPoint(1),_setPoint.getZ());
-    _setPoint.setType(MavState::POSITION);
-
-}
-
-void Lander::init() {
-
-    //Set point to my position
-    resetSetPoint();
-
-    //TODO: improve height logic(we assume that we are safely flying)
-    //Go to max tracking height
-    _setPoint.setZ(-params_automatic::zMax);
-
-}
-
 void Lander::run() {
 
     managetime();
+    updateSignals();
     int state = getActualMachineState();
     static bool initDone = false;
     switch (state){
@@ -233,6 +180,13 @@ void Lander::run() {
 
 }
 
+void Lander::resetSetPoint() {
+
+    _setPoint = _state;
+    _setPoint.setType(MavState::type::POSITION);
+
+}
+
 void Lander::updateIntegrals() {
 
     _err_int[0] +=  _dt * _err[0];
@@ -264,17 +218,67 @@ void Lander::resetIntegrals() {
 
 }
 
+void Lander::init() {
+
+    //Set point to my position
+    resetSetPoint();
+
+    //Go to max tracking height
+    _setPoint.setZ(params_automatic::zMax);
+
+}
+
+void Lander::hold() {
+
+    //This function is purely tracking, nothing more
+
+    /*
+     * The tracking is performed by POSITION control, issuing the position setpoint
+     * in order to achieve the desired velocity calculated by:
+     *
+     * Vdes = K * ep + Vplat
+     * or
+     * Psp = Pplat + K * Vplat
+     *
+     * where:
+     *
+     * Vdes = desired velocity, K = proportional gain, ep = position error, Vplat = paltform velocity
+     */
+
+    //Cache values
+    MavState platPos = _platformState;
+    MavState state   = _state;
+
+    Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
+    Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
+    Eigen::Vector2d tempErr = _err;
+    const double  kp = 0.5;
+
+    Eigen::Vector2d prop = kp * tempErr;
+
+    updateIntegrals();
+    //PosSP = PlatPos + K * Vplat
+    tempSetPoint += params_automatic::KpHold * tempVel + params_automatic::KiHold * _err_int;
+
+    tempSetPoint += prop;
+
+    //Fill right fields
+    _setPoint.setPosition(tempSetPoint(0),tempSetPoint(1),_setPoint.getZ());
+    _setPoint.setType(MavState::POSITION);
+
+}
+
 void Lander::asce() {
 
     resetIntegrals();
-    _setPoint.setZ(_setPoint.getZ() - 0.1);
+    _setPoint.setZ(_setPoint.getZ() + 0.1);
 
 }
 
 void Lander::desc() {
 
     //Add step because z is negative up
-    _setPoint.setZ(_setPoint.getZ() + 0.1);
+    _setPoint.setZ(_setPoint.getZ() - 0.1);
 }
 
 void Lander::comp() {
@@ -283,7 +287,8 @@ void Lander::comp() {
 
     MavState tempState = _state;
     //Calculate desired vertical velocity in order to compensate oscillations
-    double desc = 0.07;
+    double dz = - _state.getZ() + _platformState.getZ() + PLATFORM_OFFSET;
+    double desc = common::interpolate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
     double z_target_v = _platformState.getVz() - desc;
 
     double err_v = z_target_v - tempState.getVz();
@@ -297,9 +302,8 @@ void Lander::comp() {
     //Now we need to transform this velocity in a position setpoint since in Firmware:
     // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos
 
-    _setPoint.setZ((-z_target_v) + tempState.getZ());
+    _setPoint.setZ((z_target_v) + tempState.getZ());
 
-    //_setPoint.setZ(-_platformState.getZ() - 0.6);
 }
 
 void Lander::clampZSP() {
@@ -307,7 +311,7 @@ void Lander::clampZSP() {
     double temp;
     temp = common::clamp(fabs(_setPoint.getZ()),params_automatic::zMin,params_automatic::zMax);
 
-    _setPoint.setZ(-temp);
+    _setPoint.setZ(temp);
 }
 
 

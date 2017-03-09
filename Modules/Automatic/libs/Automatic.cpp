@@ -1,14 +1,6 @@
 #include "Automatic.h"
 
-#define PI              3.141592653589
-#define Kland           1
-#define THRE            0.15
-#define DRATE_MIN       0.1
-#define DRATE_MAX       0.4
-#define VMAX            1.5
-#define TMAX            2
-#define TMIN            0.5
-#define PLATFORM_OFFSET 0.1
+
 
 Eigen::Quaterniond getQuatFromYaw(double yaw){
 
@@ -270,7 +262,6 @@ void Automatic::land2(MavState platPose, double kp, double ki, double kd) {
     if(v.norm() > VMAX){
 
         v.normalize();
-
         v = v * VMAX;
 
     }

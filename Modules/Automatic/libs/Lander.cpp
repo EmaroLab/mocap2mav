@@ -49,7 +49,7 @@ void Lander::initStateMachine() {
     _holdS._nextComState = &_compS;
     _asceS._nextState    = &_holdS;
     _descS._nextState    = &_holdS;
-    _compS._nextState    = &_asceS;
+    _compS._nextState    = &_holdS;
 
     _machine.setStatePtr(&_initS);
 
@@ -251,6 +251,7 @@ void Lander::hold() {
 
     Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
     Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
+    //Eigen::Vector2d tempSetPoint(state.getX(),state.getY());
     Eigen::Vector2d tempErr = _err;
     const double  kp = 0.5;
 

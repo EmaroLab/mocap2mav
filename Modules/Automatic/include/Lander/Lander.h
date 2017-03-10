@@ -44,11 +44,12 @@ private:
     MavState _platformState;
 
     //Create states
-    InitState _initS;
-    HoldState _holdS;
-    AsceState _asceS;
-    DescState _descS;
-    CompState _compS;
+    InitState       _initS;
+    HoldState       _holdS;
+    AsceState       _asceS;
+    DescState       _descS;
+    RToLandState    _rtolS;
+    CompState       _compS;
 
     //Time helpers
     double _dt;

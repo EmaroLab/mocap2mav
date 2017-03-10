@@ -35,6 +35,7 @@ public:
         HOLD,
         DESC,
         ASCE,
+        R2LA,
         COMP
 
     };
@@ -51,6 +52,7 @@ public:
          _tauErr       = *(_contextL->_tauErr);
          _NHold        = *(_contextL->_NHold);
          _NLost        = *(_contextL->_NLost);
+         _NComp        = *(_contextL->_NComp);
          _state        = *(_contextL->_state);
          _setPoint     = *(_contextL->_setPoint);
 
@@ -90,7 +92,6 @@ class HoldState : public AbstractLandState {
 public:
     AbstractLandState* _nextAscState;
     AbstractLandState* _nextDesState;
-    AbstractLandState* _nextComState;
 
     HoldState(LandMachine *context) : AbstractLandState(context) {
         setId();
@@ -125,6 +126,20 @@ public:
     void setId() override {
 
         _id = ASCE;
+
+    }
+    void handle();
+};
+class RToLandState : public AbstractLandState {
+public:
+    AbstractLandState* _nextComState;
+    RToLandState(LandMachine *context) : AbstractLandState(context) {
+        setId();
+    }
+
+    void setId() override {
+
+        _id = R2LA;
 
     }
     void handle();

@@ -27,16 +27,19 @@ namespace params_automatic {
     static double       zMin            = 4;
 
     //Proportional gain times platform velocity
-    static const double KpHold          = 1.03;
+    static const double KpHoldV          = 1.03;
+
+    //Proportional gain times horizontal error
+    static const double KpHold           = 0.6;
 
     //Integral gain times integral horizontal error
-    static const double KiHold          = 0.08;
+    static const double KiHold          = 0.1;
 
     //Proportional gain for velocity tracking
-    static const double KPComp          = 0.1;
+    static const double KPCompV          = 0.1;
 
     //Integral clamping values
-    static const double maxIntValue     = 4;
+    static const double maxIntValue     = 5;
     static const double minIntValue     = -maxIntValue;
 
 }

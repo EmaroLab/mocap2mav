@@ -8,12 +8,8 @@ set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-#Set QT
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Network)
-
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp)
+${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SRC_DIR}/MavState.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
@@ -21,8 +17,8 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 add_executable(secur ${PROJECT_SRCS})
 
 #Set LCM
-set ( PROJECT_LINK_LIBS liblcm.so )
-link_directories( ~/usr/local/lib )
+find_package(PkgConfig REQUIRED)
+pkg_search_module(LCM REQUIRED lcm)
 
 ##Declare a C++ library
  add_library(SecLib
@@ -34,9 +30,7 @@ link_directories( ~/usr/local/lib )
 
 target_link_libraries( secur
         ${PROJECT_LINK_LIBS}
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets
+		${LCM_LIBRARIES}
 	    SecLib
 	)
 

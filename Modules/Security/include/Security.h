@@ -3,7 +3,7 @@
 #define SECURITY_H
 #include "lcm_messages/geometry/pose.hpp"
 #include "lcm_messages/exec/task.hpp"
-#include "MavState.h"
+#include "common/MavState.h"
 
 class Security
 {

@@ -57,7 +57,7 @@ void Lander::initStateMachine() {
     _machine.setStatePtr(&_initS);
 
     _tauHold = 0.5 * params_automatic::platformLenght;
-    _tauLost = params_automatic::platformLenght;
+    _tauLost = params_automatic::platformLenght * 0.7;
 
     //Print actual state
     std::cout << "Actual state: " << _machine.getActualNodeId() << std::endl;
@@ -115,6 +115,7 @@ void Lander::updateSignals() {
 
 #ifdef DEBUG
 
+    std::cout << "**********************************" << std::endl;
     std::cout << "STATE: " << _machine.getActualNodeId()<< std::endl;
     std::cout << "HERRO: " << _horizontaErr<< std::endl;
     std::cout << "NHOLD: " << _NHold<< std::endl;
@@ -122,6 +123,7 @@ void Lander::updateSignals() {
     std::cout << "NCOMP: " << _NComp<< std::endl;
     std::cout << "INTEX: " << _err_int[0] << std::endl;
     std::cout << "INTEY: " << _err_int[1] << std::endl;
+    std::cout << "**********************************" << std::endl;
 #endif
 
 }

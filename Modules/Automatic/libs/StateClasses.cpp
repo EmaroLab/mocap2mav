@@ -72,7 +72,7 @@ void RToLandState::handle() {
         this->_contextL->setStatePtr(_nextComState);
         printStateTransition();
         return;
-    } else{
+    } else if (_NComp == 0){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
         return;

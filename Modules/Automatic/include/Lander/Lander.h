@@ -51,6 +51,9 @@ private:
     RToLandState    _rtolS;
     CompState       _compS;
 
+    int _actualState;
+    int _prevState;
+
     //Time helpers
     double _dt;
     uint64_t _actualTime;
@@ -66,6 +69,7 @@ private:
 
     Eigen::Vector2d _err_int;
     Eigen::Vector2d _err;
+    Eigen::Vector2d _err_prev;
     Eigen::Vector2d _err_diff;
 
     void updateIntegrals();
@@ -76,7 +80,7 @@ private:
     void clampZSP();
 
     //Tracking logic defined here
-    void hold();
+    void hold(bool increaseK = false);
     //Initialize stuff here
     void init();
     //Go up in case we miss, shall we reset integrals too ?

@@ -58,7 +58,7 @@ void AsceState::handle() {
 
 void CompState::handle() {
     getSignals();
-    if (_NComp < params_automatic::NFramesComp){
+    if (_NComp < params_automatic::NFramesComp || _horizontaErr > _tauHold * 0.5){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
         return;
@@ -72,7 +72,7 @@ void RToLandState::handle() {
         this->_contextL->setStatePtr(_nextComState);
         printStateTransition();
         return;
-    } else if (_NComp == 0){
+    } else if (_horizontaErr > _tauHold * 0.5){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
         return;

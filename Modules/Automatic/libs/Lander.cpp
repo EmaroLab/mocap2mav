@@ -9,11 +9,13 @@
 
 Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
-          _NLost(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
-          _err(0,0), _err_int(0,0), _err_diff(0,0), _dt(0), _prevTime(0), _actualTime(0)
+          _NLost(0),_NComp(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
+          _rtolS(&_machine), _err(0,0), _err_int(0,0), _err_diff(0,0), _dt(0), _prevTime(0), _actualTime(0),_actualState(0),_prevState(0)
 {
 
     initStateMachine();
+    _actualState = _machine.getActualNodeId();
+    _err_prev = _err;
 
 }
 
@@ -43,18 +45,21 @@ void Lander::initStateMachine() {
     _machine._setPoint     =  &_setPoint;
 
     //Link states
+
     _initS._nextState    = &_holdS;
     _holdS._nextAscState = &_asceS;
     _holdS._nextDesState = &_descS;
-    _holdS._nextComState = &_compS;
+    _holdS._nextState    = &_rtolS;
     _asceS._nextState    = &_holdS;
     _descS._nextState    = &_holdS;
+    _rtolS._nextComState = &_compS;
+    _rtolS._nextState    = &_holdS;
     _compS._nextState    = &_asceS;
 
     _machine.setStatePtr(&_initS);
 
     _tauHold = 0.5 * params_automatic::platformLenght;
-    _tauLost = params_automatic::platformLenght;
+    _tauLost = params_automatic::platformLenght * 0.7;
 
     //Print actual state
     std::cout << "Actual state: " << _machine.getActualNodeId() << std::endl;
@@ -67,7 +72,7 @@ void Lander::setPlatformState(const MavState platformState) {
 
 void Lander::updateSignals() {
 
-    int state = _machine.getActualNodeId();
+
     //Compute horizontal error
     double xTemp = _state.getX();
     double yTemp = _state.getY();
@@ -82,10 +87,14 @@ void Lander::updateSignals() {
 
     _horizontaErr = _err.norm();
 
-    if( state == AbstractLandState::states::HOLD ||
-        state == AbstractLandState::states::ASCE ||
-        state == AbstractLandState::states::DESC ||
-        state == AbstractLandState::states::COMP){
+    //Compute differential error
+
+
+    if( _actualState == AbstractLandState::states::HOLD ||
+        _actualState == AbstractLandState::states::ASCE ||
+        _actualState == AbstractLandState::states::DESC ||
+        _actualState == AbstractLandState::states::COMP ||
+        _actualState == AbstractLandState::states::R2LA ){
 
         //Increment N if needed
         if (_horizontaErr < _tauHold) {
@@ -97,39 +106,41 @@ void Lander::updateSignals() {
             _NComp = 0;
             _NLost++;
         }
-/*
-        if(state == AbstractLandState::states::HOLD) {
 
-            if ((fabs(_state.getZ() - (-params_automatic::zMin)) < 0.1) && _horizontaErr < _tauHold) {
-                _NComp++;
-            } else{
-                _NComp = 0;
-            }
-        }
-*/
-        if(state == AbstractLandState::states::COMP)  {
 
+
+        if(_actualState == AbstractLandState::states::R2LA || _actualState == AbstractLandState::states::COMP){
+
+            if(_prevState == AbstractLandState::states::HOLD) _NComp = 0;
             //Check whether we are on place to land
-            if (_horizontaErr < _tauHold) {
+            if (_horizontaErr < _tauHold * 0.5) {
                 _NComp++;
             } else{
                 _NComp = 0;
             }
         }
+
+        _err_prev = _err;
     }
 
 #ifdef DEBUG
+
+    std::cout << "**********************************" << std::endl;
+    std::cout << "STATE: " << _actualState<< std::endl;
     std::cout << "HERRO: " << _horizontaErr<< std::endl;
     std::cout << "NHOLD: " << _NHold<< std::endl;
     std::cout << "NLOST: " << _NLost<< std::endl;
-
+    std::cout << "NCOMP: " << _NComp<< std::endl;
     std::cout << "INTEX: " << _err_int[0] << std::endl;
     std::cout << "INTEY: " << _err_int[1] << std::endl;
+    std::cout << "**********************************" << std::endl;
 #endif
 
 }
 
 void Lander::handleMachine() {
+
+    updateSignals();
     _machine.handle();
 }
 
@@ -139,11 +150,12 @@ int Lander::getActualMachineState() {
 
 void Lander::run() {
 
+    handleMachine();
+    _actualState = _machine.getActualNodeId();
     managetime();
-    updateSignals();
-    int state = getActualMachineState();
+
     static bool initDone = false;
-    switch (state){
+    switch (_actualState){
 
         case (AbstractLandState::states::INIT):
             if(!initDone){
@@ -166,9 +178,16 @@ void Lander::run() {
 
             asce();
             clampZSP();
-            break;
-        case (AbstractLandState::states::COMP):
 
+            break;
+
+        case (AbstractLandState::states::R2LA):
+            clampZSP();
+            hold();
+            break;
+
+        case (AbstractLandState::states::COMP):
+            hold();
             comp();
             break;
 
@@ -177,6 +196,7 @@ void Lander::run() {
             break;
 
     }
+    _prevState = _actualState;
 
 }
 
@@ -228,7 +248,7 @@ void Lander::init() {
 
 }
 
-void Lander::hold() {
+void Lander::hold(bool increaseK) {
 
     //This function is purely tracking, nothing more
 
@@ -251,14 +271,18 @@ void Lander::hold() {
 
     Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
     Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
+    //Eigen::Vector2d tempSetPoint(state.getX(),state.getY());
     Eigen::Vector2d tempErr = _err;
-    const double  kp = 0.5;
 
-    Eigen::Vector2d prop = kp * tempErr;
+    //Increase proportional gain when needed
+    double corr = 1;
+    if(increaseK) corr *= 6;
+
+    Eigen::Vector2d prop = corr * params_automatic::KpHold * tempErr;
 
     updateIntegrals();
     //PosSP = PlatPos + K * Vplat
-    tempSetPoint += params_automatic::KpHold * tempVel + params_automatic::KiHold * _err_int;
+    tempSetPoint += params_automatic::KpHoldV * tempVel + params_automatic::KiHold * _err_int;
 
     tempSetPoint += prop;
 
@@ -283,8 +307,6 @@ void Lander::desc() {
 
 void Lander::comp() {
 
-    hold();
-
     MavState tempState = _state;
     //Calculate desired vertical velocity in order to compensate oscillations
     double dz = - _state.getZ() + _platformState.getZ() + PLATFORM_OFFSET;
@@ -295,9 +317,9 @@ void Lander::comp() {
 
     double corr = 1;
 
-    if(_platformState.getVz() > 0) corr = 1.1;
+    if(_platformState.getVz() > 0) corr = 1.2;
 
-    z_target_v += corr * params_automatic::KPComp * (err_v);
+    z_target_v += corr * params_automatic::KPCompV * (err_v);
 
     //Now we need to transform this velocity in a position setpoint since in Firmware:
     // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos

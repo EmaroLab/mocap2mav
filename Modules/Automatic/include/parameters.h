@@ -8,17 +8,17 @@
 namespace params_automatic {
 
     //Number of consecutive frames in which tracking is considered valid
-    static const int    NFramesHold     = 200;
+    static const int    NFramesHold     = 120;
 
     //Number of consecutive frames in which tracking is considered not valid
-    static const int    NFramesLost     = 100;
+    static const int    NFramesLost     = 70;
 
     //Number of consecutive frames in which tracking is considered valid
     //and robot is ready for compensation
-    static const int    NFramesComp     = 50;
+    static const int    NFramesComp     = 20;
 
     //Platform dimension
-    static const double platformLenght  = 2;
+    static const double platformLenght  = 1.8;
 
     //Max altitude for landing procedure
     static const double zMax            = 10;
@@ -27,16 +27,22 @@ namespace params_automatic {
     static double       zMin            = 4;
 
     //Proportional gain times platform velocity
-    static const double KpHold          = 1.03;
+    static const double KpHoldV          = 0.9;
+
+    //Proportional gain times horizontal error
+    static const double KpHold           = 0.48;
+
+    //Differential gain times horizontal error
+    static const double KdHold           = 0.4;
 
     //Integral gain times integral horizontal error
-    static const double KiHold          = 0.08;
+    static const double KiHold          = 0.13;
 
     //Proportional gain for velocity tracking
-    static const double KPComp          = 0.1;
+    static const double KPCompV          = 0.1;
 
     //Integral clamping values
-    static const double maxIntValue     = 4;
+    static const double maxIntValue     = 5;
     static const double minIntValue     = -maxIntValue;
 
 }

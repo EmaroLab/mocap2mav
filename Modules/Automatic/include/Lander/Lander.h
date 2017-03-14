@@ -25,15 +25,15 @@ class Lander {
 
 public:
     Lander();
+
     void setPlatformState(const MavState platformState);
     void initStateMachine();
     void setState(MavState pose);
-    void updateSignals();
     void handleMachine();
+    void updateSignals();
     int getActualMachineState();
     MavState getState();
     MavState getCommand();
-    void resetSetPoint();
     void run();
 
 private:
@@ -44,17 +44,22 @@ private:
     MavState _platformState;
 
     //Create states
-    InitState _initS;
-    HoldState _holdS;
-    AsceState _asceS;
-    DescState _descS;
-    CompState _compS;
+    InitState       _initS;
+    HoldState       _holdS;
+    AsceState       _asceS;
+    DescState       _descS;
+    RToLandState    _rtolS;
+    CompState       _compS;
+
+    int _actualState;
+    int _prevState;
 
     //Time helpers
     double _dt;
     uint64_t _actualTime;
     uint64_t _prevTime;
 
+    //Signals
     double _horizontaErr;
     double _tauHold;
     double _tauLost;
@@ -63,10 +68,13 @@ private:
     int    _NLost;
     int    _NComp;
 
+    //Errors
     Eigen::Vector2d _err_int;
     Eigen::Vector2d _err;
+    Eigen::Vector2d _err_prev;
     Eigen::Vector2d _err_diff;
 
+    //Logic and signals helpers
     void updateIntegrals();
     void resetIntegrals();
     void managetime();
@@ -74,11 +82,14 @@ private:
     //Clamp z SP
     void clampZSP();
 
-    //Tracking logic defined here
-    void hold();
+    //Reset position setpoint to actual position
+    void resetSetPoint();
+
     //Initialize stuff here
     void init();
-    //Go up in case we miss, shall we reset integrals too ?
+    //Tracking logic defined here
+    void hold(bool increaseK = false);
+    //Go up in case we miss, reset integrals.
     void asce();
     //Get closer to the target
     void desc();
@@ -86,6 +97,5 @@ private:
     void comp();
 
 };
-
 
 #endif //MOCAP2MAV_LANDER_H

@@ -36,10 +36,14 @@ include_directories("${PROJECT_SRC_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_LIB_DIR}")
 
+#Project modules
 #add_subdirectory(${MODULES_SRC_DIR}/NatNetReceiver)
 #add_subdirectory(${MODULES_SRC_DIR}/Dispatcher)
 add_subdirectory(${MODULES_SRC_DIR}/Executioner)
 add_subdirectory(${MODULES_SRC_DIR}/Automatic)
 add_subdirectory(${MODULES_SRC_DIR}/Test)
+add_subdirectory(${MODULES_SRC_DIR}/Security)
+
+#Project external libs
 add_subdirectory(${PROJECT_LIB_DIR}/StateMachine)
-#add_subdirectory(${MODULES_SRC_DIR}/Security)
+

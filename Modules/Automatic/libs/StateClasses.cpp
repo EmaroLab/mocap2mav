@@ -39,7 +39,7 @@ void HoldState::handle(){
         return;
     }
     if(compValid){
-        this->_contextL->setStatePtr(_nextComState);
+        this->_contextL->setStatePtr(_nextState);
         printStateTransition();
         return;
     }
@@ -58,9 +58,31 @@ void AsceState::handle() {
 
 void CompState::handle() {
     getSignals();
-    if ((_horizontaErr > _tauHold * 0.5)){
+    if (_NComp < params_automatic::NFramesComp || _horizontaErr > _tauHold * 0.5){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
         return;
     }
+}
+
+void RToLandState::handle() {
+
+    getSignals();
+    if (_NComp > params_automatic::NFramesComp){
+        this->_contextL->setStatePtr(_nextComState);
+        printStateTransition();
+        return;
+    } else if (_horizontaErr > _tauHold * 0.5){
+        this->_contextL->setStatePtr(_nextState);
+        printStateTransition();
+        return;
+    }
+
+}
+
+void LandState::handle() {
+
+
+
+
 }

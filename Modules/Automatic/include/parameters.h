@@ -8,10 +8,10 @@
 namespace params_automatic {
 
     //Number of consecutive frames in which tracking is considered valid
-    static const int    NFramesHold     = 150;
+    static const int    NFramesHold     = 120;
 
     //Number of consecutive frames in which tracking is considered not valid
-    static const int    NFramesLost     = 50;
+    static const int    NFramesLost     = 70;
 
     //Number of consecutive frames in which tracking is considered valid
     //and robot is ready for compensation
@@ -30,7 +30,7 @@ namespace params_automatic {
     static const double KpHoldV          = 0.9;
 
     //Proportional gain times horizontal error
-    static const double KpHold           = 0.4;
+    static const double KpHold           = 0.48;
 
     //Differential gain times horizontal error
     static const double KdHold           = 0.4;

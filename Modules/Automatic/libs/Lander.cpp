@@ -150,10 +150,9 @@ int Lander::getActualMachineState() {
 
 void Lander::run() {
 
+    handleMachine();
     _actualState = _machine.getActualNodeId();
     managetime();
-    updateSignals();
-
 
     static bool initDone = false;
     switch (_actualState){
@@ -318,7 +317,7 @@ void Lander::comp() {
 
     double corr = 1;
 
-    if(_platformState.getVz() > 0) corr = 1.1;
+    if(_platformState.getVz() > 0) corr = 1.2;
 
     z_target_v += corr * params_automatic::KPCompV * (err_v);
 

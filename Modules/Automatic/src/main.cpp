@@ -17,6 +17,7 @@ int main(int argc, char** argv){
 	CallbackHandler call;
 	Automatic autom;
 	Lander lander;
+
 	lcm::Subscription *sub   = handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
 	lcm::Subscription *sub2  = handler2.subscribe("platform/pose", &CallbackHandler::positionSetpointCallback, &call);
 	lcm::Subscription *sub3  = handler3.subscribe("actual_task", &CallbackHandler::actualTaskCallback, &call);
@@ -40,8 +41,6 @@ int main(int argc, char** argv){
 	uint64_t t_prev = 0;
 	MavState platform;
 
-	lander.handleMachine();
-
 	while(0==handler.handle()){
 
 		t = time::getTimeMilliSecond();
@@ -52,7 +51,6 @@ int main(int argc, char** argv){
         lander.setState(call._vision_pos);
 
 		int ret = poll(fds,2,0);
-
 
 		if(fds[0].revents & POLLIN){
 
@@ -109,7 +107,6 @@ int main(int argc, char** argv){
             if(autom._actualTask.params[0] == 1){
                 //autom.land2(platform,autom._actualTask.params[1],autom._actualTask.params[2],autom._actualTask.params[3]);
 
-                lander.handleMachine();
                 lander.run();
                 autom._comm = lander.getCommand();
 

@@ -85,7 +85,7 @@ void Lander::updateSignals() {
 
     double dx = xPlatTemp - xTemp;
     double dy = yPlatTemp - yTemp;
-    double dz = zPlatTemp - zTemp;
+    double dz = zPlatTemp - zTemp + PLATFORM_OFFSET;
 
     _err[0] = dx;
     _err[1] = dy;
@@ -195,8 +195,7 @@ void Lander::run() {
             comp();
             break;
         case (AbstractLandState::states::LAND):
-            hold();
-            comp();
+            land();
             break;
 
         default:
@@ -339,9 +338,16 @@ void Lander::comp() {
 void Lander::clampZSP() {
 
     double temp;
-    temp = common::clamp(fabs(_setPoint.getZ()),params_automatic::zMin,params_automatic::zMax);
+    temp = common::clamp(_setPoint.getZ(),params_automatic::zMin,params_automatic::zMax);
 
     _setPoint.setZ(temp);
+}
+
+void Lander::land() {
+
+    resetSetPoint();
+    _setPoint.setZ(_state.getZ()-10);
+
 }
 
 

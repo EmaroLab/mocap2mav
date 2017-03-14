@@ -57,22 +57,23 @@ void AsceState::handle() {
 }
 
 void CompState::handle() {
+
     getSignals();
+
     bool centered = (_horizontaErr < _tauHold * 0.5);
     bool onTarget = _NComp > params_automatic::NFramesComp;
-//_NComp < params_automatic::NFramesComp || _horizontaErr > _tauHold * 0.5
+
     if (!onTarget || !centered){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
-
     }
 
-   /* std::cout << "VERRRRRRRR: " << _verticalErr << std::endl;
-    if(onTarget && centered && fabs(_verticalErr <= 0.05)){
+   std::cout << "VERRRRRRRR: " << _verticalErr << std::endl;
+
+    if(onTarget && centered && (fabs(_verticalErr) < 0.1)){
         this->_contextL->setStatePtr(_nextLanState);
         printStateTransition();
     }
-    */
 
 }
 
@@ -92,15 +93,14 @@ void RToLandState::handle() {
 }
 
 void LandState::handle() {
-    /*
+
     getSignals();
-    bool centered = (_horizontaErr > _tauHold * 0.5);
-    bool onTarget = _NComp >= params_automatic::NFramesComp;
+    bool centered = (_horizontaErr < _tauHold * 0.5);
+    bool onTarget = _NComp > params_automatic::NFramesComp;
 
     if (!onTarget || !centered){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
-
     }
-     */
+
 }

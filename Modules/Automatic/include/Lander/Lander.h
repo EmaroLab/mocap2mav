@@ -97,6 +97,8 @@ private:
     void desc();
     //Compensate altitude oscillation before landing
     void comp();
+    //Aggressive land
+    void land();
 
 };
 

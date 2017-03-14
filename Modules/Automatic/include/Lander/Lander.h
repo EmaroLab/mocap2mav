@@ -50,6 +50,7 @@ private:
     DescState       _descS;
     RToLandState    _rtolS;
     CompState       _compS;
+    LandState       _landS;
 
     int _actualState;
     int _prevState;
@@ -61,6 +62,7 @@ private:
 
     //Signals
     double _horizontaErr;
+    double _verticalErr;
     double _tauHold;
     double _tauLost;
     double _tauErr;
@@ -69,10 +71,10 @@ private:
     int    _NComp;
 
     //Errors
-    Eigen::Vector2d _err_int;
-    Eigen::Vector2d _err;
-    Eigen::Vector2d _err_prev;
-    Eigen::Vector2d _err_diff;
+    Eigen::Vector3d _err_int;
+    Eigen::Vector3d _err;
+    Eigen::Vector3d _err_prev;
+    Eigen::Vector3d _err_diff;
 
     //Logic and signals helpers
     void updateIntegrals();

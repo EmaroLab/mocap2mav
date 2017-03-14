@@ -14,6 +14,7 @@ class LandMachine : public Machine {
 
 public:
     double *_horizontaErr;
+    double *_verticalErr;
     double *_tauHold;
     double *_tauLost;
     double *_tauErr;
@@ -48,6 +49,7 @@ public:
     void getSignals(){
 
          _horizontaErr = *(_contextL->_horizontaErr);
+         _verticalErr  = *(_contextL->_verticalErr);
          _tauHold      = *(_contextL->_tauHold);
          _tauLost      = *(_contextL->_tauLost);
          _tauErr       = *(_contextL->_tauErr);
@@ -65,6 +67,7 @@ public:
 protected:
 
     double   _horizontaErr;
+    double   _verticalErr;
     double   _tauHold;
     double   _tauLost;
     double   _tauErr;

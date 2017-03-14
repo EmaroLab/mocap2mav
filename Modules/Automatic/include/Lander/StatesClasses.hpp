@@ -36,7 +36,8 @@ public:
         DESC,
         ASCE,
         R2LA,
-        COMP
+        COMP,
+        LAND
 
     };
 
@@ -146,6 +147,8 @@ public:
 };
 class CompState : public AbstractLandState {
 public:
+
+    AbstractLandState* _nextLanState;
     CompState(LandMachine *context) : AbstractLandState(context) {
         setId();
     }
@@ -153,6 +156,20 @@ public:
     void setId() override {
 
         _id = COMP;
+
+    }
+    void handle();
+};
+
+class LandState : public AbstractLandState {
+public:
+    LandState(LandMachine *context) : AbstractLandState(context) {
+        setId();
+    }
+
+    void setId() override {
+
+        _id = LAND;
 
     }
     void handle();

@@ -150,7 +150,7 @@ public:
 };
 class CompState : public AbstractLandState {
 public:
-
+    AbstractLandState* _nextLanState;
     CompState(LandMachine *context) : AbstractLandState(context) {
         setId();
     }

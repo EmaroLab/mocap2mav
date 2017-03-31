@@ -122,11 +122,22 @@ int main(int argc, char** argv){
 
         if(!waiting) {
             geometry::pose command = call.mavState2LcmPose(autom._comm);
+            geometry::pose platRobPos;
+
+            platRobPos.position[0] = platform.getX();
+            platRobPos.position[1] = platform.getY();
+            platRobPos.position[2] = platform.getZ();
+
+            platRobPos.velocity[0] = autom.getState().getX();
+            platRobPos.velocity[1] = autom.getState().getY();
+            platRobPos.velocity[2] = autom.getState().getZ();
 
             handler.publish("local_position_sp", &command);
 
 			//For gazebo visualization with the marker plugin
 			handler.publish("Marker/pose_cmd", &command);
+
+            handler3.publish("platRob", &platRobPos);
         }
 	}
 

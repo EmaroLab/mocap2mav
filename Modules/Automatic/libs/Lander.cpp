@@ -10,7 +10,8 @@
 Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
           _NLost(0),_NComp(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
-          _rtolS(&_machine), _err(0,0), _err_int(0,0), _err_diff(0,0), _dt(0), _prevTime(0), _actualTime(0),_actualState(0),_prevState(0)
+          _rtolS(&_machine),_landS(&_machine), _err(0,0,0), _err_int(0,0,0), _err_diff(0,0,0), _dt(0), _prevTime(0), _actualTime(0),_actualState(0),_prevState(0),
+          _verticalErr(0)
 {
 
     initStateMachine();
@@ -35,6 +36,7 @@ void Lander::initStateMachine() {
 
     //Link signals
     _machine._horizontaErr =  &_horizontaErr;
+    _machine._verticalErr  =  &_verticalErr;
     _machine._tauErr       =  &_tauErr;
     _machine._tauHold      =  &_tauHold;
     _machine._tauLost      =  &_tauLost;
@@ -45,7 +47,6 @@ void Lander::initStateMachine() {
     _machine._setPoint     =  &_setPoint;
 
     //Link states
-
     _initS._nextState    = &_holdS;
     _holdS._nextAscState = &_asceS;
     _holdS._nextDesState = &_descS;
@@ -55,6 +56,8 @@ void Lander::initStateMachine() {
     _rtolS._nextComState = &_compS;
     _rtolS._nextState    = &_holdS;
     _compS._nextState    = &_asceS;
+    _compS._nextLanState = &_landS;
+    _landS._nextState    = &_asceS;
 
     _machine.setStatePtr(&_initS);
 
@@ -72,23 +75,25 @@ void Lander::setPlatformState(const MavState platformState) {
 
 void Lander::updateSignals() {
 
-
     //Compute horizontal error
     double xTemp = _state.getX();
     double yTemp = _state.getY();
+    double zTemp = _state.getZ();
     double xPlatTemp = _platformState.getX();
     double yPlatTemp = _platformState.getY();
+    double zPlatTemp = _platformState.getZ();
 
     double dx = xPlatTemp - xTemp;
     double dy = yPlatTemp - yTemp;
+    double dz = zPlatTemp - zTemp + PLATFORM_OFFSET;
 
     _err[0] = dx;
     _err[1] = dy;
+    _err[2] = 0; //Trick, used to calculate horizontal error
 
     _horizontaErr = _err.norm();
-
-    //Compute differential error
-
+    _err[2]       = dz;
+    _verticalErr  = _err[2];
 
     if( _actualState == AbstractLandState::states::HOLD ||
         _actualState == AbstractLandState::states::ASCE ||
@@ -106,8 +111,6 @@ void Lander::updateSignals() {
             _NComp = 0;
             _NLost++;
         }
-
-
 
         if(_actualState == AbstractLandState::states::R2LA || _actualState == AbstractLandState::states::COMP){
 
@@ -128,6 +131,7 @@ void Lander::updateSignals() {
     std::cout << "**********************************" << std::endl;
     std::cout << "STATE: " << _actualState<< std::endl;
     std::cout << "HERRO: " << _horizontaErr<< std::endl;
+    std::cout << "HERRV: " << _verticalErr<< std::endl;
     std::cout << "NHOLD: " << _NHold<< std::endl;
     std::cout << "NLOST: " << _NLost<< std::endl;
     std::cout << "NCOMP: " << _NComp<< std::endl;
@@ -189,6 +193,9 @@ void Lander::run() {
         case (AbstractLandState::states::COMP):
             hold();
             comp();
+            break;
+        case (AbstractLandState::states::LAND):
+            land();
             break;
 
         default:
@@ -272,7 +279,7 @@ void Lander::hold(bool increaseK) {
     Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
     Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
     //Eigen::Vector2d tempSetPoint(state.getX(),state.getY());
-    Eigen::Vector2d tempErr = _err;
+    Eigen::Vector2d tempErr = _err.head(2);
 
     //Increase proportional gain when needed
     double corr = 1;
@@ -282,7 +289,7 @@ void Lander::hold(bool increaseK) {
 
     updateIntegrals();
     //PosSP = PlatPos + K * Vplat
-    tempSetPoint += params_automatic::KpHoldV * tempVel + params_automatic::KiHold * _err_int;
+    tempSetPoint += params_automatic::KpHoldV * tempVel + params_automatic::KiHold * _err_int.head(2);
 
     tempSetPoint += prop;
 
@@ -331,9 +338,16 @@ void Lander::comp() {
 void Lander::clampZSP() {
 
     double temp;
-    temp = common::clamp(fabs(_setPoint.getZ()),params_automatic::zMin,params_automatic::zMax);
+    temp = common::clamp(_setPoint.getZ(),params_automatic::zMin,params_automatic::zMax);
 
     _setPoint.setZ(temp);
+}
+
+void Lander::land() {
+
+    resetSetPoint();
+    _setPoint.setZ(_state.getZ()-10);
+
 }
 
 

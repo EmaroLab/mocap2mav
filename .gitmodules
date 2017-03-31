@@ -1,6 +1,3 @@
 [submodule "Modules/Executioner/libs/AndOr"]
 	path = Modules/Executioner/libs/AndOr
 	url = https://github.com/EmaroLab/endor.git
-[submodule "projectLIBS/StateMachine"]
-	path = projectLIBS/StateMachine
-	url = https://github.com/andrea-nisti/FiniteStateMachine.git

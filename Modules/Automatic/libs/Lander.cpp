@@ -260,7 +260,7 @@ void Lander::hold(bool increaseK) {
     //This function is purely tracking, nothing more
 
     /*
-     * The tracking is performed by POSITION control, issuing the position setpoint
+     * Tracking is performed by POSITION control, issuing the position setpoint
      * in order to achieve the desired velocity calculated by:
      *
      * Vdes = K * ep + Vplat

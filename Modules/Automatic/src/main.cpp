@@ -128,9 +128,9 @@ int main(int argc, char** argv){
             platRobPos.position[1] = platform.getY();
             platRobPos.position[2] = platform.getZ();
 
-            platRobPos.velocity[0] = autom.getState().getX();
-            platRobPos.velocity[1] = autom.getState().getY();
-            platRobPos.velocity[2] = autom.getState().getZ();
+            platRobPos.velocity[0] = platform.getVx();
+            platRobPos.velocity[1] = platform.getVy();
+            platRobPos.velocity[2] = platform.getVz();
 
             handler.publish("local_position_sp", &command);
 

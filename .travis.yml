@@ -31,3 +31,5 @@ script:
   - cd build
   - cmake ..
   - make
+notifications:
+  email: false

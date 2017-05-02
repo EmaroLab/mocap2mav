@@ -4,3 +4,6 @@
 [submodule "projectLIBS/StateMachine"]
 	path = projectLIBS/StateMachine
 	url = https://github.com/andrea-nisti/FiniteStateMachine.git
+[submodule "projectLIBS/lcm"]
+	path = projectLIBS/lcm
+	url = https://github.com/lcm-proj/lcm.git

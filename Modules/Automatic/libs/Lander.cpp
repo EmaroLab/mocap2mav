@@ -308,19 +308,18 @@ void Lander::asce() {
 
 void Lander::desc() {
 
-    //Add step because z is negative up
+
     _setPoint.setZ(_setPoint.getZ() - 0.1);
 }
 
 void Lander::comp() {
 
-    MavState tempState = _state;
     //Calculate desired vertical velocity in order to compensate oscillations
     double dz = - _state.getZ() + _platformState.getZ() + PLATFORM_OFFSET;
     double desc = common::interpolate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
     double z_target_v = _platformState.getVz() - desc;
 
-    double err_v = z_target_v - tempState.getVz();
+    double err_v = z_target_v - _state.getVz();
 
     double corr = 1;
 
@@ -331,7 +330,7 @@ void Lander::comp() {
     //Now we need to transform this velocity in a position setpoint since in Firmware:
     // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos
 
-    _setPoint.setZ((z_target_v) + tempState.getZ());
+    _setPoint.setZ((z_target_v) + _state.getZ());
 
 }
 

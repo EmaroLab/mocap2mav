@@ -30,6 +30,6 @@ script:
   - mkdir build
   - cd build
   - cmake ..
-  - make CFLAGS += -Wall
+  - make "CFLAGS += -Wall"
 notifications:
   email: false

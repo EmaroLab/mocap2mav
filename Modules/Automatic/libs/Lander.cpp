@@ -48,15 +48,21 @@ void Lander::initStateMachine() {
 
     //Link states
     _initS._nextState    = &_holdS;
+
     _holdS._nextAscState = &_asceS;
     _holdS._nextDesState = &_descS;
     _holdS._nextState    = &_rtolS;
+
     _asceS._nextState    = &_holdS;
+
     _descS._nextState    = &_holdS;
+
     _rtolS._nextComState = &_compS;
     _rtolS._nextState    = &_holdS;
+
     _compS._nextState    = &_asceS;
     _compS._nextLanState = &_landS;
+
     _landS._nextState    = &_asceS;
 
     _machine.setStatePtr(&_initS);
@@ -276,8 +282,8 @@ void Lander::hold(bool increaseK) {
     MavState platPos = _platformState;
     MavState state   = _state;
 
-    Eigen::Vector2d tempVel(platPos.getVx(),platPos.getVy());
-    Eigen::Vector2d tempSetPoint(platPos.getX(),platPos.getY());
+    Eigen::Vector2d tempVel(_platformState.getVx(),_platformState.getVy());
+    Eigen::Vector2d tempSetPoint(_platformState.getX(),_platformState.getY());
     //Eigen::Vector2d tempSetPoint(state.getX(),state.getY());
     Eigen::Vector2d tempErr = _err.head(2);
 

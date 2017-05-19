@@ -90,7 +90,7 @@ private:
     //Initialize stuff here
     void init();
     //Tracking logic defined here
-    void hold(bool increaseK = false);
+    void hold();
     //Go up in case we miss, reset integrals.
     void asce();
     //Get closer to the target

@@ -261,7 +261,7 @@ void Lander::init() {
 
 }
 
-void Lander::hold(bool increaseK) {
+void Lander::hold() {
 
     //This function is purely tracking, nothing more
 
@@ -288,10 +288,9 @@ void Lander::hold(bool increaseK) {
     Eigen::Vector2d tempErr = _err.head(2);
 
     //Increase proportional gain when needed
-    double corr = 1;
-    if(increaseK) corr *= 6;
 
-    Eigen::Vector2d prop = corr * params_automatic::KpHold * tempErr;
+
+    Eigen::Vector2d prop = params_automatic::KpHold * tempErr;
 
     updateIntegrals();
     //PosSP = PlatPos + K * Vplat

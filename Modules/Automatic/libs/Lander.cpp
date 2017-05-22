@@ -11,12 +11,16 @@ Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
           _NLost(0),_NComp(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
           _rtolS(&_machine),_landS(&_machine), _err(0,0,0), _err_int(0,0,0), _err_diff(0,0,0), _dt(0), _prevTime(0), _actualTime(0),_actualState(0),_prevState(0),
-          _verticalErr(0), _holdPIDX(params_automatic::KpHold,params_automatic::KiHold,0), _holdPIDY(params_automatic::KdHold,params_automatic::KiHold,0)
+          _verticalErr(0), _holdPIDX(params_automatic::KpHold,params_automatic::KiHold,0), _holdPIDY(params_automatic::KpHold,params_automatic::KiHold,0)
 {
 
     initStateMachine();
     _actualState = _machine.getActualNodeId();
     _err_prev = _err;
+    _holdPIDX.setMaxIOutput(5);
+    _holdPIDY.setMaxIOutput(5);
+
+    _holdPIDX.set
 
 }
 
@@ -282,7 +286,7 @@ void Lander::hold() {
 
     double xTarget = _holdPIDX.getOutput(_state.getX(), _platformState.getX());
     double yTarget = _holdPIDY.getOutput(_state.getY(), _platformState.getY());
-    Eigen::Vector2d targetVect(xTarget,yTarget);
+    Eigen::Vector2d targetVect(xTarget + _platformState.getX(),yTarget + _platformState.getY());
 
 
     updateIntegrals();

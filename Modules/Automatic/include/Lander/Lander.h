@@ -9,6 +9,7 @@
 #include "common/MavState.h"
 #include "StatesClasses.hpp"
 #include "common/common.h"
+#include "miniPID/MiniPID.h"
 
 #define DEBUG
 #define PI              3.141592653589
@@ -42,6 +43,12 @@ private:
     MavState _state;
     MavState _setPoint;
     MavState _platformState;
+    MiniPID  _holdPID;
+public:
+    Lander(const MiniPID &_holdPID);
+
+private:
+
 
     //Create states
     InitState       _initS;

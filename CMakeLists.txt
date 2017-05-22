@@ -45,4 +45,5 @@ add_subdirectory(${MODULES_SRC_DIR}/Security)
 
 #Project external libs
 add_subdirectory(${PROJECT_LIB_DIR}/StateMachine)
+add_subdirectory(${PROJECT_LIB_DIR}/miniPID)
 

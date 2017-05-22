@@ -41,7 +41,7 @@ pkg_search_module(LCM REQUIRED lcm)
 		 #${PROJECT_LIB_DIR}/StateMachine/include/AbstractState.h
 		 #${PROJECT_LIB_DIR}/StateMachine/src/Machine.cpp)
 
-target_link_libraries(Automlib StateMachine)
+target_link_libraries(Automlib StateMachine miniPID)
 ##qt5_use_modules(exec Widgets Core Network SerialPort)
 ##qt5_use_modules(Dis Widgets Core Network SerialPort)
 target_link_libraries( autom

@@ -7,3 +7,6 @@
 [submodule "projectLIBS/lcm"]
 	path = projectLIBS/lcm
 	url = https://github.com/lcm-proj/lcm.git
+[submodule "projectLIBS/miniPID"]
+	path = projectLIBS/miniPID
+	url = https://github.com/andrea-nisti/MiniPID.git

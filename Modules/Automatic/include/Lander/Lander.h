@@ -43,9 +43,8 @@ private:
     MavState _state;
     MavState _setPoint;
     MavState _platformState;
-    MiniPID  _holdPID;
-public:
-    Lander(const MiniPID &_holdPID);
+    MiniPID  _holdPIDX;
+    MiniPID  _holdPIDY;
 
 private:
 

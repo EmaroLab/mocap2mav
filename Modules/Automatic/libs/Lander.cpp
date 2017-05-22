@@ -11,7 +11,7 @@ Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
           _NLost(0),_NComp(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
           _rtolS(&_machine),_landS(&_machine), _err(0,0,0), _err_int(0,0,0), _err_diff(0,0,0), _dt(0), _prevTime(0), _actualTime(0),_actualState(0),_prevState(0),
-          _verticalErr(0), _holdPID(0,0,0)
+          _verticalErr(0), _holdPIDX(params_automatic::KpHold,0,params_automatic::KiHold), _holdPIDY(params_automatic::KdHold,0,params_automatic::KiHold)
 {
 
     initStateMachine();
@@ -278,28 +278,19 @@ void Lander::hold() {
      * Vdes = desired velocity, K = proportional gain, ep = position error, Vplat = paltform velocity
      */
 
-    //Cache values
-    MavState platPos = _platformState;
-    MavState state   = _state;
-
     Eigen::Vector2d tempVel(_platformState.getVx(),_platformState.getVy());
-    Eigen::Vector2d tempSetPoint(_platformState.getX(),_platformState.getY());
-    //Eigen::Vector2d tempSetPoint(state.getX(),state.getY());
-    Eigen::Vector2d tempErr = _err.head(2);
 
-    //Increase proportional gain when needed
+    double xTarget = _holdPIDX.getOutput(_state.getX(), _platformState.getX());
+    double yTarget = _holdPIDY.getOutput(_state.getY(), _platformState.getY());
+    Eigen::Vector2d targetVect(xTarget,yTarget);
 
-
-    Eigen::Vector2d prop = params_automatic::KpHold * tempErr;
 
     updateIntegrals();
     //PosSP = PlatPos + K * Vplat
-    tempSetPoint += params_automatic::KpHoldV * tempVel + params_automatic::KiHold * _err_int.head(2);
-
-    tempSetPoint += prop;
+    targetVect += params_automatic::KpHoldV * tempVel;
 
     //Fill right fields
-    _setPoint.setPosition(tempSetPoint(0),tempSetPoint(1),_setPoint.getZ());
+    _setPoint.setPosition(targetVect(0),targetVect(1),_setPoint.getZ());
     _setPoint.setType(MavState::POSITION);
 
 }

@@ -16,10 +16,10 @@
 #define Kland           1
 #define THRE            0.15
 #define DRATE_MIN       0.1
-#define DRATE_MAX       0.4
+#define DRATE_MAX       0.6
 #define VMAX            1.5
-#define TMAX            2
-#define TMIN            0.5
+#define TMAX            1.5
+#define TMIN            0.3
 #define PLATFORM_OFFSET 0.1
 
 class Lander {

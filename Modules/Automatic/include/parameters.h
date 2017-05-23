@@ -30,10 +30,10 @@ namespace params_automatic {
     static const double KpHoldV          = 1;
 
     //Proportional gain times horizontal error
-    static const double KpHold           = 2; // 0.5
+    static const double KpHold           = 2.5; // 0.5
 
     //Differential gain times horizontal error
-    static const double KdHold           = 0.4;
+    static const double KdHold           = 0.01;
 
     //Integral gain times integral horizontal error
     static const double KiHold          = 0.01; //0.1

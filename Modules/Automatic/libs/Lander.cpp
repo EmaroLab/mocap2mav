@@ -10,8 +10,9 @@
 Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
           _NLost(0),_NComp(0), _initS(&_machine), _holdS(&_machine)  , _asceS(&_machine)  , _descS(&_machine),_compS(&_machine),
-          _rtolS(&_machine),_landS(&_machine), _err(0,0,0), _err_int(0,0,0), _err_diff(0,0,0), _dt(0), _prevTime(0), _actualTime(0),_actualState(0),_prevState(0),
-          _verticalErr(0), _holdPIDX(params_automatic::KpHold,params_automatic::KiHold,0), _holdPIDY(params_automatic::KpHold,params_automatic::KiHold,0)
+          _rtolS(&_machine),_landS(&_machine), _err(0,0,0), _err_int(0,0,0), _err_diff(0,0,0), _dt(0), _prevTime(0), _actualTime(0),
+          _actualState(0),_prevState(0), _verticalErr(0), _holdPIDX(params_automatic::KpHold,params_automatic::KiHold,params_automatic::KdHold),
+          _holdPIDY(params_automatic::KpHold,params_automatic::KiHold,params_automatic::KdHold)
 {
 
     initStateMachine();
@@ -19,8 +20,6 @@ Lander::Lander()
     _err_prev = _err;
     _holdPIDX.setMaxIOutput(5);
     _holdPIDY.setMaxIOutput(5);
-
-    _holdPIDX.set
 
 }
 
@@ -126,16 +125,27 @@ void Lander::updateSignals() {
     _lost     = (_NLost > params_automatic::NFramesLost);
     _centered = _horizontaErr < _tauHold * 0.5;
 
-    if(_actualState == AbstractLandState::states::R2LA || _actualState == AbstractLandState::states::COMP){
+    if(_actualState == AbstractLandState::states::R2LA || _actualState == AbstractLandState::states::COMP || _actualState == AbstractLandState::states::LAND){
 
+        //Reset NComp
         if(_prevState == AbstractLandState::states::HOLD) _NComp = 0;
+
         //Check whether we are on place to land
         if (_centered) {
             _NComp++;
         } else{
             _NComp = 0;
+            _NHold = 0;
         }
     }
+    //Check if we are escaping to ascending
+    if(_actualState == AbstractLandState::states::ASCE && (_prevState == AbstractLandState::states::COMP ||
+                                                           _prevState == AbstractLandState::states::LAND))
+    {
+        _NComp = 0;
+        _NHold = 0;
+    }
+
 
     _err_prev = _err;
 
@@ -153,6 +163,7 @@ void Lander::updateSignals() {
     std::cout << "**********************************" << std::endl;
 #endif
 
+
 }
 
 void Lander::handleMachine() {
@@ -167,6 +178,7 @@ int Lander::getActualMachineState() {
 
 void Lander::run() {
 
+    _prevState = _actualState;
     handleMachine();
     _actualState = _machine.getActualNodeId();
     managetime();
@@ -216,7 +228,7 @@ void Lander::run() {
             break;
 
     }
-    _prevState = _actualState;
+
 
 }
 
@@ -287,6 +299,9 @@ void Lander::hold() {
 
     Eigen::Vector2d tempVel(_platformState.getVx(),_platformState.getVy());
 
+    _holdPIDX.setDt(_dt);
+    _holdPIDY.setDt(_dt);
+
     double xTarget = _holdPIDX.getOutput(_state.getX(), _platformState.getX());
     double yTarget = _holdPIDY.getOutput(_state.getY(), _platformState.getY());
     Eigen::Vector2d targetVect(xTarget + _platformState.getX(),yTarget + _platformState.getY());
@@ -304,7 +319,8 @@ void Lander::hold() {
 
 void Lander::asce() {
 
-    resetIntegrals();
+    _holdPIDX.reset();
+    _holdPIDY.reset();
     _setPoint.setZ(_setPoint.getZ() + 0.1);
 
 }

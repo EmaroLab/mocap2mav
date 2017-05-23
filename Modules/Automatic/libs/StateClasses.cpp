@@ -19,14 +19,12 @@ void InitState::handle(){
     }
 }
 void HoldState::handle(){
+
     getSignals();
 
-    bool holding = (_NHold > params_automatic::NFramesHold);
-    bool lost    = (_NLost > params_automatic::NFramesLost);
-
-    bool descValid = holding && (_setPoint.getZ()   > params_automatic::zMin + 0.1);
-    bool asceValid = lost    && (_setPoint.getZ()   < params_automatic::zMax - 0.1);
-    bool compValid = holding && (fabs(_state.getZ() - params_automatic::zMin) < 0.2) && (_horizontaErr < _tauHold * 0.5);
+    bool descValid = _holding && (_setPoint.getZ()   > params_automatic::zMin + 0.1);
+    bool asceValid = _lost    && (_setPoint.getZ()   < params_automatic::zMax - 0.1);
+    bool compValid = _holding && (fabs(_state.getZ() - params_automatic::zMin) < 0.2) && _centered;
 
     if(descValid){
         this->_contextL->setStatePtr(_nextDesState);
@@ -60,17 +58,16 @@ void CompState::handle() {
 
     getSignals();
 
-    bool centered = (_horizontaErr < _tauHold * 0.5);
     bool onTarget = _NComp > params_automatic::NFramesComp;
 
-    if (!onTarget || !centered){
+    if (!onTarget || !_centered){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
     }
 
    std::cout << "VERRRRRRRR: " << _verticalErr << std::endl;
 
-    if(onTarget && centered && (fabs(_verticalErr) < 0.1)){
+    if(onTarget && _centered && (fabs(_verticalErr) < 0.1)){
         this->_contextL->setStatePtr(_nextLanState);
         printStateTransition();
     }
@@ -84,7 +81,7 @@ void RToLandState::handle() {
         this->_contextL->setStatePtr(_nextComState);
         printStateTransition();
         return;
-    } else if (_horizontaErr > _tauHold * 0.5){
+    } else if (!_centered){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
         return;
@@ -95,10 +92,9 @@ void RToLandState::handle() {
 void LandState::handle() {
 
     getSignals();
-    bool centered = (_horizontaErr < _tauHold * 0.5);
     bool onTarget = _NComp > params_automatic::NFramesComp;
 
-    if (!onTarget || !centered){
+    if (!onTarget || !_centered){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
     }

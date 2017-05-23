@@ -50,6 +50,12 @@ void Lander::initStateMachine() {
     _machine._state        =  &_state;
     _machine._setPoint     =  &_setPoint;
 
+    //New signals
+    _machine._holding      =  &_holding;
+    _machine._centered     =  &_centered;
+    _machine._lost         =  &_lost;
+
+
     //Link states
     _initS._nextState    = &_holdS;
 
@@ -105,36 +111,33 @@ void Lander::updateSignals() {
     _err[2]       = dz;
     _verticalErr  = _err[2];
 
-    if( _actualState == AbstractLandState::states::HOLD ||
-        _actualState == AbstractLandState::states::ASCE ||
-        _actualState == AbstractLandState::states::DESC ||
-        _actualState == AbstractLandState::states::COMP ||
-        _actualState == AbstractLandState::states::R2LA ){
-
-        //Increment N if needed
-        if (_horizontaErr < _tauHold) {
-            _NLost = 0;
-            _NHold++;
-        }
-        else if (_horizontaErr > _tauLost) {
-            _NHold = 0;
-            _NComp = 0;
-            _NLost++;
-        }
-
-        if(_actualState == AbstractLandState::states::R2LA || _actualState == AbstractLandState::states::COMP){
-
-            if(_prevState == AbstractLandState::states::HOLD) _NComp = 0;
-            //Check whether we are on place to land
-            if (_horizontaErr < _tauHold * 0.5) {
-                _NComp++;
-            } else{
-                _NComp = 0;
-            }
-        }
-
-        _err_prev = _err;
+    //Increment N if needed
+    if (_horizontaErr < _tauHold) {
+        _NLost = 0;
+        _NHold++;
     }
+    else if (_horizontaErr > _tauLost) {
+        _NHold = 0;
+        _NComp = 0;
+        _NLost++;
+    }
+
+    _holding  = (_NHold > params_automatic::NFramesHold);
+    _lost     = (_NLost > params_automatic::NFramesLost);
+    _centered = _horizontaErr < _tauHold * 0.5;
+
+    if(_actualState == AbstractLandState::states::R2LA || _actualState == AbstractLandState::states::COMP){
+
+        if(_prevState == AbstractLandState::states::HOLD) _NComp = 0;
+        //Check whether we are on place to land
+        if (_centered) {
+            _NComp++;
+        } else{
+            _NComp = 0;
+        }
+    }
+
+    _err_prev = _err;
 
 #ifdef DEBUG
 

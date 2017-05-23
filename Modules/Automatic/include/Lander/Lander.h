@@ -76,6 +76,11 @@ private:
     int    _NLost;
     int    _NComp;
 
+    //NewSignals
+    bool _centered;
+    bool _holding;
+    bool _lost;
+
     //Errors
     Eigen::Vector3d _err_int;
     Eigen::Vector3d _err;

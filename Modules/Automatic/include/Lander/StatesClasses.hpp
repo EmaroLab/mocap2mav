@@ -24,6 +24,11 @@ public:
     MavState *_state;
     MavState *_setPoint;
 
+    //New Signals
+    bool *_holding;
+    bool *_lost;
+    bool *_centered;
+
 };
 
 class AbstractLandState : public AbstractState {
@@ -59,6 +64,11 @@ public:
          _state        = *(_contextL->_state);
          _setPoint     = *(_contextL->_setPoint);
 
+        //New Signals
+        _holding       = *(_contextL->_holding);
+        _centered      = *(_contextL->_centered);
+        _lost          = *(_contextL->_lost);
+
     }
     void printStateTransition(){
         std::cout << "Actual state: " << _contextL->getActualNodeId() << std::endl;
@@ -77,6 +87,11 @@ protected:
     MavState _state;
     MavState _setPoint;
     LandMachine* _contextL;
+
+    //New Signals
+    bool _centered;
+    bool _holding;
+    bool _lost;
 };
 
 class InitState : public AbstractLandState {

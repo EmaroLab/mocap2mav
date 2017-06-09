@@ -12,7 +12,7 @@ do
   else
       echo $BABS
 	  echo "STARTING: " $name;
-          $BABS/bin/$name &
+          xterm -e $BABS/bin/$name &
           let temp=$!
           pids+=($temp)
 	  

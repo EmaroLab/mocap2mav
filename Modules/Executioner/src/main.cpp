@@ -8,12 +8,19 @@
 
 int main(int argc, char** argv){
 
-
-
     Parser p;
     Executioner e;
 
-    p.loadFile("lists/list.txt");
+    //Fetch list path
+    std::string listPath;
+    ifstream listF(".direnv/lists.txt");
+    if (listF.is_open()){
+         getline(listF,listPath);
+    } else {
+        std::cout << "Environment paths not set!!" << std::endl;
+        return 1;
+    }
+    p.loadFile(listPath+"/list.txt");
     std::cout << "Parsing ....." << std::endl;
 
     if(p.parse()){
@@ -22,7 +29,7 @@ int main(int argc, char** argv){
     }else{
 
         std::cout << "Unable to parse the file" << std::endl;
-
+        return 1;
     }
     // Call init everytime you have a new list.
     e.init();
@@ -52,9 +59,6 @@ int main(int argc, char** argv){
 
         }
 
-
-        //AndOr
-
         //Run state machine
         e.setState(call._vision_pos);
         e.run();
@@ -67,5 +71,5 @@ int main(int argc, char** argv){
         }
 
     }
-
+    return 0;
 }

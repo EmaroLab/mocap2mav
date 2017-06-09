@@ -41,7 +41,7 @@ Thumbs.db
 
 ## Directory-based project format:
 .idea/
-
+.direnv/
 ## Plugin-specific files:
 
 # C extensions

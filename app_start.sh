@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source ./build_package.sh
 pids=()
 echo "Choose the application configuration file"
 read file
@@ -10,9 +10,9 @@ do
   if [ "$name" = ">" ]; then
           break
   else
-          
+      echo $BABS
 	  echo "STARTING: " $name;
-          xterm -e ./build/bin/$name &
+          $BABS/bin/$name &
           let temp=$!
           pids+=($temp)
 	  

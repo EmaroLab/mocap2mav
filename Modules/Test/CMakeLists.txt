@@ -8,13 +8,14 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(PROJECT_SRCS
-        src/maintest.cpp ${PROJECT_SRC_DIR}/MavState.cpp )
+        src/maintest.cpp ${PROJECT_SRC_DIR}/MavState.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("include")
 
 add_executable(testM ${PROJECT_SRCS})
+add_executable(dummypose src/dummyPose.cpp ../../include/utils/TimeHelpers.hpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(LCM REQUIRED lcm)
@@ -25,3 +26,4 @@ target_link_libraries( testM
         Automlib
         ${LCM_LIBRARIES}
         )
+target_link_libraries(dummypose  ${LCM_LIBRARIES})

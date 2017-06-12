@@ -20,7 +20,7 @@ include_directories("libs")
 include_directories("include")
 include_directories("dir")
 
-add_executable(exec ${PROJECT_SRCS})
+add_executable(exec ${PROJECT_SRCS} ${PROJECT_INCLUDE_DIR}/utils/TimeHelpers.hpp)
 
 #Set LCM
 #set ( PROJECT_LINK_LIBS liblcm.so )

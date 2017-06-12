@@ -4,6 +4,7 @@
 #include "common/CallbackHandler.hpp"
 #include "Parser.h"
 #include <poll.h>
+#include "utils/TimeHelpers.hpp"
 
 
 int main(int argc, char** argv){
@@ -43,15 +44,25 @@ int main(int argc, char** argv){
     handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
     handler2.subscribe("state", &CallbackHandler::stateCallback, &call);
 
-    struct pollfd fds[1];
+    struct pollfd fds[2];
 
     fds[0].fd = handler2.getFileno(); // Actual task
     fds[0].events = POLLIN;
 
-    while(0==handler.handle()){
+    fds[1].fd = handler.getFileno(); // Actual task
+    fds[1].events = POLLIN;
+
+    bool gotPosition = false;
+    TimeManager t;
+    t.useMicro();
+    Spinner sp(5);
+    sp.suppressWarnings();
+    sp.useMilli();
+    while(sp.ok() && (0==handler.handle())){
 
         //Fetch land messages from mavros
-        int ret = poll(fds,1,0);
+
+        int ret = poll(fds,2,0);
 
         if(fds[0].revents & POLLIN){
             handler2.handle();
@@ -59,16 +70,24 @@ int main(int argc, char** argv){
 
         }
 
+        if(fds[1].revents & POLLIN){
+            handler.handle();
+            gotPosition = true;
+        }
+
         //Run state machine
         e.setState(call._vision_pos);
         e.run();
         //Publish next task
-        if(e.readyToPublish()) {
+        if (e.readyToPublish()) {
 
             std::cout << "publishing task" << std::endl;
             handler.publish("actual_task", &e._actualTask);
 
         }
+
+        t.updateTimer();
+        std::cout << t._dt << std::endl;
 
     }
     return 0;

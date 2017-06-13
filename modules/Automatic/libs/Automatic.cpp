@@ -131,6 +131,7 @@ void Automatic::takeOff() {
 
     _comm.setOrientation((float)q.w(),(float)q.x(),(float)q.y(),(float)q.z());
 
+
 }
 
 void Automatic::move()

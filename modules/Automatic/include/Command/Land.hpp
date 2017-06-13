@@ -11,7 +11,7 @@
 #include "Lander/Lander.h"
 
 class Land : protected Command{
-
+//TODO: add newtask field!
 private:
 
     double _xin;
@@ -110,10 +110,10 @@ private:
     }
 
 public:
-    Land(MavState *_state, MavState *_comm,exec::task *_actualTask) : Command(_state, _comm, _actualTask) {}
+    Land(MavState *_state, MavState *_comm,int _plat) : Command(_state, _comm, _actualTask) , _plat(_plat) {}
 
     void execute() override {
-
+        land();
     }
 
 };

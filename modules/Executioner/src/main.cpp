@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <lcm/lcm-cpp.hpp>
 #include "Executioner.h"
 #include "common/CallbackHandler.hpp"
@@ -14,7 +15,7 @@ int main(int argc, char** argv){
 
     //Fetch list path
     std::string listPath;
-    ifstream listF(".direnv/lists.txt");
+    std::ifstream listF(".direnv/lists.txt");
     if (listF.is_open()){
          getline(listF,listPath);
     } else {
@@ -49,9 +50,6 @@ int main(int argc, char** argv){
     fds[0].fd = handler2.getFileno(); // Actual task
     fds[0].events = POLLIN;
 
-    bool gotPosition = false;
-    TimeManager t;
-    t.useMicro();
     Spinner sp(5);
     sp.suppressWarnings();
     sp.useMilli();
@@ -77,9 +75,6 @@ int main(int argc, char** argv){
             handler.publish("actual_task", &e._actualTask);
 
         }
-
-        t.updateTimer();
-        std::cout << t._dt << std::endl;
 
     }
     return 0;

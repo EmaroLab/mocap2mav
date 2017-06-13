@@ -44,13 +44,10 @@ int main(int argc, char** argv){
     handler.subscribe("vision_position_estimate", &CallbackHandler::visionEstimateCallback, &call);
     handler2.subscribe("state", &CallbackHandler::stateCallback, &call);
 
-    struct pollfd fds[2];
+    struct pollfd fds[1];
 
     fds[0].fd = handler2.getFileno(); // Actual task
     fds[0].events = POLLIN;
-
-    fds[1].fd = handler.getFileno(); // Actual task
-    fds[1].events = POLLIN;
 
     bool gotPosition = false;
     TimeManager t;
@@ -62,17 +59,12 @@ int main(int argc, char** argv){
 
         //Fetch land messages from mavros
 
-        int ret = poll(fds,2,0);
+        int ret = poll(fds,1,0);
 
         if(fds[0].revents & POLLIN){
             handler2.handle();
             e.setStatus(call._armed,call._landed);
 
-        }
-
-        if(fds[1].revents & POLLIN){
-            handler.handle();
-            gotPosition = true;
         }
 
         //Run state machine

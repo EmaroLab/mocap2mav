@@ -352,7 +352,7 @@ bool Parser::parseLand(exec::task& task, int pos) {
     std::cout << "Land found" << std::endl;
     task.action = common::actions::LAND;
     task.z = 0; //Assume that landing is normal, not on a platform. We'll see later
-    int c = 1;
+    task.params[0] = 0;
 
     for (int i = pos+1;  i < _tokens.size() && _tokens[i][0] != "type" ; i++) {
         std::string field = _tokens[i][0];
@@ -371,19 +371,8 @@ bool Parser::parseLand(exec::task& task, int pos) {
 
         }
         else if(field == "platform"){
-            value_str = _tokens[i][1];
-            double value = getValue(value_str);
+
             task.params[0] = 1;
-            if (c < 4){
-
-                task.params[c++] = value;
-                if(c != 3) task.params[c] = 0;  // Set next gain to zero in case
-
-            }
-            else {
-                std::cout << "Too many PLATFORM fields, they must be 3 for PID gains" << std::endl;
-                return false;
-            }
 
         }
         else{

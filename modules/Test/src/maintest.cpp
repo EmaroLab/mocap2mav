@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "Modules/Automatic/include/Lander/Lander.h"
+#include "Automatic/include/Lander/Lander.h"
 #include "common/common.h"
 #include "lcm/lcm-cpp.hpp"
 #include "common/CallbackHandler.hpp"

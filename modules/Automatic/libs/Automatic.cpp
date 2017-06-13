@@ -1,20 +1,5 @@
 #include "Automatic.h"
 
-
-
-Eigen::Quaterniond getQuatFromYaw(double yaw){
-
-    Eigen::Quaterniond quaterniond;
-
-    quaterniond.w() = cos(yaw/2);
-    quaterniond.x() = 0;
-    quaterniond.y() = 0;
-    quaterniond.z() = sin(yaw/2);
-
-    return quaterniond;
-
-}
-
 Automatic::Automatic()  {}
 
 MavState Automatic::getState()

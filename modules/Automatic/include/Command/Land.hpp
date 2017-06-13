@@ -1,0 +1,121 @@
+//
+// Created by andreanistico on 13/06/17.
+//
+
+#ifndef MOCAP2MAV_LAND_HPP
+#define MOCAP2MAV_LAND_HPP
+
+#endif //MOCAP2MAV_LAND_HPP
+#include "Command.hpp"
+#include "common/conversions.h"
+#include "Lander/Lander.h"
+
+class Land : protected Command{
+
+private:
+
+    double _xin;
+    double _yin;
+    double _yawin;
+    bool*  _newTask;
+    int    _plat;
+    Lander _lander;
+
+    double calculateDescendRate(double dz,double drate_max,double drate_min, double tmax, double tmin){
+
+        //Calculate the descend rate profile (linear) through y = mx + q
+        //where x is vertical distance between robot and platform
+        if(dz > tmax)      return drate_max;
+        else if(dz < tmin) return drate_min;
+        else{
+
+            double m = (drate_max - drate_min) / (tmax - tmin);
+            double q = drate_min - m * tmin;
+            return m * dz + q;
+
+        }
+    }
+
+    void simpleLanding(float x_target, float y_target, float h) {
+
+        //Calculate difference
+
+        double dx = - _state->getX() + x_target;
+        double dy = - _state->getY() + y_target;
+        double dz = - _state->getZ() + h;
+
+        // Be sure that we are on top of the target
+
+        double x_target_v = Kland * (dx);
+        double y_target_v = Kland * (dy);
+
+        //Normalize
+
+        Eigen::Vector2d v(x_target_v,y_target_v);
+
+        if(v.norm() > VMAX){
+
+            v.normalize();
+
+            v = v * VMAX;
+
+        }
+
+        _comm->setVx(v(0));
+        _comm->setVy(v(1));
+
+        //TODO: add security checks on vz
+        if(fabs(dx) <= THRE && fabs(dy) <= THRE){
+            //Descending is safe, is it?
+            double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
+            _comm->setVz(-desc);
+            /*
+            if (fabs(dz) < 0.05){
+                _comm.setVx(0);
+                _comm.setVy(0);
+                _comm.setVz(-10);
+            }
+            */
+        }
+
+            //else if (fabs(dx) <= THRE * 10 && fabs(dy) <= THRE * 10) _comm.setVz(DRATE_MAX); //Is it correct? Don't think so
+        else _comm->setVz(0);
+
+        _comm->setType(MavState::type::VELOCITY);
+
+    }
+
+    void land(){
+
+        //Save initial state if we have a new task
+        if (*_newTask) {
+            _xin   = _state->getX();
+            _yin   = _state->getY();
+            _yawin = _state->getYawFromQuat();
+            _plat = (int)_actualTask->params[0];
+        }
+
+
+        if (_plat == 0){
+
+            simpleLanding((float)_xin,(float)_yin,0);
+
+
+        } else {
+            _lander.setState(*_state);
+            _lander.run();
+            *_comm = _lander.getCommand();
+        }
+
+    }
+
+public:
+    Land(MavState *_state, MavState *_comm,exec::task *_actualTask) : Command(_state, _comm, _actualTask) {}
+
+    void execute() override {
+
+    }
+
+};
+
+#endif //MOCAP2MAV_ROTATE_HPP

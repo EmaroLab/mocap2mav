@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Automatic/include/Lander/Lander.h"
+#include "Automatic/include/Command/Command.hpp"
 #include "common/common.h"
 #include "lcm/lcm-cpp.hpp"
 #include "common/CallbackHandler.hpp"
@@ -14,6 +15,8 @@
 using namespace common;
 
 int main(int argc, char** argv){
+
+
 
     lcm::LCM handler, handler2;
 

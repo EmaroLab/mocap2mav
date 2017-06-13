@@ -33,9 +33,6 @@ public:
 	int _actualNode;
 	bool _idle;
 
-
-
-
 private:
 
 	MavState _state;

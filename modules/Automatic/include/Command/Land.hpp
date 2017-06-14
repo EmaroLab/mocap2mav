@@ -5,7 +5,6 @@
 #ifndef MOCAP2MAV_LAND_HPP
 #define MOCAP2MAV_LAND_HPP
 
-#endif //MOCAP2MAV_LAND_HPP
 #include "Command.hpp"
 #include "common/conversions.h"
 #include "Lander/Lander.h"
@@ -17,7 +16,6 @@ private:
     double _xin;
     double _yin;
     double _yawin;
-    bool*  _newTask;
     int    _plat;
     Lander _lander;
 
@@ -88,11 +86,12 @@ private:
     void land(){
 
         //Save initial state if we have a new task
-        if (*_newTask) {
+        if (_newTask) {
             _xin   = _state->getX();
             _yin   = _state->getY();
             _yawin = _state->getYawFromQuat();
             _plat = (int)_actualTask->params[0];
+            _newTask = false;
         }
 
 
@@ -110,7 +109,7 @@ private:
     }
 
 public:
-    Land(MavState *_state, MavState *_comm,int _plat) : Command(_state, _comm, _actualTask) , _plat(_plat) {}
+    Land(MavState *_state, MavState *_comm,int _plat) : Command(_state, _comm, _actualTask) , _plat(_plat){}
 
     void execute() override {
         land();

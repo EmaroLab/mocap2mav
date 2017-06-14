@@ -1,6 +1,6 @@
 #include "Automatic.h"
-
-Automatic::Automatic()  {}
+using namespace common;
+Automatic::Automatic(): _actualCommand(nullptr)  {}
 
 MavState Automatic::getState()
 {
@@ -14,7 +14,6 @@ exec::task Automatic::getTask()
 void Automatic::setState(MavState rState)
 {
     _state = rState;
-
 }
 
 void Automatic::setTask(exec::task rTask)
@@ -28,12 +27,10 @@ void Automatic::setTask(exec::task rTask)
     _actualTask.params[1]=rTask.params[1];
     _actualTask.params[2]=rTask.params[2];
     _actualTask.params[3]=rTask.params[3];
-
 }
 
 
 void Automatic::rotate() {
-
     _comm.setType(MavState::type::POSITION);
     double angleValid = _actualTask.params[0];
     double yawSP = _actualTask.yaw;
@@ -281,5 +278,42 @@ void Automatic::land2(MavState platPose, double kp, double ki, double kd) {
     }                           //Is it correct?
 
     _comm.setType(MavState::type::VELOCITY);
+
+}
+
+void Automatic::handleCommands() {
+
+
+    switch (_actualTask.action){
+
+        case actions::IDLE:
+
+            break;
+
+        case actions::MOVE:
+
+
+            break;
+
+        case actions::TAKE_OFF:
+
+            _actualCommand = std::unique_ptr <TakeOff> (&_state,&_comm,&_actualTask);
+            break;
+
+        case actions::LAND:
+
+
+            break;
+
+        case actions::ROTATE:
+
+            break;
+
+        default:
+
+            std::cout << "Unknown action" << std::endl;
+            return;
+
+    }
 
 }

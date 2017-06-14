@@ -12,13 +12,14 @@ class Command {
 protected:
     MavState* _state;
     MavState* _comm;
-    exec::task* _actualTask;
+    exec::task* const _actualTask;
+    bool _newTask;
 
 
 public:
-
+    Command(){}
     Command(MavState *_state, MavState *_comm,exec::task *_actualTask) : _state(_state), _comm(_comm),
-                                                                                _actualTask(_actualTask) {}
+                                                                         _actualTask(_actualTask), _newTask(true) {}
 
     virtual ~Command() {}
 

@@ -14,14 +14,14 @@ private:
     double _xin;
     double _yin;
     double _yawin;
-    bool*  _newTask;
 
     void takeoff() {
         //Save initial state if we have a new task
-        if (*_newTask) {
+        if (_newTask) {
             _xin = _state->getX();
             _yin = _state->getY();
             _yawin = _state->getYawFromQuat();
+            _newTask = false;
         }
 
         //Take off procedure
@@ -39,8 +39,8 @@ private:
 
 
 public:
-    TakeOff(MavState *_state, MavState *_comm,exec::task *_actualTask, bool* _newTask) :
-            Command(_state, _comm, _actualTask), _newTask(_newTask) {}
+    TakeOff(MavState *_state, MavState *_comm,exec::task *_actualTask) :
+            Command(_state, _comm, _actualTask){}
 
     void execute() override {
         takeoff();

@@ -1,13 +1,18 @@
 #ifndef AUTOMATIC_H
 #define AUTOMATIC_H
+#include <iostream>
+#include <memory>
 #include "lcm_messages/geometry/pose.hpp"
 #include "lcm_messages/exec/task.hpp"
 #include "common/MavState.h"
 #include "common/common.h"
 #include "common/conversions.h"
 #include "include/Lander/Lander.h"
-#include <iostream>
 #include "Command/TakeOff.hpp"
+#include "Command/Land.hpp"
+#include "Command/Move.hpp"
+#include "Command/Rotate.hpp"
+
 class Automatic
 {
    
@@ -29,8 +34,13 @@ public:
     exec::task _actualTask;
     Lander _lander;
 
+    //Command pattern implementation
+    void handleCommands();
+
+
 private:
    MavState _state;
+   std::unique_ptr<Command> _actualCommand;
 
 };
 

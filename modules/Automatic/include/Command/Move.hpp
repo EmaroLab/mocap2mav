@@ -6,7 +6,7 @@
 #define MOCAP2MAV_MOVE_HPP
 
 #include "Command.hpp"
-class Move : protected Command{
+class Move : public Command{
 
 private:
 

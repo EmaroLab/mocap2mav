@@ -12,7 +12,7 @@ class Command {
 protected:
     MavState* _state;
     MavState* _comm;
-    exec::task* const _actualTask;
+    exec::task* _actualTask;
     bool _newTask;
 
 

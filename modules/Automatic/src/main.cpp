@@ -35,18 +35,11 @@ int main(int argc, char** argv){
 	fds[1].fd = handler2.getFileno(); // Square pose
 	fds[1].events = POLLIN;
 
-	bool newTask;
     bool waiting = true;
 
-	uint64_t t = 0;
-	uint64_t t_prev = 0;
 	MavState platform;
 
 	while(0==handler.handle()){
-
-		t = time::getTimeMilliSecond();
-		float dt = t_prev != 0 ? (t - t_prev) * (float)MILLI2SECS : 0.0f;
-		t_prev = t;
 
 		autom.setState(call._vision_pos);
         lander.setState(call._vision_pos);
@@ -60,67 +53,24 @@ int main(int argc, char** argv){
 
 			std::cout<<  "New task arrived with action: " << printAction(autom._actualTask.action) << std::endl;
 
-			newTask = true;
             waiting = false;
-
-		}
-		else{
-			newTask = false;
+            autom.handleCommands();
 		}
 
 		if(fds[1].revents & POLLIN){
 
 			handler2.handle();
 			platform = call._position_sp;
-            lander.setPlatformState(platform);
-
-		}
-
-		//Choose action
-
-		if (autom.getTask().action == actions::IDLE) std::cout << "Idle, is the list empty?" << std::endl;
-
-		if (autom.getTask().action == actions::MOVE){
-
-			autom.move();
-
-		}
-		if (autom.getTask().action == actions::TAKE_OFF){
-
-			//Save initial state if we have a new task
-			if (newTask){
-				autom._actualTask.x = autom.getState().getX();
-				autom._actualTask.y = autom.getState().getY();
-				autom._actualTask.yaw = autom.getState().getYawFromQuat();
-			}
-
-			autom.takeOff();
-
-		}
-		if (autom.getTask().action == actions::LAND){
-
-			//Land on last set point command, is it good?
-			if (newTask){
-				autom._actualTask.x = autom._comm.getX();
-				autom._actualTask.y = autom._comm.getY();
-			}
-
-            if(autom._actualTask.params[0] == 1){
-
-                lander.run();
-                autom._comm = lander.getCommand();
-
-            }
-            else autom.land1((float)autom._actualTask.x,(float)autom._actualTask.y,(float)autom._actualTask.z);
-
-		}
-		if (autom.getTask().action == actions::ROTATE){
-
-			autom.rotate();
+            autom.setPlatformState(platform);
 
 		}
 
         if(!waiting) {
+
+            //Call commands
+            autom.executeCommand();
+
+            //Prepare LCM stuff
             geometry::pose command = call.mavState2LcmPose(autom._comm);
             geometry::pose platRobPos;
 

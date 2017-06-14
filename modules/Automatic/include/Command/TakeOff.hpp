@@ -7,7 +7,7 @@
 
 #include "Command.hpp"
 #include "common/conversions.h"
-class TakeOff : protected Command{
+class TakeOff : public Command{
 
 private:
 

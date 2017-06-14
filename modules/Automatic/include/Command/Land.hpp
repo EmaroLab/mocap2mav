@@ -9,7 +9,7 @@
 #include "common/conversions.h"
 #include "Lander/Lander.h"
 
-class Land : protected Command{
+class Land : public Command{
 //TODO: add newtask field!
 private:
 
@@ -17,6 +17,7 @@ private:
     double _yin;
     double _yawin;
     int    _plat;
+    MavState* _platformPose;
     Lander _lander;
 
     double calculateDescendRate(double dz,double drate_max,double drate_min, double tmax, double tmin){
@@ -94,14 +95,11 @@ private:
             _newTask = false;
         }
 
-
         if (_plat == 0){
-
             simpleLanding((float)_xin,(float)_yin,0);
-
-
         } else {
             _lander.setState(*_state);
+            _lander.setPlatformState(*_platformPose);
             _lander.run();
             *_comm = _lander.getCommand();
         }
@@ -109,7 +107,7 @@ private:
     }
 
 public:
-    Land(MavState *_state, MavState *_comm,int _plat) : Command(_state, _comm, _actualTask) , _plat(_plat){}
+    Land(MavState *_state, MavState *_comm,exec::task *_actualTask, MavState* _platform) : Command(_state, _comm, _actualTask) , _plat(_plat), _platformPose(_platform){}
 
     void execute() override {
         land();

@@ -19,27 +19,21 @@ class Automatic
 public:
 
     Automatic();
-    void land2(MavState platPose,double kp, double ki, double kd);
-    void land1(float x_target, float y_target, float h);
-    void takeOff();
-    void move();
-    void rotate();
     void setState(MavState pose);
+    void setPlatformState(MavState pose);
     void setTask(exec::task task);
     exec::task getTask();
-    void calculatePositionInterm(const double alpha,const exec::task target, const MavState state, MavState &comm);
-    void calculateYawInterm(const float heading,const double yawTarget, double &yawComm);
     MavState getState();
     MavState _comm;
     exec::task _actualTask;
-    Lander _lander;
 
     //Command pattern implementation
     void handleCommands();
-
+    void executeCommand();
 
 private:
    MavState _state;
+   MavState _platformState;
    std::unique_ptr<Command> _actualCommand;
 
 };

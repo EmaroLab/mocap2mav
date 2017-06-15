@@ -29,20 +29,6 @@ void Automatic::setTask(exec::task rTask)
     _actualTask.params[3]=rTask.params[3];
 }
 
-double calculateDescendRate(double dz,double drate_max,double drate_min, double tmax, double tmin){
-
-    //Calculate the descend rate profile (linear) through y = mx + q
-    //where x is vertical distance between robot and platform
-    if(dz > tmax)      return drate_max;
-    else if(dz < tmin) return drate_min;
-    else{
-
-        double m = (drate_max - drate_min) / (tmax - tmin);
-        double q = drate_min - m * tmin;
-        return m * dz + q;
-
-    }
-}
 void Automatic::handleCommands() {
 
     std::cout << "Command: " << printAction(_actualTask.action) <<std::endl;
@@ -60,8 +46,8 @@ void Automatic::handleCommands() {
             break;
 
         case actions::TAKE_OFF:
-          //  std::unique_ptr<Command> temp(new TakeOff(&_state,&_comm,&_actualTask));
-            _actualCommand = std::unique_ptr<Command>(new TakeOff(&_state,&_comm,&_actualTask));
+            _actualCommand.reset(new TakeOff(&_state,&_comm,&_actualTask));
+           // _actualCommand = std::unique_ptr<Command>(new TakeOff(&_state,&_comm,&_actualTask));
             std::cout << "Actual command: TakeOff" << std::endl;
             break;
 

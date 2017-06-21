@@ -12,13 +12,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #find_package(Qt5Network)
 
 set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SRC_DIR}/MavState.cpp include/parameters.h include/Command/Command.hpp include/Command/Move.hpp include/Command/TakeOff.hpp include/Command/Rotate.hpp include/Command/Land.hpp include/Command/Idle.hpp)
-
+src/main.cpp ${PROJECT_SRC_DIR}/MavState.cpp include/parameters.h)
+file(GLOB_RECURSE COMM include/Command/*.hpp)
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("include")
 
-add_executable(autom ${PROJECT_SRCS})
+add_executable(autom ${PROJECT_SRCS} ${COMM})
 
 #Set LCM
 #set ( PROJECT_LINK_LIBS liblcm.so )

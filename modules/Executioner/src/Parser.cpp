@@ -113,9 +113,14 @@ bool Parser::parseAction(int pos) {
         res = parseRotate(task,pos);
         return res;
     }
-    else if (a == "land"){
+    else if (a == "land") {
 
-        res = parseLand(task,pos);
+        res = parseLand(task, pos);
+        return res;
+    }
+    else if (a == "idle"){
+
+        res = parseIdle(task);
         return res;
     }else {
         std::cout << "Unrecognised type at position: "<< pos << std::endl;
@@ -383,6 +388,13 @@ bool Parser::parseLand(exec::task& task, int pos) {
         }
 
     }
+    _taskListParsed.push_back(task);
+    return true;
+}
+
+bool Parser::parseIdle(exec::task &task) {
+    std::cout << "Idle found" << std::endl;
+    task.action = common::actions::IDLE;
     _taskListParsed.push_back(task);
     return true;
 }

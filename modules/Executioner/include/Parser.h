@@ -38,6 +38,7 @@ private:
     bool parseMove(exec::task& task,int pos);
     bool parseRotate(exec::task& task,int pos);
     bool parseLand(exec::task& task,int pos);
+    bool parseIdle(exec::task& task);
 
 };
 

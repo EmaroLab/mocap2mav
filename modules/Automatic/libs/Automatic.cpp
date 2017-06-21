@@ -1,3 +1,4 @@
+#include <include/Command/Idle.hpp>
 #include "Automatic.h"
 using namespace common;
 Automatic::Automatic()  {}
@@ -37,7 +38,7 @@ void Automatic::handleCommands() {
 
 
         case actions::IDLE:
-
+            _actualCommand = std::unique_ptr<Command>(new Idle(&_state,&_comm, nullptr));
             break;
 
         case actions::MOVE:

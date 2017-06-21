@@ -55,7 +55,7 @@ void Automatic::handleCommands() {
         case actions::LAND:
 
             _actualCommand = std::unique_ptr<Command>(new Land(&_state,&_comm,&_actualTask,&_platformState));
-            std::cout << "Actual command: TakeOff" << std::endl;
+            std::cout << "Actual command: Land" << std::endl;
             break;
         case actions::ROTATE:
 

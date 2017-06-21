@@ -49,7 +49,7 @@ private:
         double y_target_v = Kland * (dy);
 
         //Normalize
-
+/*
         Eigen::Vector2d v(x_target_v,y_target_v);
 
         if(v.norm() > VMAX){
@@ -59,9 +59,9 @@ private:
             v = v * VMAX;
 
         }
-
-        _comm->setVx(v(0));
-        _comm->setVy(v(1));
+*/
+        _comm->setVx(x_target_v);
+        _comm->setVy(y_target_v);
 
         //TODO: add security checks on vz
         if(fabs(dx) <= THRE && fabs(dy) <= THRE){

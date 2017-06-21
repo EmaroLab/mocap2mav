@@ -111,6 +111,8 @@ private:
     //Aggressive land
     void land();
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 };
 
 #endif //MOCAP2MAV_LANDER_H

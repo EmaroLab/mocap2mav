@@ -18,22 +18,22 @@ namespace params_automatic {
     static const int    NFramesComp     = 20;
 
     //Platform dimension
-    static const double platformLenght  = 1.8;
+    static const double platformLenght  = 0.7;
 
     //Max altitude for landing procedure
-    static const double zMax            = 7;
+    static const double zMax            = 2;
 
     //Minimum altitude for landing procedure (before compensating, this value should be above the maximum platform altitude)
-    static double       zMin            = 5;
+    static double       zMin            = 1.6;
 
     //Proportional gain times platform velocity
     static const double KpHoldV          = 1;
 
     //Proportional gain times horizontal error
-    static const double KpHold           = 2.5; // 0.5
+    static const double KpHold           = 1; // 0.5
 
     //Differential gain times horizontal error
-    static const double KdHold           = 0.001;
+    static const double KdHold           = 0.00;
 
     //Integral gain times integral horizontal error
     static const double KiHold          = 0.01; //0.1
@@ -42,11 +42,11 @@ namespace params_automatic {
     static const double KPCompV          = 0.1;
 
     //Integral clamping values
-    static const double maxIntValue     = 5;
+    static const double maxIntValue     = 1;
     static const double minIntValue     = -maxIntValue;
 
     //Max total PID output
-    static const double maxOutput       = 1;
+    static const double maxOutput       = 1.5;
 
 }
 

@@ -20,7 +20,7 @@
 #define VMAX            1.5
 #define TMAX            1.5
 #define TMIN            0.3
-#define PLATFORM_OFFSET 0.1
+#define PLATFORM_OFFSET 0.0
 
 class Lander {
 

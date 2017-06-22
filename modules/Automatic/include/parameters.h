@@ -45,6 +45,9 @@ namespace params_automatic {
     static const double maxIntValue     = 5;
     static const double minIntValue     = -maxIntValue;
 
+    //Max total PID output
+    static const double maxOutput       = 1;
+
 }
 
 #endif //MOCAP2MAV_PARAMETERS_H

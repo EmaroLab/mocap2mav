@@ -18,8 +18,10 @@ Lander::Lander()
     initStateMachine();
     _actualState = _machine.getActualNodeId();
     _err_prev = _err;
-    _holdPIDX.setMaxIOutput(5);
-    _holdPIDY.setMaxIOutput(5);
+    _holdPIDX.setMaxIOutput(params_automatic::maxIntValue);
+    _holdPIDY.setMaxIOutput(params_automatic::maxIntValue);
+
+    _holdPIDX.setOutputLimits(params_automatic::maxOutput);
 
 }
 

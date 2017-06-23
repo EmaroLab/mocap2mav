@@ -15,8 +15,8 @@
 #define PI              3.141592653589
 #define Kland           1
 #define THRE            0.15
-#define DRATE_MIN       0.2
-#define DRATE_MAX       0.7
+#define DRATE_MIN       0.5
+#define DRATE_MAX       1
 #define VMAX            1.5
 #define TMAX            1
 #define TMIN            0.6

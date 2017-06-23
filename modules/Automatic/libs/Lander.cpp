@@ -223,6 +223,7 @@ void Lander::run() {
             comp();
             break;
         case (AbstractLandState::states::LAND):
+            initDone = false;
             land();
             break;
 

@@ -10,7 +10,7 @@
 #include "Lander/Lander.h"
 
 class Land : public Command{
-//TODO: add newtask field!
+
 private:
 
     double _xin;
@@ -48,39 +48,24 @@ private:
         double x_target_v = Kland * (dx);
         double y_target_v = Kland * (dy);
 
-        //Normalize
-/*
-        Eigen::Vector2d v(x_target_v,y_target_v);
-
-        if(v.norm() > VMAX){
-
-            v.normalize();
-
-            v = v * VMAX;
-
-        }
-*/
         _comm->setVx(x_target_v);
         _comm->setVy(y_target_v);
-
+        _comm->setType(MavState::VELOCITY);
         //TODO: add security checks on vz
         if(fabs(dx) <= THRE && fabs(dy) <= THRE){
             //Descending is safe, is it?
             double desc = calculateDescendRate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
             _comm->setVz(-desc);
-            /*
-            if (fabs(dz) < 0.05){
-                _comm.setVx(0);
-                _comm.setVy(0);
-                _comm.setVz(-10);
+
+            if (fabs(dz) < THRE){
+                _comm->setX(x_target);
+                _comm->setY(y_target);
+                _comm->setZ(h-10);
+                _comm->setType(MavState::POSITION);
             }
-            */
+
         }
-
-            //else if (fabs(dx) <= THRE * 10 && fabs(dy) <= THRE * 10) _comm.setVz(DRATE_MAX); //Is it correct? Don't think so
         else _comm->setVz(0);
-
-        _comm->setType(MavState::type::VELOCITY);
 
     }
 

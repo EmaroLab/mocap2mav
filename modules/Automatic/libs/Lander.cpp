@@ -75,6 +75,7 @@ void Lander::initStateMachine() {
     _compS._nextLanState = &_landS;
 
     _landS._nextState    = &_asceS;
+    _landS._restartState = &_initS;
 
     _machine.setStatePtr(&_initS);
 

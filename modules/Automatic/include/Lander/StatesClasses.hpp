@@ -180,6 +180,7 @@ public:
 
 class LandState : public AbstractLandState {
 public:
+    AbstractLandState* _restartState;
     LandState(LandMachine *context) : AbstractLandState(context) {
         setId();
     }

@@ -16,6 +16,7 @@ void InitState::handle(){
     if(wait++ > 100) {
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
+        wait=0;
     }
 }
 void HoldState::handle(){
@@ -92,11 +93,20 @@ void RToLandState::handle() {
 void LandState::handle() {
 
     getSignals();
+    static int wait = 0;
     bool onTarget = _NComp > params_automatic::NFramesComp;
 
     if (!onTarget || !_centered){
         this->_contextL->setStatePtr(_nextState);
         printStateTransition();
+        wait = 0;
+    }
+
+    //Restart the procedure
+    if(wait++ > 100) {
+        this->_contextL->setStatePtr(_restartState);
+        printStateTransition();
+        wait=0;
     }
 
 }

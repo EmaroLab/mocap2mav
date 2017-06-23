@@ -27,7 +27,7 @@ namespace params_automatic {
     static double       zMin            = 1.6;
 
     //Proportional gain times platform velocity
-    static const double KpHoldV          = 0.4;
+    static const double KpHoldV          = 0.9;
 
     //Proportional gain times horizontal error
     static const double KpHold           = 0.4; // 0.5

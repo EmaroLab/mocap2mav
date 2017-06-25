@@ -68,7 +68,7 @@ void CompState::handle() {
 
    std::cout << "VERRRRRRRR: " << _verticalErr << std::endl;
 
-    if(onTarget && _centered && (fabs(_verticalErr) < 0.20)){
+    if(onTarget && _centered && (fabs(_verticalErr) < 0.15)){
         this->_contextL->setStatePtr(_nextLanState);
         printStateTransition();
     }

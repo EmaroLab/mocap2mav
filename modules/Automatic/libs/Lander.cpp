@@ -192,6 +192,9 @@ void Lander::run() {
         case (AbstractLandState::states::INIT):
             if(!initDone){
                 init();
+                _NHold=0;
+                _NComp=0;
+                _NLost=0;
                 initDone = true;
             }
             break;

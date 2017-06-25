@@ -16,7 +16,7 @@
 #define Kland           1
 #define THRE            0.15
 #define DRATE_MIN       0.1
-#define DRATE_MAX       0.4
+#define DRATE_MAX       0.3
 #define TMAX            1.6
 #define TMIN            0.7
 #define PLATFORM_OFFSET 0.0

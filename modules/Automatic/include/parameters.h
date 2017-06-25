@@ -30,13 +30,13 @@ namespace params_automatic {
     static const double KpHoldV          = 1;
 
     //Proportional gain times horizontal error
-    static const double KpHold           = 0.75; // 0.5
+    static const double KpHold           = 0.78; // 0.5
 
     //Differential gain times horizontal error
     static const double KdHold           = 0.00;
 
     //Integral gain times integral horizontal error
-    static const double KiHold          = 0.002; //0.1
+    static const double KiHold          = 0.001; //0.1
 
     //Proportional gain for velocity tracking
     static const double KPCompV          = 0.1;

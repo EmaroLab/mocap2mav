@@ -18,7 +18,7 @@ namespace params_automatic {
     static const int    NFramesComp     = 20;
 
     //Platform dimension
-    static const double platformLenght  = 0.7;
+    static const double platformLenght  = 0.65;
 
     //Max altitude for landing procedure
     static const double zMax            = 2.4;

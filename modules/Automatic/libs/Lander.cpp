@@ -363,7 +363,7 @@ void Lander::clampZSP() {
 void Lander::land() {
 
     resetSetPoint();
-    _setPoint.setZ(_state.getZ()-10);
+    _setPoint.setZ(_state.getZ()-20);
 
 }
 

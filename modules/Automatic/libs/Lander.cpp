@@ -339,14 +339,9 @@ void Lander::comp() {
     double dz = - _state.getZ() + _platformState.getZ() + PLATFORM_OFFSET;
     double desc = common::interpolate(fabs(dz), DRATE_MAX, DRATE_MIN, TMAX, TMIN);
     double z_target_v = _platformState.getVz() - desc;
-
     double err_v = z_target_v - _state.getVz();
 
-    double corr = 1;
-
-    if(_platformState.getVz() > 0) corr = 1.2;
-
-    z_target_v += corr * params_automatic::KPCompV * (err_v);
+    z_target_v += params_automatic::KPCompV * (err_v);
 
     //Now we need to transform this velocity in a position setpoint since in Firmware:
     // VelSP = Kp * PosError then PosSP = ( VelSP / Kp ) + RobotPos

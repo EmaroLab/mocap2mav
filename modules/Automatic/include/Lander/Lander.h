@@ -98,6 +98,8 @@ private:
     //Reset position setpoint to actual position
     void resetSetPoint();
 
+    //Align yaw with platform
+    void allign();
     //Initialize stuff here
     void init();
     //Tracking logic defined here

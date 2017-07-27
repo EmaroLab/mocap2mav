@@ -6,6 +6,7 @@
 #include "include/Lander/StatesClasses.hpp"
 #include "Lander/Lander.h"
 #include "parameters.h"
+#include "common/conversions.h"
 
 Lander::Lander()
         : _horizontaErr((double)0)    , _tauHold((double)0), _tauLost((double)0), _tauErr((double)0), _NHold(0),
@@ -362,6 +363,16 @@ void Lander::land() {
 
     resetSetPoint();
     _setPoint.setZ(_state.getZ()-10);
+
+}
+
+void Lander::allign() {
+
+    //Continuosly change yaw value
+    double yaw_target = _platformState.getYawFromQuat();
+    Eigen::Quaterniond q_interm = yawToQuaternion(yaw_target);
+
+    _setPoint.setOrientation(q_interm);
 
 }
 

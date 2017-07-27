@@ -24,8 +24,6 @@ set(MODULES_SRC_DIR ${PROJECT_SOURCE_DIR}/modules)
 set(PROJECT_LIB_DIR ${PROJECT_SOURCE_DIR}/libs)
 
 include_directories("${PROJECT_INCLUDE_DIR}")
-#include_directories("${PROJECT_SRC_DIR}")
-#include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_LIB_DIR}")
 include_directories("${MODULES_SRC_DIR}")
 
@@ -35,7 +33,7 @@ include_directories("${MODULES_SRC_DIR}")
 add_subdirectory(${MODULES_SRC_DIR}/Executioner)
 add_subdirectory(${MODULES_SRC_DIR}/Automatic)
 add_subdirectory(${MODULES_SRC_DIR}/Test)
-add_subdirectory(${MODULES_SRC_DIR}/Security)
+#add_subdirectory(${MODULES_SRC_DIR}/Security)
 
 #Project external libs
 add_subdirectory(${PROJECT_LIB_DIR}/StateMachine)

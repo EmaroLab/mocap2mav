@@ -21,7 +21,7 @@ include_directories(${Eigen_INCLUDE_DIR})
 set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(MODULES_SRC_DIR ${PROJECT_SOURCE_DIR}/modules)
-set(PROJECT_LIB_DIR ${PROJECT_SOURCE_DIR}/projectLIBS)
+set(PROJECT_LIB_DIR ${PROJECT_SOURCE_DIR}/libs)
 
 include_directories("${PROJECT_INCLUDE_DIR}")
 #include_directories("${PROJECT_SRC_DIR}")

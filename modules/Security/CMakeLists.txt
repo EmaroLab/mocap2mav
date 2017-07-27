@@ -2,17 +2,16 @@ cmake_minimum_required(VERSION 2.6)
 project (Security)
 #list( APPEND CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
 
-set (PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(PROJECT_SRCS
-${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_SRC_DIR}/MavState.cpp)
-
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
+
+set(PROJECT_SRCS
+${PROJECT_SOURCE_DIR}/main.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.cpp)
 
 add_executable(secur ${PROJECT_SRCS})
 

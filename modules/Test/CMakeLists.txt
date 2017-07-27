@@ -8,7 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(PROJECT_SRCS
-        src/maintest.cpp ${PROJECT_SRC_DIR}/MavState.cpp)
+        src/maintest.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.cpp)
 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")

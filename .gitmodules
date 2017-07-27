@@ -1,9 +1,9 @@
 [submodule "projectLIBS/StateMachine"]
-	path = projectLIBS/StateMachine
+	path = libs/StateMachine
 	url = https://github.com/andrea-nisti/FiniteStateMachine.git
 [submodule "projectLIBS/lcm"]
-	path = projectLIBS/lcm
+	path = libs/lcm
 	url = https://github.com/lcm-proj/lcm.git
 [submodule "projectLIBS/miniPID"]
-	path = projectLIBS/miniPID
+	path = libs/miniPID
 	url = https://github.com/andrea-nisti/MiniPID.git

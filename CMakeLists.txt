@@ -30,4 +30,6 @@ add_subdirectory(${MODULES_SRC_DIR}/Test)
 #Project external libs
 add_subdirectory(${PROJECT_LIB_DIR}/StateMachine)
 add_subdirectory(${PROJECT_LIB_DIR}/miniPID)
+add_subdirectory(${PROJECT_LIB_DIR}/mocap)
+
 

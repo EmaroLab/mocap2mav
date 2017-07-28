@@ -15,6 +15,7 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("include")
 
 add_executable(testM ${PROJECT_SRCS})
+add_executable(mocapTest src/mocapTest.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.cpp)
 add_executable(dummypose src/dummyPose.cpp ../../include/utils/TimeHelpers.hpp)
 
 find_package(PkgConfig REQUIRED)
@@ -27,3 +28,4 @@ target_link_libraries( testM
         ${LCM_LIBRARIES}
         )
 target_link_libraries(dummypose  ${LCM_LIBRARIES})
+target_link_libraries(mocapTest  mocap)

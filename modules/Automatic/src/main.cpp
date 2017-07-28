@@ -3,8 +3,6 @@
 #include "Automatic.h"
 #include "common/CallbackHandler.hpp"
 #include "poll.h"
-#include "Command/TakeOff.hpp"
-
 
 using namespace common;
 

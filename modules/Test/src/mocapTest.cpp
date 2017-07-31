@@ -10,6 +10,7 @@ int main(int argc, char** argv){
     Automatic a;
     Executioner e;
     e.init();
+    a.handleCommands();
     return 0;
 
 }

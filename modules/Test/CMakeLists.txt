@@ -14,7 +14,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("include")
 
-add_executable(testM ${PROJECT_SRCS})
+#add_executable(testM ${PROJECT_SRCS})
 add_executable(mocapTest src/mocapTest.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.cpp)
 add_executable(dummypose src/dummyPose.cpp ../../include/utils/TimeHelpers.hpp)
 
@@ -23,9 +23,5 @@ pkg_search_module(LCM REQUIRED lcm)
 
 #target_link_libraries(Automlib StateMachine)
 
-target_link_libraries( testM
-        Automlib
-        ${LCM_LIBRARIES}
-        )
 target_link_libraries(dummypose  ${LCM_LIBRARIES})
 target_link_libraries(mocapTest  mocap)

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "lcm/lcm-cpp.hpp"
-#include "Automatic.h"
+#include "mocap/Automatic/include/Automatic.h"
 #include "common/CallbackHandler.hpp"
 #include "poll.h"
 

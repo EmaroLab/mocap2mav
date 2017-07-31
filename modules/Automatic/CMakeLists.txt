@@ -12,40 +12,17 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 #find_package(Qt5Network)
 
 set(PROJECT_SRCS
-src/main.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.cpp include/parameters.h)
-file(GLOB_RECURSE COMM include/Command/*.hpp)
-include_directories("${PROJECT_BINARY_DIR}")
+src/main.cpp)
+
 include_directories("${PROJECT_INCLUDE_DIR}")
-include_directories("include")
 
-add_executable(autom ${PROJECT_SRCS} ${COMM})
-
-#Set LCM
-#set ( PROJECT_LINK_LIBS liblcm.so )
-#link_directories( ~/usr/local/lib )
+add_executable(autom ${PROJECT_SRCS})
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(LCM REQUIRED lcm)
 
-##Declare a C++ library
- add_library(Automlib
-         libs/Automatic.cpp
-         include/Automatic.h
-		 ${PROJECT_INCLUDE_DIR}/common/MavState.h
-		 ${PROJECT_INCLUDE_DIR}/common/MavState.cpp
-		 libs/Lander.cpp
-		 include/Lander/Lander.h
-		 include/Lander/StatesClasses.hpp
-		 libs/StateClasses.cpp)
-		 #${PROJECT_LIB_DIR}/StateMachine/include/Machine.h
-		 #${PROJECT_LIB_DIR}/StateMachine/include/AbstractState.h
-		 #${PROJECT_LIB_DIR}/StateMachine/src/Machine.cpp)
-
-target_link_libraries(Automlib StateMachine miniPID)
-##qt5_use_modules(exec Widgets Core Network SerialPort)
-##qt5_use_modules(Dis Widgets Core Network SerialPort)
 target_link_libraries( autom
-	    Automlib
+	    mocap
 		${LCM_LIBRARIES}
 	)
 

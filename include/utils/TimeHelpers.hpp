@@ -162,8 +162,7 @@ public:
             }else{
                 _deadlineNotRespected = true;
                 //Your loop is to slow
-                std::cout << "WARNING: your loop takes too long. Decrease your rate value" << std::endl;
-
+                if(!_noW) std::cout << "WARNING: your loop takes too long. Decrease your rate value" << std::endl;
                 //Exit
                 return _noW;
             }

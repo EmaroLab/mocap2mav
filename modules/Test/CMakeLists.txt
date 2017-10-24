@@ -17,6 +17,7 @@ include_directories("include")
 #add_executable(testM ${PROJECT_SRCS})
 add_executable(mocapTest src/mocapTest.cpp ${PROJECT_INCLUDE_DIR}/common/MavState.cpp)
 add_executable(dummypose src/dummyPose.cpp ../../include/utils/TimeHelpers.hpp)
+add_executable(config src/configtest.cpp)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(LCM REQUIRED lcm)
@@ -25,3 +26,4 @@ pkg_search_module(LCM REQUIRED lcm)
 
 target_link_libraries(dummypose  ${LCM_LIBRARIES})
 target_link_libraries(mocapTest  mocap)
+target_link_libraries(config  /usr/local/lib/librudeconfig.so)

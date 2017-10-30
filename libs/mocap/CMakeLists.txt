@@ -19,7 +19,7 @@ include_directories(Executioner/include)
 		 ${PROJECT_INCLUDE_DIR}/common/MavState.cpp
 		 Executioner/Executioner.cpp
 
-)
+         ../../include/common/Parameters.hpp)
 target_link_libraries(mocap StateMachine miniPID)
 
 

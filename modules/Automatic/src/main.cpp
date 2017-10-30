@@ -3,10 +3,13 @@
 #include "mocap/Automatic/include/Automatic.h"
 #include "common/CallbackHandler.hpp"
 #include "poll.h"
+#include "common/Parameters.hpp"
 
 using namespace common;
 
 int main(int argc, char** argv){
+
+    Parameters p;
 
 	lcm::LCM handler, handler2, handler3;
 

@@ -16,11 +16,12 @@ int main(int argc, char** argv){
 
     // load a configuration/.ini file
     //
-    config.load("myfile.ini");
 
-    // load a configuration/.ini file
-    //
-    config.load("myfile.ini");
+    const char* t;
+    t = "myfile.ini";
+
+    config.load(t);
+
 
     // read information
     //

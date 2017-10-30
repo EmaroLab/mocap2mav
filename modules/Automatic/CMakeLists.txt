@@ -24,5 +24,6 @@ pkg_search_module(LCM REQUIRED lcm)
 target_link_libraries( autom
 	    mocap
 		${LCM_LIBRARIES}
+		/usr/local/lib/librudeconfig.so
 	)
 

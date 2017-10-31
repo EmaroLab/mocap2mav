@@ -71,8 +71,13 @@ private:
     }
 
     //Read each parameter and store it in a local variable
-    void updateParams(const char* config_file){
+    void updateParams(){
+        if(_ini_loaded){
 
+
+
+        } else
+            std::cout << "Please load a config file" << std::endl;
 
 
 

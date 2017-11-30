@@ -17,6 +17,8 @@ public:
     }
     Parameters() : _ini_loaded(false){
 
+        //Throw a bunch of default params
+
         //Number of consecutive frames in which tracking is considered valid
         NFramesHold     = 120;
 

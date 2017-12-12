@@ -22,7 +22,7 @@ public:
         //Number of consecutive frames in which tracking is considered valid
         NFramesHold     = 120;
 
-        //Number of consecutive frames in which tracking is considered not valid
+        //Number of consecutive frames in which tracking is +considered not valid
         NFramesLost     = 70;
 
         //Number of consecutive frames in which tracking is considered valid

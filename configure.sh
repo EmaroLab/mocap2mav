@@ -8,5 +8,10 @@ cd libs/lcm &&
 ./configure &&
 make &&
 sudo make install &&
+cd .. &&
+cd rudeconfig-5.0.5 &&
+./configure &&
+make &&
+sudo make install &&
 sudo ldconfig
 

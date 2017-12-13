@@ -14,11 +14,12 @@ class Parameters {
 public:
     Parameters(const char* config_file) {
         loadConfigFile(config_file);
+
     }
-    Parameters() : _ini_loaded(false){
+    Parameters() {
 
         //Throw a bunch of default params
-
+        _ini_loaded = false;
         //Number of consecutive frames in which tracking is considered valid
         NFramesHold     = 120;
 
@@ -64,15 +65,15 @@ public:
 
 private:
 
-    rude::Config _ini;
-    bool _ini_loaded;
+     rude::Config _ini;
+     bool _ini_loaded;
 
-    void loadConfigFile(const char* config_file){
+     void loadConfigFile(const char* config_file){
         _ini_loaded = _ini.load(config_file);
     }
 
     //Read each parameter and store it in a local variable
-    void updateParams(){
+     void updateParams(){
         if(_ini_loaded){
 
             NFramesHold = _ini.getIntValue("NFramesHold");
@@ -101,45 +102,45 @@ public:
     //PARAMETERS FIELDS
 
     //Number of consecutive frames in which tracking is considered valid
-    int    NFramesHold;
+     int    NFramesHold;
 
     //Number of consecutive frames in which tracking is considered not valid
-    int    NFramesLost;
+     int    NFramesLost;
 
     //Number of consecutive frames in which tracking is considered valid
     //and robot is ready for compensation
-    int    NFramesComp;
+     int    NFramesComp;
 
     //Platform dimension
-    double platformLenght;
+     double platformLenght;
 
     //Max altitude for landing procedure
-    double zMax;
+     double zMax;
 
     //Minimum altitude for landing procedure (before compensating, this value should be above the maximum platform altitude)
-    double zMin;
+     double zMin;
 
     //Proportional gain times platform velocity
-    double KpHoldV;
+     double KpHoldV;
 
     //Proportional gain times horizontal error
-    double KpHold; // 0.5
+     double KpHold; // 0.5
 
     //Differential gain times horizontal error
-    double KdHold;
+     double KdHold;
 
     //Integral gain times integral horizontal error
-    double KiHold; //0.1
+     double KiHold; //0.1
 
     //Proportional gain for velocity tracking
-    double KPCompV;
+     double KPCompV;
 
     //Integral clamping values
-    double maxIntValue;
-    double minIntValue;
+     double maxIntValue;
+     double minIntValue;
 
     //Max total PID output
-    double maxOutput;
+     double maxOutput;
 
 };
 #endif //MOCAP2MAV_PARAMETERS_HPP

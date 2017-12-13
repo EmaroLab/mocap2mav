@@ -375,13 +375,3 @@ void Lander::allign() {
     _setPoint.setOrientation(q_interm);
 
 }
-
-
-
-
-
-
-
-
-
-

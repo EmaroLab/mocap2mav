@@ -22,7 +22,7 @@ public:
         //Number of consecutive frames in which tracking is considered valid
         NFramesHold     = 120;
 
-        //Number of consecutive frames in which tracking is +considered not valid
+        //Number of consecutive frames in which tracking is considered not valid
         NFramesLost     = 70;
 
         //Number of consecutive frames in which tracking is considered valid
@@ -68,25 +68,33 @@ private:
     bool _ini_loaded;
 
     void loadConfigFile(const char* config_file){
-        _ini.load(config_file);
-        _ini_loaded = true;
+        _ini_loaded = _ini.load(config_file);
     }
 
     //Read each parameter and store it in a local variable
     void updateParams(){
         if(_ini_loaded){
 
+            NFramesHold = _ini.getIntValue("NFramesHold");
+            NFramesLost = _ini.getIntValue("NFramesLost");
+            NFramesComp = _ini.getIntValue("NFramesComp");
 
+            platformLenght = _ini.getDoubleValue("platformLenght");
+            zMax = _ini.getDoubleValue("zMax");
+            zMin = _ini.getDoubleValue("zMin");
+            KpHoldV = _ini.getDoubleValue("KpHoldV");
+            KpHold = _ini.getDoubleValue("KpHold");
+            KdHold = _ini.getDoubleValue("KdHold");
+            KiHold = _ini.getDoubleValue("KiHold");
+            KPCompV = _ini.getDoubleValue("KPCompV");
+            maxIntValue = _ini.getDoubleValue("maxIntValue");
+            minIntValue = -maxIntValue;
+            maxOutput = _ini.getDoubleValue("maxOutput");
 
         } else
             std::cout << "Please load a config file" << std::endl;
 
-
-
-
-
     }
-
 
 public:
 

@@ -24,12 +24,12 @@ int main(int argc, char** argv){
     // create information
 
     //Number of consecutive frames in which tracking is considered valid
-    config.setDoubleValue("NFramesHold",120);
+    config.setIntValue("NFramesHold",120);
     //Number of consecutive frames in which tracking is considered not valid
-    config.setDoubleValue("NFramesLost",70);
+    config.setIntValue("NFramesLost",70);
     //Number of consecutive frames in which tracking is considered valid
     //and robot is ready for compensation
-    config.setDoubleValue("NFramesComp",20);
+    config.setIntValue("NFramesComp",20);
     //Platform dimension
     config.setDoubleValue("platformLenght",1);
     //Max altitude for landing procedure
@@ -60,12 +60,12 @@ int main(int argc, char** argv){
     config.setSection("Parameters");
 
     //Number of consecutive frames in which tracking is considered valid
-    config.setDoubleValue("NFramesHold",120);
+    config.setIntValue("NFramesHold",120);
     //Number of consecutive frames in which tracking is considered not valid
-    config.setDoubleValue("NFramesLost",70);
+    config.setIntValue("NFramesLost",70);
     //Number of consecutive frames in which tracking is considered valid
     //and robot is ready for compensation
-    config.setDoubleValue("NFramesComp",20);
+    config.setIntValue("NFramesComp",20);
     //Platform dimension
     config.setDoubleValue("platformLenght",0.65);
     //Max altitude for landing procedure

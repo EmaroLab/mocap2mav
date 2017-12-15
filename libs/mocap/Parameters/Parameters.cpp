@@ -2,21 +2,14 @@
 // Created by andreanistico on 24/10/17.
 //
 
-#ifndef MOCAP2MAV_PARAMETERS_HPP
-#define MOCAP2MAV_PARAMETERS_HPP
 
-#include <string>
-#include "rude/config.h"
+#include "Parameters/include/Parameters.h"
 
-
-class Parameters {
-
-public:
-    Parameters(const char* config_file) {
+Parameters::Parameters(const char* config_file) {
         loadConfigFile(config_file);
 
     }
-    Parameters() {
+Parameters::Parameters() {
 
         //Throw a bunch of default params
         _ini_loaded = false;
@@ -62,24 +55,18 @@ public:
         maxOutput       = 10;
 
     }
+     void Parameters::loadConfigFile(const char *config_file) {
+         _ini_loaded = _ini.load(config_file);
+     }
 
-private:
-
-     rude::Config _ini;
-     bool _ini_loaded;
-
-     void loadConfigFile(const char* config_file){
-        _ini_loaded = _ini.load(config_file);
-    }
 
     //Read each parameter and store it in a local variable
-     void updateParams(){
+    void Parameters::updateParams(){
         if(_ini_loaded){
 
             NFramesHold = _ini.getIntValue("NFramesHold");
             NFramesLost = _ini.getIntValue("NFramesLost");
             NFramesComp = _ini.getIntValue("NFramesComp");
-
             platformLenght = _ini.getDoubleValue("platformLenght");
             zMax = _ini.getDoubleValue("zMax");
             zMin = _ini.getDoubleValue("zMin");
@@ -96,51 +83,3 @@ private:
             std::cout << "Please load a config file" << std::endl;
 
     }
-
-public:
-
-    //PARAMETERS FIELDS
-
-    //Number of consecutive frames in which tracking is considered valid
-     int    NFramesHold;
-
-    //Number of consecutive frames in which tracking is considered not valid
-     int    NFramesLost;
-
-    //Number of consecutive frames in which tracking is considered valid
-    //and robot is ready for compensation
-     int    NFramesComp;
-
-    //Platform dimension
-     double platformLenght;
-
-    //Max altitude for landing procedure
-     double zMax;
-
-    //Minimum altitude for landing procedure (before compensating, this value should be above the maximum platform altitude)
-     double zMin;
-
-    //Proportional gain times platform velocity
-     double KpHoldV;
-
-    //Proportional gain times horizontal error
-     double KpHold; // 0.5
-
-    //Differential gain times horizontal error
-     double KdHold;
-
-    //Integral gain times integral horizontal error
-     double KiHold; //0.1
-
-    //Proportional gain for velocity tracking
-     double KPCompV;
-
-    //Integral clamping values
-     double maxIntValue;
-     double minIntValue;
-
-    //Max total PID output
-     double maxOutput;
-
-};
-#endif //MOCAP2MAV_PARAMETERS_HPP

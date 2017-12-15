@@ -7,10 +7,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB_RECURSE COMM Automatic/include/Command/*.hpp)
 file(GLOB_RECURSE AUTO Automatic/libs/*)
 file(GLOB_RECURSE LAND Automatic/include/Lander/*.cpp Automatic/include/Lander/*.hpp)
-file(GLOB_RECURSE PARA Parameters/Parameters.hpp)
+file(GLOB_RECURSE PARA Parameters/Parameters.cpp)
 
 include_directories(Automatic/include)
 include_directories(Executioner/include)
+include_directories(Parameters/include)
 
 ##Declare a C++ library
  add_library(mocap

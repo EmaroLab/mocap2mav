@@ -199,7 +199,6 @@ bool Executioner::CheckActions(int a)
 
             }
 
-
         default:
             std::cout << "IDLE" << std::endl;
             return true;

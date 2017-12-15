@@ -10,6 +10,7 @@
 #include "StatesClasses.hpp"
 #include "common/common.h"
 #include "miniPID/MiniPID.h"
+#include "Parameters.h"
 
 #define DEBUG
 #define PI              3.141592653589
@@ -45,6 +46,7 @@ private:
     MavState _platformState;
     MiniPID  _holdPIDX;
     MiniPID  _holdPIDY;
+    Parameters _param;
 
 private:
 

@@ -4,23 +4,21 @@ project (Automatic CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file(GLOB_RECURSE COMM Automatic/include/Command/*.hpp)
-file(GLOB_RECURSE AUTO Automatic/libs/*)
-file(GLOB_RECURSE LAND Automatic/include/Lander/*.cpp Automatic/include/Lander/*.hpp)
-file(GLOB_RECURSE PARA Parameters/Parameters.cpp)
+include_directories(include)
+include_directories(include/Command/)
 
-include_directories(Automatic/include)
-include_directories(Executioner/include)
-include_directories(Parameters/include)
+file(GLOB_RECURSE COMM include/Command/*.hpp)
+file(GLOB_RECURSE SRCS src/*.cpp)
+file(GLOB_RECURSE LAND include/StatesClasses.hpp)
 
 ##Declare a C++ library
  add_library(mocap
-		 ${PARA}
+		 ${SRCS}
 		 ${COMM}
-		 ${AUTO}
 		 ${LAND}
-		 ${PROJECT_INCLUDE_DIR}/common/MavState.cpp
-		 Executioner/Executioner.cpp)
-target_link_libraries(mocap StateMachine miniPID)
+		 ${PROJECT_INCLUDE_DIR}/common/MavState.cpp)
+
+##Workaround for rude...so rude
+target_link_libraries(mocap StateMachine miniPID /usr/local/lib/librudeconfig.so)
 
 

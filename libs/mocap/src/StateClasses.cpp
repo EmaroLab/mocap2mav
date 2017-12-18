@@ -2,7 +2,7 @@
 // Created by andreanistico on 08/02/17.
 //
 
-#include "Lander/StatesClasses.hpp"
+#include "StatesClasses.hpp"
 #include "parameters.h"
 //Define actual states
 

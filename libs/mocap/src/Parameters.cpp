@@ -3,7 +3,7 @@
 //
 
 
-#include "Parameters/include/Parameters.h"
+#include "Parameters.h"
 
 Parameters::Parameters(const char* config_file) {
         loadConfigFile(config_file);

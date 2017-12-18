@@ -33,6 +33,7 @@ public:
     void setState(MavState pose);
     void handleMachine();
     void updateSignals();
+    void loadParam(Parameters* p);
     int getActualMachineState();
     MavState getState();
     MavState getCommand();
@@ -46,7 +47,7 @@ private:
     MavState _platformState;
     MiniPID  _holdPIDX;
     MiniPID  _holdPIDY;
-    Parameters _param;
+    Parameters* _param;
 
 private:
 

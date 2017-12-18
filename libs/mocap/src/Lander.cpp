@@ -16,6 +16,10 @@ Lander::Lander()
           _holdPIDY(params_automatic::KpHold,params_automatic::KiHold,params_automatic::KdHold)
 {
 
+
+    //Load parameters
+
+
     initStateMachine();
     _actualState = _machine.getActualNodeId();
     _err_prev = _err;
@@ -373,5 +377,9 @@ void Lander::allign() {
     Eigen::Quaterniond q_interm = yawToQuaternion(yaw_target);
 
     _setPoint.setOrientation(q_interm);
+
+}
+
+void Lander::loadParam(Parameters *p) {
 
 }

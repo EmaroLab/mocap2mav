@@ -2,8 +2,8 @@
 // Created by andreanistico on 21/02/17.
 //
 
-#ifndef MOCAP2MAV_PARAMETERS_H
-#define MOCAP2MAV_PARAMETERS_H
+#ifndef MOCAP2MAV_PARAM_H
+#define MOCAP2MAV_PARAM_H
 
 namespace params_automatic {
 
@@ -50,4 +50,4 @@ namespace params_automatic {
 
 }
 
-#endif //MOCAP2MAV_PARAMETERS_H
+#endif //MOCAP2MAV_PARAM_H

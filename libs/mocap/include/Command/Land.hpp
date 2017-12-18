@@ -7,7 +7,7 @@
 
 #include "Command.hpp"
 #include "common/conversions.h"
-#include "../Lander/Lander.h"
+#include "../Lander.h"
 
 class Land : public Command{
 

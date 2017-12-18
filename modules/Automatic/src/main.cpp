@@ -1,6 +1,6 @@
 #include <iostream>
 #include "lcm/lcm-cpp.hpp"
-#include "mocap/Automatic/include/Automatic.h"
+#include "mocap/include/Automatic.h"
 #include "common/CallbackHandler.hpp"
 #include "poll.h"
 //#include "common/Parameters.hpp"
@@ -15,6 +15,10 @@ int main(int argc, char** argv){
 		return 1;
 
 	CallbackHandler call;
+
+	//Load parameters
+	//TODO: create param clas and feed it to lander
+
 	Automatic autom;
 	Lander lander;
 

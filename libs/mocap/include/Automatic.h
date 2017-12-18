@@ -7,7 +7,7 @@
 #include "common/MavState.h"
 #include "common/common.h"
 #include "common/conversions.h"
-#include "Lander/Lander.h"
+#include "Lander.h"
 #include "Command/TakeOff.hpp"
 #include "Command/Land.hpp"
 #include "Command/Move.hpp"

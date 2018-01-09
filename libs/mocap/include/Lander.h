@@ -33,7 +33,7 @@ public:
     void setState(MavState pose);
     void handleMachine();
     void updateSignals();
-    void loadParam(Parameters* p);
+    bool loadParam(Parameters* p);
     int getActualMachineState();
     MavState getState();
     MavState getCommand();

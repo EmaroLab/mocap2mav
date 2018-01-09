@@ -17,7 +17,7 @@ int main(int argc, char** argv){
 	CallbackHandler call;
 
 	//Load parameters
-	//TODO: create param clas and feed it to lander
+	//TODO: create param class and feed it to lander
 
 	Automatic autom;
 	Lander lander;

@@ -15,7 +15,6 @@ protected:
     exec::task* _actualTask;
     bool _newTask;
 
-
 public:
     Command(){}
     Command(MavState *_state, MavState *_comm,exec::task *_actualTask) : _state(_state), _comm(_comm),
@@ -30,8 +29,5 @@ public:
     }
 
 };
-
-
-
 
 #endif //MOCAP2MAV_COMMAND_HPP

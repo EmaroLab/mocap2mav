@@ -380,6 +380,24 @@ void Lander::allign() {
 
 }
 
-void Lander::loadParam(Parameters *p) {
+bool Lander::loadParam(Parameters *p) {
 
+    _param = p;
+    //PIDs Params
+    _holdPIDX.setD(_param->KdHold);
+    _holdPIDX.setP(_param->KpHold);
+    _holdPIDX.setI(_param->KiHold);
+    _holdPIDY.setD(_param->KdHold);
+    _holdPIDY.setP(_param->KpHold);
+    _holdPIDY.setI(_param->KiHold);
+    _NLost = _param->NFramesLost;
+    _NComp = _param->NFramesHold;
+    _NHold = _param->NFramesHold;
+    _holdPIDX.setMaxIOutput(_param->maxIntValue);
+    _holdPIDY.setMaxIOutput(_param->maxIntValue);
+    _holdPIDX.setOutputLimits(_param->maxOutput);
+
+
+
+    return true;
 }

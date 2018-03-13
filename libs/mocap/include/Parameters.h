@@ -32,6 +32,8 @@ private:
 
 public:
 
+    bool initLoaded();
+
     //PARAMETERS FIELDS
 
     //Number of consecutive frames in which tracking is considered valid

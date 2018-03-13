@@ -9,6 +9,7 @@ using namespace common;
 
 int main(int argc, char** argv){
 
+
 	lcm::LCM handler, handler2, handler3;
 
 	if (!handler.good() && !handler2.good() && !handler3.good())
@@ -18,6 +19,7 @@ int main(int argc, char** argv){
 
 	//Load parameters
 	//TODO: create param class and feed it to lander
+
 
 	Automatic autom;
 	Lander lander;

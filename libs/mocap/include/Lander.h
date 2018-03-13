@@ -49,9 +49,6 @@ private:
     MiniPID  _holdPIDY;
     Parameters* _param;
 
-private:
-
-
     //Create states
     InitState       _initS;
     HoldState       _holdS;
@@ -78,6 +75,15 @@ private:
     int    _NHold;
     int    _NLost;
     int    _NComp;
+
+    //Params
+    int _NFramesHold;
+    int _NFramesLost;
+    int _NFramesComp;
+
+    double _KPCompV;
+    double _KPHoldV;
+
 
     //NewSignals
     bool _centered;

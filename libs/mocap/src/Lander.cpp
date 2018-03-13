@@ -380,6 +380,7 @@ void Lander::allign() {
 
 }
 
+//Stores parameters in local variables
 bool Lander::loadParam(Parameters *p) {
 
     _param = p;
@@ -390,14 +391,16 @@ bool Lander::loadParam(Parameters *p) {
     _holdPIDY.setD(_param->KdHold);
     _holdPIDY.setP(_param->KpHold);
     _holdPIDY.setI(_param->KiHold);
-    _NLost = _param->NFramesLost;
-    _NComp = _param->NFramesHold;
-    _NHold = _param->NFramesHold;
+
+    _NFramesLost = _param->NFramesLost;
+    _NFramesComp = _param->NFramesComp;
+    _NFramesHold = _param->NFramesHold;
+    _KPCompV = _param->KPCompV;
+    _KPHoldV = _param->KpHoldV;
+
     _holdPIDX.setMaxIOutput(_param->maxIntValue);
     _holdPIDY.setMaxIOutput(_param->maxIntValue);
     _holdPIDX.setOutputLimits(_param->maxOutput);
 
-
-
-    return true;
+    return _param->initLoaded();
 }

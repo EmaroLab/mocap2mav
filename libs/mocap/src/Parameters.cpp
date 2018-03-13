@@ -83,3 +83,7 @@ Parameters::Parameters() {
             std::cout << "Please load a config file" << std::endl;
 
     }
+
+bool Parameters::initLoaded() {
+    return _ini_loaded;
+}
